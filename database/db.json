@@ -1,0 +1,80 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "first_name": "EXCEL",
+      "last_name": "ASAPH",
+      "email": "e.asaph@alustudent.com",
+      "password": "12345",
+      "month": "January",
+      "year": "2022",
+      "group": "group1",
+      "isLoggedin": true
+    }
+  ],
+  "groups": [
+    {
+      "2022": [
+        {
+          "id": "1",
+          "January": [
+            {
+              "id": "1",
+              "group1": {
+                "Project Name": "name",
+                "Project Description": "our names",
+                "usersId": [
+                  1
+                ],
+                "length": 1
+              }
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "May": []
+        },
+        {
+          "id": "3",
+          "September": []
+        }
+      ],
+      "id": "1"
+    },
+    {
+      "2023": [
+        {
+          "id": "1",
+          "January": []
+        },
+        {
+          "id": "2",
+          "May": []
+        },
+        {
+          "id": "3",
+          "September": []
+        }
+      ],
+      "id": "2"
+    },
+    {
+      "2024": [
+        {
+          "id": "1",
+          "January": []
+        },
+        {
+          "id": "2",
+          "May": []
+        },
+        {
+          "id": "3",
+          "September": []
+        }
+      ],
+      "id": "3"
+    }
+  ]
+}
