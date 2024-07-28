@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 
 
-export default function GeneralHomeHeader({ month, year, id, users }) {
+export default function GeneralHomeHeader({ month, year, id, users, members, project_name }) {
     const [showDropDown, setShowDropDown] = useState(false);
     const [isUserGotten, setIsUserGotten] = useState(false);
     const [triedFetch, setTriedFetch] = useState(false);
@@ -47,8 +47,8 @@ export default function GeneralHomeHeader({ month, year, id, users }) {
                     {showDropDown ? (
                         <div>
                             <ul>
-                                <li><Link to={`/discussions/${id}/${year}/${month}/${foundUser.group}`}>discussions</Link></li>
-                                <li><Link to={`/filesharing/${id}/${year}/${month}/${foundUser.group}`}>filesharing</Link></li>
+                                <li><Link to={`/discussions/${id}/${year}/${month}/${foundUser.group}/${members}/${project_name}`}>discussions</Link></li>
+                                <li><Link to={`/filesharing/${id}/${year}/${month}/${foundUser.group}/${members}/${project_name}`}>filesharing</Link></li>
                                 <li><Link to={`/home/${id}/${year}/${month}`}>Homepage</Link></li>
                             </ul>
                         </div>

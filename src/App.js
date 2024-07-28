@@ -89,7 +89,7 @@ function App() {
       change the state of form and signup error.
     */
     // new user id
-    let id = users.length ? users.reduce((accumulator, currentValue) => typeof accumulator === "number" ? accumulator > currentValue.id ? accumulator : currentValue.id : accumulator.id > currentValue.id ? accumulator.id : currentValue.id, 0) : 0;
+    let id = users.length ? users.reduce((accumulator, currentValue) => typeof accumulator === "number" ? parseInt(accumulator) > parseInt(currentValue.id) ? parseInt(accumulator) : parseInt(currentValue.id) : parseInt(accumulator.id) > parseInt(currentValue.id) ? parseInt(accumulator.id) : parseInt(currentValue.id), 0) : 0;
     id = parseInt(id) + 1;
     console.log(id);
     const isLoggedin = false;
@@ -183,10 +183,10 @@ function App() {
             users={users}
             setUsers={setUsers}
           />} />
-          <Route path="/discussions/:id/:year/:month/:group?" element={<Discussion
+          <Route path="/discussions/:id/:year/:month/:group?/:members?/:project_name?" element={<Discussion
             users={users}
           />} />
-          <Route path="/filesharing/:id/:year/:month/:group?" element={<FileSharing
+          <Route path="/filesharing/:id/:year/:month/:group?/:members?/:project_name?" element={<FileSharing
             users={users}
           />} />
         </Routes>

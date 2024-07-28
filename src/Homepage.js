@@ -40,6 +40,7 @@ const Homepage = ({ users, setUsers }) => {
             year={year}
             id={id}
             users={users}
+            groups={groups}
           />
         ) : null}
         {isGroupsGotten ? (
