@@ -34,7 +34,7 @@ const AuthSignUp = ({ first_name, last_name, email, setIntakeMonth, password, se
                 />
             </p>
             <p>
-                <label for="intake-year">Select Intake (Year)</label>
+                <label htmlFor="intake-year">Select Intake (Year)</label>
                 <select name="intake-year" id="intake-year" onChange={(e) => {setIntakeYear(e.currentTarget.value)}}>
                     <option value="">--Please choose an option--</option>
                     <option value="2022">2022</option>
@@ -43,7 +43,7 @@ const AuthSignUp = ({ first_name, last_name, email, setIntakeMonth, password, se
                 </select>
             </p>
             <p>
-                <label for="intake-month">Select Intake (Month)</label>
+                <label htmlFor="intake-month">Select Intake (Month)</label>
                 <select name="intake-month" id="intake-month" onChange={(e) => {setIntakeMonth(e.currentTarget.value)}}>
                     <option value="">--Please choose an option--</option>
                     <option value="January">January</option>

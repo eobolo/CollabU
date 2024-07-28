@@ -8,7 +8,73 @@
       "password": "12345",
       "month": "January",
       "year": "2022",
-      "group": "group1",
+      "group": "1",
+      "isLoggedin": true
+    },
+    {
+      "id": "2",
+      "first_name": "EMMANUEL",
+      "last_name": "OBOLO",
+      "email": "e.obolo@alustudent.com",
+      "password": "12345",
+      "month": "January",
+      "year": "2022",
+      "group": "1",
+      "isLoggedin": true
+    },
+    {
+      "id": "3",
+      "first_name": "ABIODUN",
+      "last_name": "KUMUYI",
+      "email": "a.kumuyi@alustudent.com",
+      "password": "12345",
+      "month": "May",
+      "year": "2022",
+      "group": "",
+      "isLoggedin": true
+    },
+    {
+      "id": "4",
+      "first_name": "HUSNA",
+      "last_name": "ABDALLAH",
+      "email": "husnamoh2001@gmail.com",
+      "password": "12345",
+      "month": "September",
+      "year": "2022",
+      "group": "",
+      "isLoggedin": true
+    },
+    {
+      "id": "5",
+      "first_name": "MICHAEL",
+      "last_name": "OBOLO",
+      "email": "michael.obolo@yahoo.com",
+      "password": "12345",
+      "month": "January",
+      "year": "2023",
+      "group": "1",
+      "isLoggedin": true
+    },
+    {
+      "id": "6",
+      "first_name": "TEMITOPE",
+      "last_name": "OBOLO",
+      "email": "testcase1@faisal.com",
+      "password": "12345",
+      "month": "September",
+      "year": "2023",
+      "group": "",
+      "isLoggedin": true
+    },
+    {
+      "id": "7",
+      "first_name": "DELIGHT",
+      "last_name": "ASAPH",
+      "email": "d.asaph@alustudent.com",
+      "password": "12345",
+      "month": "September",
+      "year": "2023",
+      "group": "",
       "isLoggedin": true
     }
   ],
@@ -21,10 +87,132 @@
             {
               "id": "1",
               "group1": {
-                "Project Name": "name",
-                "Project Description": "our names",
+                "Project Name": "first project",
+                "Project Description": "testing the group",
                 "usersId": [
+                  2,
                   1
+                ],
+                "length": 2
+              }
+            },
+            {
+              "id": "2",
+              "group2": {
+                "Project Name": "second group",
+                "Project Description": "testing second group",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "3",
+              "group3": {
+                "Project Name": "third project group",
+                "Project Description": "testing third project group and this is beyond awesome.",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "4",
+              "group4": {
+                "Project Name": "the fourth group",
+                "Project Description": "july 27th",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "5",
+              "group5": {
+                "Project Name": "new group",
+                "Project Description": "this is a group 5",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "6",
+              "group6": {
+                "Project Name": "the real nigga challenge",
+                "Project Description": "group6",
+                "usersId": [],
+                "length": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "May": [
+            {
+              "id": "1",
+              "group1": {
+                "Project Name": "may group",
+                "Project Description": "first group",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "2",
+              "group2": {
+                "Project Name": "group2",
+                "Project Description": "group2",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "3",
+              "group3": {
+                "Project Name": "group3",
+                "Project Description": "grouppe 3",
+                "usersId": [],
+                "length": 0
+              }
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "September": [
+            {
+              "id": "1",
+              "group1": {
+                "Project Name": "group1 september",
+                "Project Description": "september",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "2",
+              "group2": {
+                "Project Name": "group2",
+                "Project Description": "group2",
+                "usersId": [],
+                "length": 0
+              }
+            }
+          ]
+        }
+      ],
+      "id": "1"
+    },
+    {
+      "2023": [
+        {
+          "id": "1",
+          "January": [
+            {
+              "id": "1",
+              "group1": {
+                "Project Name": "group1",
+                "Project Description": "of jan 2023",
+                "usersId": [
+                  5
                 ],
                 "length": 1
               }
@@ -37,24 +225,26 @@
         },
         {
           "id": "3",
-          "September": []
-        }
-      ],
-      "id": "1"
-    },
-    {
-      "2023": [
-        {
-          "id": "1",
-          "January": []
-        },
-        {
-          "id": "2",
-          "May": []
-        },
-        {
-          "id": "3",
-          "September": []
+          "September": [
+            {
+              "id": "1",
+              "group1": {
+                "Project Name": "group1",
+                "Project Description": "2023 september",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "2",
+              "group2": {
+                "Project Name": "september 2023 group2",
+                "Project Description": "this is the gratests group",
+                "usersId": [],
+                "length": 0
+              }
+            }
+          ]
         }
       ],
       "id": "2"

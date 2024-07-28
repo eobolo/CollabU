@@ -19,6 +19,7 @@ function App() {
   const [signinError, setSigninError] = useState(null);
   const [noUserAccount, setNoUserAccount] = useState(null);
   const [users, setUsers] = useState([]);
+  const [isUsersGotten, setIsUserGotten] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,8 +28,10 @@ function App() {
         const usersData = await userAxios.get("/users");
         if (usersData.data.length === 0) {
           setNoUserAccount("No user account Found !!!")
+        } else {
+          setUsers(usersData.data);
+          setIsUserGotten(true);
         }
-        setUsers(usersData.data);
       } catch (error) {
         console.error(`An Error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`);
       }
@@ -86,6 +89,7 @@ function App() {
     // new user id
     let id = users.length ? users.reduce((accumulator, currentValue) => typeof accumulator === "number" ? accumulator > currentValue.id ? accumulator : currentValue.id : accumulator.id > currentValue.id ? accumulator.id : currentValue.id, 0) : 0;
     id = parseInt(id) + 1;
+    console.log(id);
     const isLoggedin = false;
     // note here the id's of endpoints must be in strings
     const newUser = { id: `${id}`, first_name: first_name.toUpperCase(), last_name: last_name.toUpperCase(), email, password, month: intakeMonth, year: intakeYear, group: '', isLoggedin };
@@ -169,14 +173,18 @@ function App() {
   return (
     <div className='App'>
       <HomeHeader />
-      <Routes>
-        <Route path="/" element={<AuthLogin signupSuccess={signupSuccess} email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} signinError={signinError} />} />
-        <Route path="/signup" element={<AuthSignUp first_name={first_name} last_name={last_name} email={email} setIntakeMonth={setIntakeMonth} password={password} setFirstName={setFirstName} setLastName={setLastName} setEmail={setEmail} setIntakeYear={setIntakeYear} setPassword={setPassword} signupError={signupError} handleSignUp={handleSignUp} verifyPassword={verifyPassword} setVerifyPassword={setVerifyPassword} />} />
-        <Route path="/home/:id/:year/:month" element={<Homepage 
-          users={users}
-          setUsers={setUsers}
-        />} />
-      </Routes>
+      {isUsersGotten ? (
+        <Routes>
+          <Route path="/" element={<AuthLogin signupSuccess={signupSuccess} email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} signinError={signinError} />} />
+          <Route path="/signup" element={<AuthSignUp first_name={first_name} last_name={last_name} email={email} setIntakeMonth={setIntakeMonth} password={password} setFirstName={setFirstName} setLastName={setLastName} setEmail={setEmail} setIntakeYear={setIntakeYear} setPassword={setPassword} signupError={signupError} handleSignUp={handleSignUp} verifyPassword={verifyPassword} setVerifyPassword={setVerifyPassword} />} />
+          <Route path="/home/:id/:year/:month" element={<Homepage
+            users={users}
+            setUsers={setUsers}
+          />} />
+        </Routes>
+      ) : <div>
+        <p>fetching data ...</p>
+      </div>}
     </div>
   );
 }
