@@ -3,6 +3,8 @@ import HomeHeader from './HomeHeader';
 import Homepage from './Homepage';
 import AuthLogin from './AuthLogin';
 import AuthSignUp from './AuthSignUp';
+import Discussion from './Discussion';
+import FileSharing from './FileSharing';
 import { useState, useEffect } from 'react';
 import userAxios from './apis/userApi';
 
@@ -180,6 +182,12 @@ function App() {
           <Route path="/home/:id/:year/:month" element={<Homepage
             users={users}
             setUsers={setUsers}
+          />} />
+          <Route path="/discussions/:id/:year/:month/:group?" element={<Discussion
+            users={users}
+          />} />
+          <Route path="/filesharing/:id/:year/:month/:group?" element={<FileSharing
+            users={users}
           />} />
         </Routes>
       ) : <div>

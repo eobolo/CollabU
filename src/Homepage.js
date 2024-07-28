@@ -4,6 +4,7 @@ import userAxios from './apis/userApi';
 import CreateGroup from './CreateGroup';
 import MyGroup from './MyGroup';
 import AllGroup from './AllGroup';
+import HomepageHeader from './HomepageHeader';
 
 const Homepage = ({ users, setUsers }) => {
   const [groups, setGroups] = useState({});
@@ -33,6 +34,14 @@ const Homepage = ({ users, setUsers }) => {
   return (
     <main>
       <section>
+        {isGroupsGotten ? (
+          <HomepageHeader
+            month={month}
+            year={year}
+            id={id}
+            users={users}
+          />
+        ) : null}
         {isGroupsGotten ? (
           <>
             <MyGroup
