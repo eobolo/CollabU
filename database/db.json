@@ -8,8 +8,8 @@
       "password": "12345",
       "month": "January",
       "year": "2022",
-      "group": "1",
-      "isLoggedin": true
+      "group": "",
+      "isLoggedin": false
     },
     {
       "id": "2",
@@ -90,10 +90,9 @@
                 "Project Name": "first project",
                 "Project Description": "testing the group",
                 "usersId": [
-                  2,
-                  1
+                  2
                 ],
-                "length": 2
+                "length": 1
               }
             },
             {

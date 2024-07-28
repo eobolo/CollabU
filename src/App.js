@@ -6,6 +6,7 @@ import AuthSignUp from './AuthSignUp';
 import { useState, useEffect } from 'react';
 import userAxios from './apis/userApi';
 
+
 function App() {
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
@@ -19,6 +20,7 @@ function App() {
   const [signinError, setSigninError] = useState(null);
   const [noUserAccount, setNoUserAccount] = useState(null);
   const [users, setUsers] = useState([]);
+  const [authUser, setAuthUser] = useState([]);
   const [isUsersGotten, setIsUserGotten] = useState(false);
   const navigate = useNavigate();
 
@@ -158,6 +160,7 @@ function App() {
         const month = authenticateUser[0].month;
         const year = authenticateUser[0].year;
 
+        setAuthUser(authenticateUser);
         navigate(`/home/${id}/${year}/${month}`);
       } catch (error) {
         console.error(`An Error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`);
@@ -172,7 +175,11 @@ function App() {
 
   return (
     <div className='App'>
-      <HomeHeader />
+      <HomeHeader 
+        authUser={authUser}
+        users={users}
+        setUsers={setUsers}
+      />
       {isUsersGotten ? (
         <Routes>
           <Route path="/" element={<AuthLogin signupSuccess={signupSuccess} email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} signinError={signinError} />} />
