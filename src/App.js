@@ -3,6 +3,8 @@ import HomeHeader from './HomeHeader';
 import Homepage from './Homepage';
 import AuthLogin from './AuthLogin';
 import AuthSignUp from './AuthSignUp';
+import Discussion from './Discussion';
+import FileSharing from './FileSharing';
 import { useState, useEffect } from 'react';
 import userAxios from './apis/userApi';
 
@@ -87,7 +89,7 @@ function App() {
       change the state of form and signup error.
     */
     // new user id
-    let id = users.length ? users.reduce((accumulator, currentValue) => typeof accumulator === "number" ? accumulator > currentValue.id ? accumulator : currentValue.id : accumulator.id > currentValue.id ? accumulator.id : currentValue.id, 0) : 0;
+    let id = users.length ? users.reduce((accumulator, currentValue) => typeof accumulator === "number" ? parseInt(accumulator) > parseInt(currentValue.id) ? parseInt(accumulator) : parseInt(currentValue.id) : parseInt(accumulator.id) > parseInt(currentValue.id) ? parseInt(accumulator.id) : parseInt(currentValue.id), 0) : 0;
     id = parseInt(id) + 1;
     console.log(id);
     const isLoggedin = false;
@@ -180,6 +182,12 @@ function App() {
           <Route path="/home/:id/:year/:month" element={<Homepage
             users={users}
             setUsers={setUsers}
+          />} />
+          <Route path="/discussions/:id/:year/:month/:group?/:members?/:project_name?" element={<Discussion
+            users={users}
+          />} />
+          <Route path="/filesharing/:id/:year/:month/:group?/:members?/:project_name?" element={<FileSharing
+            users={users}
           />} />
         </Routes>
       ) : <div>

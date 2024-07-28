@@ -266,5 +266,169 @@
       ],
       "id": "3"
     }
+  ],
+  "comments": [
+    {
+      "id": "9",
+      "userId": "1",
+      "text": "latest comment by me",
+      "dateObject": "28/07/2024, 21:54:25",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "10",
+      "userId": "1",
+      "text": "new comment by me",
+      "dateObject": "28/07/2024, 21:54:30",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "11",
+      "userId": "1",
+      "text": "last comment by me",
+      "dateObject": "28/07/2024, 21:55:25",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "12",
+      "userId": "1",
+      "text": "new comment now",
+      "dateObject": "28/07/2024, 23:22:26",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "13",
+      "userId": "1",
+      "text": "final comment",
+      "dateObject": "28/07/2024, 23:23:00",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "14",
+      "userId": "1",
+      "text": "11:24 comment",
+      "dateObject": "28/07/2024, 23:24:49",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "15",
+      "userId": "1",
+      "text": "11:24 comment",
+      "dateObject": "30/06/2024, 23:24:49",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "16",
+      "userId": "1",
+      "text": "Hey, man. How are you?",
+      "dateObject": "28/07/2024, 23:36:53",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "17",
+      "userId": "1",
+      "text": "hey what's up man",
+      "dateObject": "28/07/2024, 23:39:01",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "20",
+      "userId": "1",
+      "text": "abiodun just came in",
+      "dateObject": "28/07/2024, 23:41:47",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "21",
+      "userId": "1",
+      "text": "abiodun just came in",
+      "dateObject": "28/07/2024, 23:42:24",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "22",
+      "userId": "1",
+      "text": "the project is awesome",
+      "dateObject": "28/07/2024, 23:45:48",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "23",
+      "userId": "1",
+      "text": "Okay, tell me more about i",
+      "dateObject": "28/07/2024, 23:54:56",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "24",
+      "userId": "2",
+      "text": "So, it's more about databases, you know 😁",
+      "dateObject": "28/07/2024, 23:55:28",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "25",
+      "userId": "1",
+      "text": "Oh, I see 😂",
+      "dateObject": "28/07/2024, 23:55:49",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "26",
+      "userId": "1",
+      "text": "How far that baddie na😒 ",
+      "dateObject": "28/07/2024, 23:57:19",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "27",
+      "userId": "2",
+      "text": "Which one? Amaka? 🥲",
+      "dateObject": "28/07/2024, 23:57:44",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "28",
+      "userId": "2",
+      "text": "na shantel dey hot now",
+      "dateObject": "29/07/2024, 00:02:30",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    }
   ]
 }
