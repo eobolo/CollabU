@@ -1,4 +1,5 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import './styles/App.css'
 import HomeHeader from './HomeHeader';
 import Homepage from './Homepage';
 import AuthLogin from './AuthLogin';
@@ -7,6 +8,7 @@ import Discussion from './Discussion';
 import FileSharing from './FileSharing';
 import { useState, useEffect } from 'react';
 import userAxios from './apis/userApi';
+
 
 function App() {
   const [first_name, setFirstName] = useState('');
@@ -21,6 +23,7 @@ function App() {
   const [signinError, setSigninError] = useState(null);
   const [noUserAccount, setNoUserAccount] = useState(null);
   const [users, setUsers] = useState([]);
+  const [authUser, setAuthUser] = useState([]);
   const [isUsersGotten, setIsUserGotten] = useState(false);
   const navigate = useNavigate();
 
@@ -35,7 +38,7 @@ function App() {
           setIsUserGotten(true);
         }
       } catch (error) {
-        console.error(`An Error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`);
+        console.error(`An error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`);
       }
     }
     fetchUsers();
@@ -52,7 +55,7 @@ function App() {
     e.preventDefault();
     // check passwords if they are correct
     if (password !== verifyPassword) {
-      setSignupError("Your passwords are not identical check password again :(");
+      setSignupError("Your passwords are not identical. Check password again.");
       setPassword('');
       setVerifyPassword('');
       return;
@@ -78,7 +81,7 @@ function App() {
     const userExists = users.filter(checkUserExist);
 
     if (userExists.length > 0) {
-      setSignupError(`The User with email ${userExists[0].email} already exists`);
+      setSignupError(`The user with email "${userExists[0].email}" already exists`);
       setPassword('');
       setVerifyPassword('');
       return;
@@ -105,7 +108,7 @@ function App() {
         const userData = await userAxios.post(`/users/`, user);
         console.log(userData.data);
       } catch (error) {
-        console.error(`An Error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`)
+        console.error(`An error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`)
       }
     }
     addUser(newUser);
@@ -118,7 +121,7 @@ function App() {
     setIntakeMonth('');
     setIntakeYear('');
     setSigninError(null);
-    setSignupSuccess('User successfully Created :)');
+    setSignupSuccess('User successfully created');
     navigate("/");
   }
 
@@ -138,7 +141,7 @@ function App() {
     const authenticateUser = users.filter(checkUserIn);
     // if user doesn't exist send an error to the form
     if (authenticateUser.length === 0) {
-      setSigninError("This account doesn't exist, sign up to create one :(");
+      setSigninError("This account doesn't exist. Sign up to create one.");
       setSignupSuccess('');
       return;
     }
@@ -160,9 +163,10 @@ function App() {
         const month = authenticateUser[0].month;
         const year = authenticateUser[0].year;
 
+        setAuthUser(authenticateUser);
         navigate(`/home/${id}/${year}/${month}`);
       } catch (error) {
-        console.error(`An Error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`);
+        console.error(`An error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`);
       }
     }
     changeUserIsLoggedin(authenticateUser[0].id);
@@ -174,25 +178,34 @@ function App() {
 
   return (
     <div className='App'>
-      <HomeHeader />
-      {isUsersGotten ? (
-        <Routes>
-          <Route path="/" element={<AuthLogin signupSuccess={signupSuccess} email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} signinError={signinError} />} />
-          <Route path="/signup" element={<AuthSignUp first_name={first_name} last_name={last_name} email={email} setIntakeMonth={setIntakeMonth} password={password} setFirstName={setFirstName} setLastName={setLastName} setEmail={setEmail} setIntakeYear={setIntakeYear} setPassword={setPassword} signupError={signupError} handleSignUp={handleSignUp} verifyPassword={verifyPassword} setVerifyPassword={setVerifyPassword} />} />
-          <Route path="/home/:id/:year/:month" element={<Homepage
-            users={users}
-            setUsers={setUsers}
-          />} />
-          <Route path="/discussions/:id/:year/:month/:group?/:members?/:project_name?" element={<Discussion
-            users={users}
-          />} />
-          <Route path="/filesharing/:id/:year/:month/:group?/:members?/:project_name?" element={<FileSharing
-            users={users}
-          />} />
-        </Routes>
-      ) : <div>
-        <p>fetching data ...</p>
-      </div>}
+      <div>
+        <HomeHeader
+          authUser={authUser}
+          users={users}
+          setUsers={setUsers}
+        />
+      </div>
+
+      <div className='routes-container'>
+        {isUsersGotten ? (
+          <Routes>
+            <Route path="/" element={<AuthLogin signupSuccess={signupSuccess} email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} signinError={signinError} />} />
+            <Route path="/signup" element={<AuthSignUp first_name={first_name} last_name={last_name} email={email} setIntakeMonth={setIntakeMonth} password={password} setFirstName={setFirstName} setLastName={setLastName} setEmail={setEmail} setIntakeYear={setIntakeYear} setPassword={setPassword} signupError={signupError} handleSignUp={handleSignUp} verifyPassword={verifyPassword} setVerifyPassword={setVerifyPassword} />} />
+            <Route path="/home/:id/:year/:month" element={<Homepage
+              users={users}
+              setUsers={setUsers}
+            />} />
+            <Route path="/discussions/:id/:year/:month/:group?/:members?/:project_name?" element={<Discussion
+              users={users}
+            />} />
+            <Route path="/filesharing/:id/:year/:month/:group?/:members?/:project_name?" element={<FileSharing
+              users={users}
+            />} />
+          </Routes>
+        ) : <div>
+          <p>fetching data ...</p>
+        </div>}
+      </div>
     </div>
   );
 }
