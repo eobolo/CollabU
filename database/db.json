@@ -430,5 +430,34 @@
       "intakeMonth": "January",
       "group": "1"
     }
+  ],
+  "files": [
+    {
+      "id": "1",
+      "userId": "1",
+      "filename": "first file",
+      "url": "https://docs.google.com/document/d/1J8kUpMIXOk-M27HWzTo4Z2IYq73lFGIhgNbPhIfT9JA/edit",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "filename": "second file",
+      "url": "https://docs.google.com/document/d/1J8kUpMIXOk-M27HWzTo4Z2IYq73lFGIhgNbPhIfT9JA/edit",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "3",
+      "userId": "2",
+      "filename": "third file",
+      "url": "https://docs.google.com/document/d/1J8kUpMIXOk-M27HWzTo4Z2IYq73lFGIhgNbPhIfT9JA/edit",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    }
   ]
 }
