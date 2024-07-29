@@ -30,7 +30,7 @@ export default function GeneralHomeHeader({ month, year, id, users, members, pro
     }
 
     return (
-        <div>
+        <div className="generalhomeheader">
             {triedFetch ? isUserGotten ? (
                 <div>
                     <div>
