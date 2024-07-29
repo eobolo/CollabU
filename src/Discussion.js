@@ -9,6 +9,7 @@ export default function Discussion({ users }) {
     const [newMessage, setNewMessage] = useState("");
     // this group is the group number and the members is the members count
     const { id, year, month, group, members, project_name } = useParams();
+    console.log(project_name);
 
     useEffect(() => {
         if (!group) {
@@ -153,6 +154,7 @@ export default function Discussion({ users }) {
         const postNewComment = async (comment_data) => {
             try {
                 const data = await userAxios.post(`/comments/`, comment_data);
+                console.log(data);
             } catch (error) {
                 console.error("post unsuccessful 🥲");
             }
@@ -171,7 +173,7 @@ export default function Discussion({ users }) {
                 year={year}
                 month={month}
                 users={users}
-                member={members ? members : ""}
+                members={members ? members : ""}
                 project_name={project_name ? project_name : ""}
             />
             {group ? (
@@ -196,6 +198,7 @@ export default function Discussion({ users }) {
                                                     </div>
                                                     <div>
                                                         <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
+                                                        <span>📤</span>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -211,6 +214,7 @@ export default function Discussion({ users }) {
                                                     </div>
                                                     <div>
                                                         <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
+                                                        <span>📤</span>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -226,6 +230,7 @@ export default function Discussion({ users }) {
                                                     </div>
                                                     <div>
                                                         <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
+                                                        <span>📥</span>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -241,6 +246,7 @@ export default function Discussion({ users }) {
                                                     </div>
                                                     <div>
                                                         <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
+                                                        <span>📥</span>
                                                     </div>
                                                 </div>
                                                 <div>
@@ -252,7 +258,11 @@ export default function Discussion({ users }) {
                                 ))}
                             </div>
                         </div>
-                    ) : null}
+                    ) : (
+                        <div>
+                            No comment yet, start new discussion 📤
+                        </div>
+                    )}
                     <div>
                         <form onSubmit={handleSendMessage}>
                             <label htmlFor="comments"></label>
@@ -260,6 +270,7 @@ export default function Discussion({ users }) {
                                 id="comments"
                                 value={newMessage}
                                 onChange={(e) => { setNewMessage(e.currentTarget.value) }}
+                                required
                             >
                             </textarea>
                             <button
