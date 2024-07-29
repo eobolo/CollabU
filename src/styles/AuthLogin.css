@@ -1,0 +1,268 @@
+.login-auth-section {
+    width: 100%;
+    height: 100vh;
+    padding-left: 13rem;
+    /* margin-left: 5rem; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Old Styling */
+.login-forms-div {
+    width: 25%;
+    /* max-height: 100vh; */
+    /* display: flex;
+    flex-direction: column;
+    width: 70%;
+    min-height: 50rem;
+    align-items: center; */
+}
+
+.login-forms-div .login-success-form-msg,
+.login-forms-div .login-error-form-msg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 8rem;
+    text-align: center;
+}
+
+.login-forms-div .lord-icon-msg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5rem;
+    gap: 10px;
+}
+
+.login-forms-div .lord-icon-msg p {
+    font-size: 1.5rem;
+}
+
+lord-icon {
+    width: 50px;
+    max-width: 100%;
+    height: 50px;
+}
+
+.login-forms-div .login-success-search-msg,
+.login-forms-div .login-error-search-msg {
+    font-size: 1.2rem;
+}
+
+.login-forms-div .login-inner-success-text,
+.login-forms-div .login-inner-error-text {
+    color: #0c81bb;
+}
+
+form {
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-top: 3rem; */
+}
+
+.login-form-group {
+    min-width: 20rem;
+}
+
+/* .main-form .logo-image {
+    margin-top: 3rem;
+    animation: fadeInDown 1s ease-in-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.main-form .main-para {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    animation: fadeIn 1s ease-in-out;
+} */
+
+.login-form-group label,
+.login-form-group input {
+    display: block;
+}
+
+.login-form-group {
+    margin-bottom: 2rem;
+    animation: fadeInUp 1s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+form .msg {
+    margin: 3rem 0;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.login-error-msg {
+    color: #e50914;
+}
+
+.login-success-msg {
+    color: #0ca04a;
+}
+
+.login-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.login-title h1 {
+    font-size: 1.7rem;
+}
+
+.login-form-group label {
+    font-size: 1.2rem;
+}
+
+.login-form-group input {
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.5rem 0.3rem;
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.862);
+    outline: 0;
+    border-radius: 0.3rem;
+    /* border: none; */
+    border: 1px solid #5858583c;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.login-form-group input:hover {
+    border: 1px solid #0c81bb;
+}
+
+.login-form-group input:focus {
+    border: 1px solid #0c81bb;
+}
+
+.login-form-group select {
+    width: 100%;
+    margin-top: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    outline: none;
+    background-color: #0c81bb;
+    /* background-color: #36373bde; */
+    font-size: 1rem;
+    padding: 0.5rem 0.3rem;
+    color: #ffffff;
+}
+
+.login-form-group select:focus {
+    background-color: #36373B;
+    opacity: 0.9;
+}
+
+/* .no-focus input {
+    pointer-events: none;
+} */
+
+form .login-btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.login-btn .login-submit-btn {
+    padding: 0.9rem 2rem;
+    height: 44px;
+    width: 170px;
+    font-size: 1rem;
+    border-radius: 9px;
+    border: none;
+    color: #fff;
+    background-color: #0c81bb;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.login-btn .login-submit-btn i {
+    padding-left: 0.5rem;
+}
+
+.login-btn .login-submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+    z-index: 1;
+    transition: all 0.5s ease;
+    animation: slide 2s linear infinite;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.login-btn .login-submit-btn:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+
+@media (max-width: 480px) {
+    .login-forms-div .lord-icon-msg {
+        flex-direction: column;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .login-forms-div .lord-icon-msg p {
+        font-size: 1.2rem;
+    }
+
+    lord-icon {
+        width: 70px;
+        height: 70px;
+    }
+
+    .login-forms-div .login-success-search-msg,
+    .login-forms-div .login-error-search-msg {
+        font-size: 1rem;
+    }
+}

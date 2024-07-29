@@ -1,40 +1,56 @@
-import React from 'react'
+import './styles/AuthLogin.css'
 
-const AuthLogin = ( {signupSuccess, email, password, setEmail, setPassword, handleLogin, signinError} ) => {
+const AuthLogin = ({ signupSuccess, email, password, setEmail, setPassword, handleLogin, signinError }) => {
     return (
-        <section>
-            {signupSuccess ? (<p>
-                {signupSuccess}
-            </p>) : null}
-            {signinError ? (
-                <p>{signinError}</p>
-            ) : null}
-            <h1>Login Here :)</h1>
-            <form onSubmit={handleLogin}>
-                <p>
-                    <label htmlFor="email">email</label>
-                    <input
-                        id="email"
-                        type="text"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </p>
-                <p>
-                    <label htmlFor="password">password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </p>
-                <button
-                    type="submit"
-                >
-                    Login
-                </button>
-            </form>
+        <section className='login-auth-section'>
+            <div className='login-forms-div'>
+                {signupSuccess ? (
+                    <div className='login-success-form-msg login-success-msg'>
+                        <p>
+                            {signupSuccess}
+                        </p>
+                    </div>
+                ) : null}
+                {signinError ? (
+                    <div className='login-error-form-msg login-error-msg'>
+                        <p>{signinError}</p>
+                    </div>
+                ) : null}
+                <div className='login-title'>
+                    <h1>Login Here</h1>
+                </div>
+                <form onSubmit={handleLogin}>
+                    <div>
+                        <div className='login-form-group'>
+                            <label htmlFor="email">Email</label>
+                            <input
+                                id="email"
+                                type="text"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                        <div className='login-form-group'>
+                            <label htmlFor="password">Password</label>
+                            <input
+                                id="password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <div className='login-btn'>
+                            <button
+                                type="submit"
+                                className='login-submit-btn'
+                            >
+                                Login
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
         </section>
     );
 }
