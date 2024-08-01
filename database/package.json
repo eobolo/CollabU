@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "json-server --watch db.json --port 8080",
+    "build": "echo 'Build step not needed'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
