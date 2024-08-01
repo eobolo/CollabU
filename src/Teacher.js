@@ -1,5 +1,3 @@
-import GeneralHomeHeader from "./GeneralHomeHeader"
-
 const Teacher = () => {
     return (
         <main>
