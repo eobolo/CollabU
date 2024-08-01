@@ -9,7 +9,7 @@
       "month": "January",
       "year": "2022",
       "group": "",
-      "isLoggedin": false
+      "isLoggedin": true
     },
     {
       "id": "2",
@@ -130,15 +130,6 @@
               }
             },
             {
-              "id": "8",
-              "group8": {
-                "Project Name": "Excel's Project",
-                "Project Description": "A brief summary of an Art gallery showcase. Bringing art pieces to life again",
-                "usersId": [],
-                "length": 0
-              }
-            },
-            {
               "id": "9",
               "group9": {
                 "Project Name": "TedX Project",
@@ -157,32 +148,12 @@
               }
             },
             {
-              "id": "11",
-              "group11": {
-                "Project Name": "new group",
-                "Project Description": "testing group",
-                "usersId": [],
-                "length": 0
-              }
-            },
-            {
               "id": "12",
               "group12": {
                 "Project Name": "121th group",
                 "Project Description": "the champions group",
                 "usersId": [],
                 "length": 0
-              }
-            },
-            {
-              "id": "12",
-              "group12": {
-                "Project Name": "121th group",
-                "Project Description": "the champions group",
-                "usersId": [
-                  9
-                ],
-                "length": 1
               }
             },
             {
@@ -204,10 +175,46 @@
               }
             },
             {
-              "id": "10",
-              "group10": {
-                "Project Name": "Summative Group Work",
-                "Project Description": "My summative for the term",
+              "id": "11",
+              "group11": {
+                "Project Name": "Artefact Documentary",
+                "Project Description": "Artefact documentary for the May 2024 semester",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "14",
+              "group14": {
+                "Project Name": "New Artefact Documentary",
+                "Project Description": "testing group 14",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "15",
+              "group15": {
+                "Project Name": "Friday the 15th",
+                "Project Description": "THE FIFTEENTH GROUP",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "16",
+              "group16": {
+                "Project Name": "16TH",
+                "Project Description": "GROUP",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "17",
+              "group17": {
+                "Project Name": "17th group",
+                "Project Description": "17th is the lucky charm",
                 "usersId": [],
                 "length": 0
               }

@@ -183,7 +183,7 @@ export default function FileSharing({ users, appDropDown, handleAppDropDown, sho
                         )}
                     </div>
                 ) : (
-                    <div className='no-fileshared-section' onClick={handleAppDropDown}>
+                    <div className='discussion-no-comment-section' onClick={handleAppDropDown}>
                         User doesn't belong to any group. No files available.
                     </div>
                 )}
