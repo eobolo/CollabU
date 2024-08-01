@@ -375,8 +375,8 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
                         </div>
                     </div>
                 ) : (
-                    <div>
-                        User doesn't belong to any group, no comments
+                    <div className='discussion-no-comment-section'>
+                        User doesn't belong to any group. No comments found.
                     </div>
                 )}
             </section>

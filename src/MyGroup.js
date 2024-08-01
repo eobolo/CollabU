@@ -47,10 +47,12 @@ export default function MyGroup({ groups, setGroups, month, year, yearId, id, us
     const handleLeaveGroup = () => {
         const newgroups = { ...groups };
         const group = newgroups[year][monthObj[month] - 1][month];
+        console.log(group);
         const userId = parseInt(id);
         (myGroup[`group${loggedUser.group}`]["usersId"]).splice((myGroup[`group${loggedUser.group}`]["usersId"]).indexOf(userId), 1);
         myGroup[`group${loggedUser.group}`]["length"] = (myGroup[`group${loggedUser.group}`]["usersId"]).length;
-        group.splice(parseInt(loggedUser.group) - 1, 1, myGroup);
+        const groupIndex = group.findIndex((group) => group.id === loggedUser.group)
+        group.splice(groupIndex, 1, myGroup);
         newgroups[year][monthObj[month] - 1][month] = group;
 
         // changed user group to ""

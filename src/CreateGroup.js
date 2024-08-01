@@ -35,7 +35,8 @@ const CreateGroup = ({ groups, setGroups, month, year, yearId, id, users, setUse
         // Getting the new group ID for that intake Year and Month
         const newgroups = { ...groups };
         const groupArray = newgroups[year][monthObj[month] - 1][month];
-        const newId = groupArray.length ? parseInt(groupArray[groupArray.length - 1].id) + 1 : 1;
+        let newId = groupArray.length ? groupArray.reduce((accumulator, currentValue) => typeof accumulator === "number" ? parseInt(accumulator) > parseInt(currentValue.id) ? parseInt(accumulator) : parseInt(currentValue.id) : parseInt(accumulator.id) > parseInt(currentValue.id) ? parseInt(accumulator.id) : parseInt(currentValue.id), 0) : 0;
+        newId = parseInt(newId) + 1;
         const newGroup = `group${newId}`
         const newGroupObj = {
             id: `${newId}`,
