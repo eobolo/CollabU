@@ -1,0 +1,82 @@
+.mycreategroup-container {
+    width: inherit;
+    height: auto;
+    padding: 2% 0;
+    border-top: 1px solid #22212936;
+}
+
+
+.creategroup-items-fixed {
+    width: 100%;
+    min-height: 20rem;
+    display: flex;
+    flex-direction: row;
+    gap: 30%;
+    /* border: 1px solid #222129; */
+    align-items: center;
+    /* justify-content: space-between;
+    align-items: center; */
+    /* padding-bottom: 1rem; */
+    /* display: flex;
+    flex-direction: row;
+    justify-content: space-evenly; */
+}
+
+.creategroup-button-details {
+    margin-left: 5rem;
+    width: 20%;
+    height: 10rem;
+    /* background-color: aqua; */
+}
+
+.creategroup-button {
+    width: 20rem;
+    height: 3rem;
+    /* background: #222129; */
+    padding-left: 7%;
+    color: #0c81bb;
+    font-size: 1.3rem;
+    border: none;
+    border-radius: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center;
+    align-items: center; */
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.creategroup-button:hover {
+    color: #525251;
+}
+
+.creategroup-button:hover .fa-creategroup {
+    color: #5b5b5a;
+}
+
+.fa-creategroup {
+    font-size: 1.3rem;
+    color: #0c81bb;
+}
+
+.form-group textarea {
+    width: 100;
+    max-width: 100%;
+    min-width: 100%;
+    box-sizing: border-box;
+    height: auto;
+    min-height: 100px;
+    margin-top: 1.5rem;
+    padding: 10px;
+    font-size: 1rem;
+    resize: vertical;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.form-group textarea:focus {
+    border-color: #0c81bb;
+}

@@ -1,0 +1,129 @@
+.homepageheader-container {
+    width: 100%;
+    height: 100%;
+}
+
+.home-items-fixed {
+    width: inherit;
+    height: inherit;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    /* padding-bottom: 1rem; */
+    /* display: flex;
+    flex-direction: row;
+    justify-content: space-evenly; */
+}
+
+.home-logo-fixed {
+    margin-left: 5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.7rem;
+}
+
+.fa-icon-home {
+    padding-bottom: 0.4rem;
+    font-size: 1.2rem;
+}
+
+.dropdown {
+    width: 10rem;
+    position: relative;
+    margin-right: 3rem;
+    z-index: 1000;
+}
+
+.dropdown * {
+    box-sizing: border-box; 
+}
+
+.select {
+    /* position: fixed; */
+    background: #010409;
+    /* background: #2a2f3b; */
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px #2a2f3b solid;
+    border-radius: 0.5em;
+    padding: 1em;
+    cursor: pointer;
+    /* z-index: 1000; */
+    transition: background 0.3s;
+}
+
+/* Clicked styles */
+.select-clicked {
+    border: 2px #26489a solid;
+    box-shadow: 0 0 0.8em #26489a;
+}
+
+.select:hover {
+  background: #323741;  
+}
+
+.caret {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #fff;
+    transition: 0.3s;
+}
+
+/* Rotate styles (added later) */
+.caret-rotate {
+    transform: rotate(180deg);
+}
+
+.menu {
+    list-style: none;
+    padding: 0.2em 0.5em;
+    background: #323741;
+    border: 1px #363a43 solid;
+    box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.2);
+    border-radius: 0.5em;
+    color: #9fa5b5;
+    position: absolute;
+    top: 3em;
+    left: 50%;
+    width: 100%;
+    transform: translateX(-50%);
+    /* opacity: 0; */
+    /* display: none; */
+    transition: 0.2s;
+    z-index: 1;
+}
+
+.menu li {
+    padding: 0.7em 0.5em;
+    margin: 0.3em 0;
+    border-radius: 0.5em;
+    cursor: pointer;
+}
+
+.menu li:hover {
+    background: #2a2d35;
+}
+
+.menu li a {
+    text-decoration: none;
+    color: #fff;
+}
+
+/* Active styles (added later) */
+.actived {
+    background: #23242a;
+}
+
+/* Open styles (added later) */
+.menu-open {
+    display: block;
+    opacity: 1;
+}
+
