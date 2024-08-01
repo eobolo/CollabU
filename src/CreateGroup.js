@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import userAxios from './apis/userApi';
+import './styles/CreateGroup.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
 const CreateGroup = ({ groups, setGroups, month, year, yearId, id, users, setUsers }) => {
     const [showCreateGroup, setShowCreateGroup] = useState(false);
@@ -30,7 +33,7 @@ const CreateGroup = ({ groups, setGroups, month, year, yearId, id, users, setUse
     const handleShowCreateGroupSubmit = (e) => {
         e.preventDefault();
         // Getting the new group ID for that intake Year and Month
-        const newgroups = {...groups};
+        const newgroups = { ...groups };
         const groupArray = newgroups[year][monthObj[month] - 1][month];
         const newId = groupArray.length ? parseInt(groupArray[groupArray.length - 1].id) + 1 : 1;
         const newGroup = `group${newId}`
@@ -90,49 +93,57 @@ const CreateGroup = ({ groups, setGroups, month, year, yearId, id, users, setUse
     }
 
     return (
-        <div>
+        <>
             {isLoggedUserGotten ? loggedUser.group ? null : (
-                <button
-                    onClick={handleShowCreateGroup}
-                >Create Group
-                </button>
+                <div className='mycreategroup-container'>
+                    <div className='creategroup-items-fixed'>
+                        <div className='creategroup-button-details'>
+                            
+                            <div
+                                className='creategroup-button'
+                                onClick={handleShowCreateGroup}
+                            >Create Group<FontAwesomeIcon icon={faCirclePlus} className='fa-creategroup' />
+                            </div>
+                        </div>
+
+                        {showCreateGroup ? (
+                            <div className='forms-div'>
+                                <form action="" onSubmit={handleShowCreateGroupSubmit}>
+                                    <div className='form-group'>
+                                        <label htmlFor="">Project Name</label>
+                                        <input
+                                            type="text"
+                                            value={projectName}
+                                            onChange={(e) => { setProjectName(e.currentTarget.value) }}
+                                        />
+                                    </div>
+
+                                    <div className='form-group'>
+                                        <label htmlFor="">Project Description</label>
+                                        <textarea
+                                            name=""
+                                            id=""
+                                            value={projectDescription}
+                                            onChange={(e) => { setProjectDescription(e.currentTarget.value) }}
+                                        >
+
+                                        </textarea>
+                                    </div>
+                                    <div className='btn'>
+                                        <button type='submit' className='submit-btn'>Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        ) : null}
+
+                    </div>
+                </div>
             ) : (
                 <div>
                     Fetching user...
                 </div>
             )}
-            {showCreateGroup ? (
-                <div>
-                    <form action="" onSubmit={handleShowCreateGroupSubmit}>
-                        <div>
-                            <label htmlFor="">Project Name</label>
-                            <input
-                                type="text"
-                                value={projectName}
-                                onChange={(e) => { setProjectName(e.currentTarget.value) }}
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="">Project Description</label>
-                            <textarea
-                                name=""
-                                id=""
-                                value={projectDescription}
-                                onChange={(e) => { setProjectDescription(e.currentTarget.value) }}
-                            >
-
-                            </textarea>
-                        </div>
-
-                        <div>
-                            <button type='submit'>Submit</button>
-                        </div>
-                    </form>
-                </div>
-            ) : null}
-
-        </div>
+        </>
     )
 }
 

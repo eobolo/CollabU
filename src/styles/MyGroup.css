@@ -1,0 +1,165 @@
+.mygroup-container {
+    width: inherit;
+    height: auto;
+    padding: 2% 0;
+    border-top: 1px solid #22212936;
+}
+
+.group-items-fixed {
+    width: 100%;
+    min-height: 20rem;
+    display: flex;
+    flex-direction: row;
+    gap: 20%;
+    /* border: 1px solid #222129; */
+    align-items: center;
+    /* justify-content: space-between;
+    align-items: center; */
+    /* padding-bottom: 1rem; */
+    /* display: flex;
+    flex-direction: row;
+    justify-content: space-evenly; */
+}
+
+.mygroup-main-title {
+    position: relative;
+    top: 0%;
+    padding-top: 3rem;
+    padding-bottom: 1rem;
+    margin-left: 7%;
+    font-size: 1.7rem;
+    color: #7d7c79;
+    /* padding-top: 2%; */
+}
+
+.group-button-details {
+    margin-left: 5rem;
+    width: 20%;
+    height: 10rem;
+    /* background-color: aqua; */
+}
+
+.mygroup-button {
+    width: 20rem;
+    height: 3rem;
+    /* background: #222129; */
+    color: #222129;
+    font-size: 1.3rem;
+    border: 1px solid #222129;
+    border-radius: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.group-project-details {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.group-project-name p {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: #609257;
+}
+
+.group-project-title {
+    font-size: 48px;
+    text-transform: capitalize;
+    margin-top: 1%;
+}
+
+.group-project-description p {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: #609257;
+}
+
+.group-project-description-text {
+    margin-top: 1%;
+    line-height: 1.1;
+}
+
+.group-members-number {
+    color: #7d7c79;
+    display: flex;
+    flex-direction: row;
+    gap: 1%;
+}
+
+.group-members-names {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.group-members-names-div {
+    background: #609257;
+    color: #fff;
+    border-radius: 1rem;
+    padding: 1.5%;
+    font-size: 0.9rem;
+}
+
+.group-members-fullname {
+    text-transform: capitalize;
+}
+
+.mygroup-btn {
+    display: flex;
+    justify-content: flex-end;
+    width: 95%;
+    margin-top: 1.5rem;
+}
+
+.mygroup-submit-btn {
+    padding: 0.9rem 2rem;
+    height: 44px;
+    min-width: 30%;
+    font-size: 1rem;
+    border-radius: 9px;
+    border: none;
+    color: #fff;
+    background-color: #e24000;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.mygroup-submit-btn i {
+    padding-left: 0.5rem;
+}
+
+.mygroup-submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+    z-index: 1;
+    transition: all 0.5s ease;
+    animation: slide 2s linear infinite;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.mygroup-submit-btn:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.8);
+}

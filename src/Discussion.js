@@ -1,15 +1,26 @@
 import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import GeneralHomeHeader from './GeneralHomeHeader';
+import './styles/Disscussion.css';
 import userAxios from './apis/userApi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
-export default function Discussion({ users }) {
+export default function Discussion({ users, appDropDown, handleAppDropDown, showDropDown, handleShowDropDown }) {
     const [userGroupComments, setUserGroupComments] = useState([]);
     const [commentExist, setCommentExist] = useState(false);
     const [newMessage, setNewMessage] = useState("");
+    const [prevLength, setPrevLength] = useState(0);
+    const [animation, setAnimation] = useState(false);
+    const [animationToUse, setAnimationToUse] = useState("fixed");
+    const [lastScroll, setLastScroll] = useState(null);
+    const textareaRef = useRef(null);
+    const lastDiv = useRef(null);
+
     // this group is the group number and the members is the members count
     const { id, year, month, group, members, project_name } = useParams();
-    console.log(project_name);
+    const title = "Discussions";
 
     useEffect(() => {
         if (!group) {
@@ -59,8 +70,9 @@ export default function Discussion({ users }) {
                                 return 0;
                             }
                         })
+
                         setUserGroupComments(groupComments);
-                        setCommentExist(true);
+                        setCommentExist(true)
                     } else {
                         setUserGroupComments([]);
                         setCommentExist(false);
@@ -79,8 +91,7 @@ export default function Discussion({ users }) {
         return () => {
             clearInterval(intervalId);
         }
-
-    }, [group, year, month]);
+    }, [group, year, month, prevLength]);
 
     const handleSendMessage = (e) => {
         e.preventDefault();
@@ -97,10 +108,10 @@ export default function Discussion({ users }) {
             const hours = String(date.getHours()).padStart(2, '0'); // 24-hour format
             const minutes = String(date.getMinutes()).padStart(2, '0');
             const seconds = String(date.getSeconds()).padStart(2, '0');
-        
+
             return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
         };
-        
+
         const dateObject = formatDate(date_created);
         const new_message = {
             id: `${newId}`,
@@ -166,126 +177,209 @@ export default function Discussion({ users }) {
         setNewMessage("");
     }
 
+    const handleInputChange = (event) => {
+        setNewMessage(event.currentTarget.value);
+        autoResizeTextarea();
+    };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            if (newMessage === "") {
+                return
+            }
+            handleSendMessage(event);
+            // Handle send message
+            setNewMessage('');
+        }
+    };
+
+    const autoResizeTextarea = () => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    };
+
+    useEffect(() => {
+        if (lastDiv.current) {
+            if (userGroupComments.length > prevLength) {
+                lastDiv.current.scrollIntoView({ behavior: "smooth" });
+                setPrevLength(userGroupComments.length);
+            } else {
+                //do nothing
+            }
+        }
+    }, [userGroupComments,prevLength]);
+
+    const handleScrollAction = (e) => {
+        const percentage = 90;
+        const discussionSectionHeight = e.currentTarget.clientHeight;
+        const discussionSectionScrollTop = e.currentTarget.scrollTop;
+        const checkHeight = ((percentage / 100) * (parseInt(discussionSectionHeight)));
+        console.log(discussionSectionHeight);
+        console.log(checkHeight);
+        console.log(animationToUse);
+        if (checkHeight >= discussionSectionScrollTop) {
+            setAnimation(true);
+            setAnimationToUse("slidein");
+            setLastScroll(discussionSectionScrollTop);
+        } else {
+            if (!lastScroll) {
+                setAnimationToUse("fixed");
+            } else {
+                setAnimation(true);
+                setAnimationToUse("slideout");
+            }
+        }
+    }
+
     return (
-        <div>
-            <GeneralHomeHeader
-                id={id}
-                year={year}
-                month={month}
-                users={users}
-                members={members ? members : ""}
-                project_name={project_name ? project_name : ""}
-            />
-            {group ? (
-                <div>
-                    {commentExist ? (
-                        <div>
-                            <div>
-                                <div>{month} {year}</div>
-                                <div>Group {group}</div>
-                                <div>{project_name}</div>
-                                <div>members {members}</div>
-                            </div>
-                            <div>
-                                {userGroupComments.map((comment, index, arr) => (
-                                    <div key={comment.id}>
-                                        {id === comment.userId ? arr.length - 1 === index ? (
-                                            <div className='right' aria-live='assertive'>
-                                                <div>
-                                                    <div>
-                                                        <span>{(users.find((user) => user.id === comment.userId)).first_name}</span>
-                                                        <span>{(users.find((user) => user.id === comment.userId)).last_name}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
-                                                        <span>📤</span>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    {comment.text}
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className='right'>
-                                                <div>
-                                                    <div>
-                                                        <span>{(users.find((user) => user.id === comment.userId)).first_name}</span>
-                                                        <span>{(users.find((user) => user.id === comment.userId)).last_name}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
-                                                        <span>📤</span>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    {comment.text}
-                                                </div>
-                                            </div>
-                                        ) : arr.length - 1 === index ? (
-                                            <div className='left' aria-live='assertive'>
-                                                <div>
-                                                    <div>
-                                                        <span>{(users.find((user) => user.id === comment.userId)).first_name}</span>
-                                                        <span>{(users.find((user) => user.id === comment.userId)).last_name}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
-                                                        <span>📥</span>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    {comment.text}
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div className='left'>
-                                                <div>
-                                                    <div>
-                                                        <span>{(users.find((user) => user.id === comment.userId)).first_name}</span>
-                                                        <span>{(users.find((user) => user.id === comment.userId)).last_name}</span>
-                                                    </div>
-                                                    <div>
-                                                        <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
-                                                        <span>📥</span>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    {comment.text}
-                                                </div>
-                                            </div>
-                                        )}
+        <main>
+            <section>
+                <div className='fixed-homepage-header'>
+                    <GeneralHomeHeader
+                        id={id}
+                        title={title}
+                        year={year}
+                        month={month}
+                        users={users}
+                        members={members ? members : ""}
+                        project_name={project_name ? project_name : ""}
+                        appDropDown={appDropDown}
+                        showDropDown={showDropDown}
+                        handleShowDropDown={handleShowDropDown}
+                    />
+                </div>
+                {group ? (
+                    <div className='discussion-groups-container' onClick={handleAppDropDown}>
+                        {commentExist ? (
+                            <div className='discussion-section'>
+                                <div className='discussion-group-title'>
+                                    <div className='discussion-project-name'>{project_name}</div>
+                                    <div className='discussion-project-details'>
+                                        <div>{month} {year}</div>
+                                        <FontAwesomeIcon icon={faCircle} className='fa-project-circle' />
+                                        <div>Group {group}</div>
+                                        <FontAwesomeIcon icon={faCircle} className='fa-project-circle' />
+                                        <div>{members} members</div>
                                     </div>
-                                ))}
+                                    <div className='discussion-project-chat'>Chat</div>
+                                </div>
+                                <div className='discussion-comment-section' onScroll={handleScrollAction}>
+                                    {userGroupComments?.map((comment, index, arr) => (
+                                        <div key={comment.id} className='comment-main-box'>
+                                            {id === comment.userId ? arr.length - 1 === index ? (
+                                                <div className='comment-right'>
+                                                    <div className='comment-flex-right'>
+                                                        <div className='comment-right-top'>
+                                                            <div className='comment-top-names'>
+                                                                <span>{((users.find((user) => user.id === comment.userId)).first_name).toLowerCase()}</span>
+                                                                <span>{((users.find((user) => user.id === comment.userId)).last_name).toLowerCase()}</span>
+                                                            </div>
+                                                            <div className='comment-top-date'>
+                                                                <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className='comment-right-text' ref={lastDiv}>
+                                                            {comment.text}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className='comment-right'>
+                                                    <div className='comment-flex-right'>
+                                                        <div className='comment-right-top'>
+                                                            <div className='comment-top-names'>
+                                                                <span>{((users.find((user) => user.id === comment.userId)).first_name).toLowerCase()}</span>
+                                                                <span>{((users.find((user) => user.id === comment.userId)).last_name).toLowerCase()}</span>
+                                                            </div>
+                                                            <div className='comment-top-date'>
+                                                                <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className='comment-right-text'>
+                                                            {comment.text}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : arr.length - 1 === index ? (
+                                                <div className='comment-left'>
+                                                    <div className='comment-flex-left'>
+                                                        <div className='comment-left-top'>
+                                                            <div className='comment-top-names'>
+                                                                <span>{((users.find((user) => user.id === comment.userId)).first_name).toLowerCase()}</span>
+                                                                <span>{((users.find((user) => user.id === comment.userId)).last_name).toLowerCase()}</span>
+                                                            </div>
+                                                            <div className='comment-top-date'>
+                                                                <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className='comment-left-text' ref={lastDiv}>
+                                                            {comment.text}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className='comment-left'>
+                                                    <div className='comment-flex-left'>
+                                                        <div className='comment-left-top'>
+                                                            <div className='comment-top-names'>
+                                                                <span>{((users.find((user) => user.id === comment.userId)).first_name).toLowerCase()}</span>
+                                                                <span>{((users.find((user) => user.id === comment.userId)).last_name).toLowerCase()}</span>
+                                                            </div>
+                                                            <div className='comment-top-date'>
+                                                                <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className='comment-left-text'>
+                                                            {comment.text}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                    <div className={animation ? animationToUse : animationToUse} onClick={() => {lastDiv.current.scrollIntoView({behavior: 'smooth'})}}>
+                                        <p>Jump to bottom</p>
+                                    </div>
+                                </div>
                             </div>
+                        ) : (
+                            <div className='discussion-no-comment-section'>
+                                No comment yet. Start new discussion 📤
+                            </div>
+                        )}
+                        <div className='discussion-message-box chat-input-container'>
+                            <form onSubmit={handleSendMessage} className='discussion-message-form'>
+                                <label htmlFor="comments"></label>
+                                <textarea
+                                    id="comments"
+                                    className="chat-textarea"
+                                    value={newMessage}
+                                    onChange={handleInputChange}
+                                    ref={textareaRef}
+                                    onKeyPress={handleKeyPress}
+                                    placeholder="Type your message..."
+                                    rows="1"
+                                    required
+                                >
+                                </textarea>
+                                <button
+                                    className='discussion-message-btn send-button'
+                                    type='submit'
+                                >
+                                    <FontAwesomeIcon icon={faPaperPlane} className='send-button-icon' />
+                                </button>
+                            </form>
                         </div>
-                    ) : (
-                        <div>
-                            No comment yet, start new discussion 📤
-                        </div>
-                    )}
-                    <div>
-                        <form onSubmit={handleSendMessage}>
-                            <label htmlFor="comments"></label>
-                            <textarea
-                                id="comments"
-                                value={newMessage}
-                                onChange={(e) => { setNewMessage(e.currentTarget.value) }}
-                                required
-                            >
-                            </textarea>
-                            <button
-                                type='submit'
-                            >
-                                make message
-                            </button>
-                        </form>
                     </div>
-                </div>
-            ) : (
-                <div>
-                    User doesn't belong to any group, no comments
-                </div>
-            )}
-        </div>
+                ) : (
+                    <div>
+                        User doesn't belong to any group, no comments
+                    </div>
+                )}
+            </section>
+        </main>
     )
 }
