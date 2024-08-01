@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "json-server --watch db.json --port 8080",
+    "start": "node index.js",
     "build": "echo 'Build step not needed'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
