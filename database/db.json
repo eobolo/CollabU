@@ -8,8 +8,8 @@
       "password": "12345",
       "month": "January",
       "year": "2022",
-      "group": "8",
-      "isLoggedin": true
+      "group": "",
+      "isLoggedin": false
     },
     {
       "id": "2",
@@ -134,10 +134,8 @@
               "group8": {
                 "Project Name": "Excel's Project",
                 "Project Description": "A brief summary of an Art gallery showcase. Bringing art pieces to life again",
-                "usersId": [
-                  1
-                ],
-                "length": 1
+                "usersId": [],
+                "length": 0
               }
             },
             {
@@ -188,10 +186,10 @@
               }
             },
             {
-              "id": "13",
-              "group13": {
-                "Project Name": "sdfgh",
-                "Project Description": "asdfghj",
+              "id": "8",
+              "group8": {
+                "Project Name": "Excel's Project",
+                "Project Description": "A brief summary of an Art gallery showcase. Bringing art pieces to life again",
                 "usersId": [],
                 "length": 0
               }
