@@ -168,7 +168,7 @@ export default function FileSharing({ users, appDropDown, handleAppDropDown, sho
                                             <span>{((users.find((user) => user.id === fileshared.userId)).last_name).toLowerCase()}</span>
                                         </div>
                                         <div className='fileshared-icon'>
-                                            <a href={fileshared.url} target='_blank'><PlayOnce /></a>
+                                            <a href={fileshared.url} target='_blank' rel="noreferrer"><PlayOnce /></a>
                                         </div>
                                         <div className='fileshared-name'>
                                             <p>{(fileshared.filename).length > sliceLength ? `${(fileshared.filename).slice(0, sliceLength)}...` : fileshared.filename}</p>
@@ -178,7 +178,7 @@ export default function FileSharing({ users, appDropDown, handleAppDropDown, sho
                             </div>
                         ) : (
                             <div className='no-fileshared-section'>
-                                No files shared yet, share file 📂
+                                No files shared yet. Share file 📂
                             </div>
                         )}
                     </div>
