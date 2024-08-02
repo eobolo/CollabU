@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import userAxios from './apis/userApi';
+import './styles/AllGroup.css'
 
 export default function AllGroup({ groups, setGroups, month, year, yearId, id, users, setUsers }) {
     const [allGroups, setAllGroups] = useState([]);
@@ -8,6 +9,7 @@ export default function AllGroup({ groups, setGroups, month, year, yearId, id, u
     const [isLoggedUserGotten, setIsLoggedUserGotten] = useState(false);
     const [showEachGroupDetail, setShowEachGroupDetail] = useState(false);
     const [divToDisplay, setDivToDisplay] = useState("");
+    const [prevDivToDisplay, setPrevDivToDisplay] = useState("");
 
     const monthObj = {
         "January": 1,
@@ -47,18 +49,31 @@ export default function AllGroup({ groups, setGroups, month, year, yearId, id, u
 
     const handleShowEachGroupDetail = (groupId) => {
         if (showEachGroupDetail) {
-            setShowEachGroupDetail(false);
-            setDivToDisplay("");
+            if (groupId === prevDivToDisplay) {
+                setShowEachGroupDetail(false);
+                setDivToDisplay("");
+                setPrevDivToDisplay(groupId);
+            } else {
+                setShowEachGroupDetail(true);
+                setDivToDisplay(groupId);
+                setPrevDivToDisplay(groupId);
+            }
         } else {
             setShowEachGroupDetail(true);
             setDivToDisplay(groupId);
+            setPrevDivToDisplay(groupId);
         }
     }
 
-    const handleJoinClickedGroup = (groupId) => {
-        allGroups[groupId - 1][`group${groupId}`]["usersId"].push(parseInt(id));
-        allGroups[groupId - 1][`group${groupId}`]["length"] = (allGroups[groupId - 1][`group${groupId}`]["usersId"]).length
-        const newgroups = {...groups};
+    const handleJoinClickedGroup = (group_id) => {
+        const groupId = parseInt(group_id);
+        let groupIndex;
+        const arrayToCheck = groups[year][monthObj[month] - 1][month];
+        groupIndex = arrayToCheck.findIndex((element) => parseInt(element.id) === groupId) + 1;
+        console.log(groupIndex);              
+        allGroups[groupIndex - 1][`group${groupId}`]["usersId"].push(parseInt(id));
+        allGroups[groupIndex - 1][`group${groupId}`]["length"] = (allGroups[groupIndex - 1][`group${groupId}`]["usersId"]).length
+        const newgroups = { ...groups };
         newgroups[year][monthObj[month] - 1][month] = allGroups;
 
         // changed user group to `${groupId}`
@@ -104,43 +119,54 @@ export default function AllGroup({ groups, setGroups, month, year, yearId, id, u
     }
 
     return (
-        <div>
+        <>
+            <div className='allgroup-main-title'>
+                <p>All Groups</p>
+            </div>
             {isAllGroupGotten && isLoggedUserGotten ? (
-                <div>
+                <div className='allgroup-container'>
                     {allGroups.map((eachGroup) => (
-                        <div key={eachGroup.id}>
-                            <button
-                                type='button'
-                                id={eachGroup.id}
-                                onClick={(e) => handleShowEachGroupDetail(e.currentTarget.id)}
-                            >
-                                {`Group ${eachGroup.id}`}
-                            </button>
+                        <div key={eachGroup.id} className='allgroup-items-fixed'>
+                            <div className='allgroup-button-details'>
+                                <div
+                                    style={showEachGroupDetail && eachGroup.id ===  divToDisplay?
+                                        {
+                                            background: '#609257',
+                                            color: '#fff'
+                                        } : {}}
+                                    className='allgroup-button'
+                                    type='button'
+                                    id={eachGroup.id}
+                                    onClick={(e) => handleShowEachGroupDetail(e.currentTarget.id)}
+                                >
+                                    {`Group ${eachGroup.id}`}
+                                </div>
+                            </div>
                             {showEachGroupDetail && (divToDisplay === eachGroup.id) ? (
-                                <div>
-                                    <div>
+                                <div className='group-project-details'>
+                                    <div className='group-project-name'>
                                         <p>Project Name:</p>
-                                        <div>{eachGroup[`group${eachGroup.id}`]["Project Name"]}</div>
+                                        <div className='group-project-title'>{eachGroup[`group${eachGroup.id}`]["Project Name"]}</div>
                                     </div>
-                                    <div>
+                                    <div className='group-project-description'>
                                         <p>Project Description:</p>
-                                        <div>{eachGroup[`group${eachGroup.id}`]["Project Description"]}</div>
+                                        <div className='group-project-description-text'>{eachGroup[`group${eachGroup.id}`]["Project Description"]}</div>
                                     </div>
-                                    <div>
-                                        <p>People:</p>
+                                    <div className='group-members-number'>
                                         <div>{eachGroup[`group${eachGroup.id}`]["length"]}</div>
+                                        <p>{eachGroup[`group${eachGroup.id}`]["length"] === 1 ? 'Member' : 'Members'}</p>
                                     </div>
-                                    <div>
-                                        <p>Members:</p>
+                                    <div className='group-members-names'>
                                         {(users.filter((user) => user.group === `${eachGroup.id}` && user.month === month && user.year === year)).map((user) => (
-                                            <div key={user.id}>
-                                                <p>{user.first_name} {user.last_name}</p>
+                                            <div key={user.id} className='group-members-names-div'>
+                                                <p className='group-members-fullname'>{(user.first_name).toLowerCase()} {(user.last_name).toLowerCase()}</p>
                                             </div>
                                         ))}
                                     </div>
-                                    <div>
+                                    <div className='allgroup-btn'>
                                         {!((loggedUser.group !== eachGroup.id) && (loggedUser.group !== "")) ? !(loggedUser.group === eachGroup.id) ? (
                                             <button
+                                                className='allgroup-submit-btn'
                                                 type='button'
                                                 name={eachGroup.id}
                                                 onClick={(e) => handleJoinClickedGroup(e.currentTarget.name)}
@@ -148,17 +174,22 @@ export default function AllGroup({ groups, setGroups, month, year, yearId, id, u
                                                 {`Join Group ${eachGroup.id}`}
                                             </button>
                                         ) : (
-                                            <p>This is your Group 😁</p>
+                                            <div className='group-notification'>
+                                                <p>This is your Group 😁</p>
+                                            </div>
                                         ) : (
-                                            <p>This not your Group 😿</p>
+                                            <div className='group-notification'>
+                                                <p>This not your Group 😿</p>
+                                            </div>
                                         )}
                                     </div>
                                 </div>
                             ) : null}
                         </div>
                     ))}
-                </div>
-            ) : null}
-        </div>
+                </div >
+            ) : null
+            }
+        </>
     );
 }

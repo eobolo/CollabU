@@ -1,12 +1,13 @@
 header {
-    width: 100%;
+    /* width: 100%;
     height: 100vh;
-    background: #323338;
+    background: #323338; */
     /* background: #e2e9f7; */
 }
 
 nav {
-    width: 250px;
+    width: 15%;
+    min-width: 190px;
     height: 100%;
     background: #1e1f23;
     /* background: #0d74f5; */
@@ -14,11 +15,12 @@ nav {
     top: 0;
     left: 0;
     padding: 20px 30px;
+    z-index: 2000;
 }
 
 .logo {
     display: block;
-    margin-bottom: 130px;
+    margin-bottom: 100px;
 }
 
 .logo-img {
@@ -37,7 +39,7 @@ nav {
 .nav-list li a {
     color: #fff;
     text-decoration: none;
-    padding: 10px 14px;
+    padding: 5px 14px;
     display: flex;
     align-items: center;
 }
@@ -47,23 +49,52 @@ nav {
     margin-right: 1rem;
 }
 
+.logout-div {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 14px;
+    display: flex;
+    align-items: center;
+}
+
+.fa-logout-icon {
+    font-size: 22px;
+    /* color: #fff; */
+    margin-right: 1rem;
+    /* padding-left: 14px; */
+}
+
 .active {
-   background: #fff;
+   background: #4c4c4c;
    width: 100%;
-   height: 47px;
+   height: 45px;
    position: absolute;
    left: 0;
    top: 2.6%;
    z-index: -1;
-   border-radius: 6px;
-   box-shadow: 0 5px 10px rgba(255, 255, 255, 0.4); 
+   border-radius: 10px;
+   /* box-shadow: 0 5px 10px rgba(255, 255, 255, 0.4);  */
    display: none;
    transition: top 0.5s;
 }
 
+.nav-links1 p {
+    margin-left: 2%;
+}
+
+.nav-links3 p {
+    margin-left: 6%;
+}
+
 .nav-list li:hover a {
-    color: #0d74f5;
+    color: #fff;
     transition: 0.3s;
+}
+
+.logout-div:hover {
+    color: #fff;
+    transition: 0.3s;
+    cursor: pointer;
 }
 
 .nav-list li:hover ~ .active {
@@ -71,11 +102,23 @@ nav {
 }
 
 .nav-list li:nth-child(1):hover ~ .active {
-    top: 2.6%;
+    top: 1%;
 }
 
 .nav-list li:nth-child(2):hover ~ .active {
-    top: 42.6%;
+    top: 20.6%;
+}
+
+.nav-list li:nth-child(3):hover ~ .active {
+    top: 40.6%;
+}
+
+.nav-list li:nth-child(4):hover ~ .active {
+    top: 60.6%;
+}
+
+.nav-list li:nth-child(5):hover ~ .active {
+    top: 80.6%;
 }
 
 .logo-sm-icon {
@@ -86,6 +129,13 @@ nav {
 @media only screen and (max-width: 600px) {
     nav {
         width: 110px;
+    }
+
+    .logo {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
     }
 
     .logo-sm-icon {
@@ -100,11 +150,23 @@ nav {
         display: none;
     }
 
+    .nav-list li p {
+        display: none;
+    }
+
     .nav-list li a i {
         margin-right: 0;
     }
 
     .nav-list li a {
         justify-content: center;
+    }
+
+    .logout-div {
+        justify-content: center; 
+    }
+
+    .logout-div {
+        margin-right: 0;
     }
 }

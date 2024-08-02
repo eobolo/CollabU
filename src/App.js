@@ -6,6 +6,8 @@ import AuthLogin from './AuthLogin';
 import AuthSignUp from './AuthSignUp';
 import Discussion from './Discussion';
 import FileSharing from './FileSharing';
+import Teacher from './Teacher';
+import Insights from './Insights';
 import { useState, useEffect } from 'react';
 import userAxios from './apis/userApi';
 
@@ -25,6 +27,8 @@ function App() {
   const [users, setUsers] = useState([]);
   const [authUser, setAuthUser] = useState([]);
   const [isUsersGotten, setIsUserGotten] = useState(false);
+  const [appDropDown, setAppDropDown] = useState(false);
+  const [showDropDown, setShowDropDown] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -174,6 +178,24 @@ function App() {
     setUsers(newUserData);
     setPassword('');
     setEmail('');
+    setSigninError('');
+  }
+  
+  const handleShowDropDown = () => {
+    if (showDropDown) {
+        setShowDropDown(false);
+    } else {
+        setShowDropDown(true);
+        setAppDropDown(true);
+    }
+  }
+  const handleAppDropDown = () => {
+    if (showDropDown) {
+        setAppDropDown(false);
+        setShowDropDown(false);
+    } else {
+        setAppDropDown(true);
+    }
   }
 
   return (
@@ -191,15 +213,29 @@ function App() {
           <Routes>
             <Route path="/" element={<AuthLogin signupSuccess={signupSuccess} email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} signinError={signinError} />} />
             <Route path="/signup" element={<AuthSignUp first_name={first_name} last_name={last_name} email={email} setIntakeMonth={setIntakeMonth} password={password} setFirstName={setFirstName} setLastName={setLastName} setEmail={setEmail} setIntakeYear={setIntakeYear} setPassword={setPassword} signupError={signupError} handleSignUp={handleSignUp} verifyPassword={verifyPassword} setVerifyPassword={setVerifyPassword} />} />
+            <Route path="/teacher" element={<Teacher />} />
+            <Route path="/insights" element={<Insights />} />
             <Route path="/home/:id/:year/:month" element={<Homepage
               users={users}
               setUsers={setUsers}
+              appDropDown={appDropDown}
+              handleAppDropDown={handleAppDropDown}
+              showDropDown={showDropDown}
+              handleShowDropDown={handleShowDropDown}
             />} />
             <Route path="/discussions/:id/:year/:month/:group?/:members?/:project_name?" element={<Discussion
               users={users}
+              appDropDown={appDropDown}
+              handleAppDropDown={handleAppDropDown}
+              showDropDown={showDropDown}
+              handleShowDropDown={handleShowDropDown}
             />} />
             <Route path="/filesharing/:id/:year/:month/:group?/:members?/:project_name?" element={<FileSharing
               users={users}
+              appDropDown={appDropDown}
+              handleAppDropDown={handleAppDropDown}
+              showDropDown={showDropDown}
+              handleShowDropDown={handleShowDropDown}
             />} />
           </Routes>
         ) : <div>

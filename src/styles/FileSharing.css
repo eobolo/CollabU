@@ -1,0 +1,227 @@
+.filesharing-container {
+    width: 100%;
+    /* height: 100vh; */
+    display: flex;
+    flex-direction: column;
+    padding-top: 10rem;
+    padding-left: 15rem;
+    /* padding-top: 10rem; */
+    /* flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+}
+
+.fileshared-section {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    flex-wrap: wrap;
+    margin-left: 20%;
+    /* padding-right: 10%; */
+    gap: 3rem;
+}
+
+.fileshared-icon {
+    cursor: pointer;
+}
+
+.fileshared-name p {
+    text-align: center;
+    color: #333;
+}
+
+.no-fileshared-section {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    margin-left: 15%;
+    padding-right: 10%;
+}
+
+/* Dropdown */
+.files-dropdown {
+    width: 10rem;
+    position: relative;
+    top: -3rem;
+    left: 45%;
+    z-index: 1000;
+}
+
+.dropdown * {
+    box-sizing: border-box; 
+}
+
+.select {
+    /* position: fixed; */
+    background: #010409;
+    /* background: #2a2f3b; */
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px #2a2f3b solid;
+    border-radius: 0.5em;
+    padding: 1em;
+    cursor: pointer;
+    /* z-index: 1000; */
+    transition: background 0.3s;
+}
+
+/* Clicked styles */
+.select-clicked {
+    border: 2px #26489a solid;
+    box-shadow: 0 0 0.8em #26489a;
+}
+
+.select:hover {
+  background: #323741;  
+}
+
+.file-caret {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #fff;
+    transition: 0.3s;
+}
+
+/* Rotate styles (added later) */
+.file-caret-rotate {
+    transform: rotate(180deg);
+}
+
+.files-menu {
+    list-style: none;
+    padding: 0.2em 0.5em;
+    background: #323741;
+    border: 1px #363a43 solid;
+    box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.2);
+    border-radius: 0.5em;
+    color: #9fa5b5;
+    position: absolute;
+    top: 3em;
+    left: 50%; /*Open to fix*/
+    width: 215%; /*Open to fix*/
+    transform: translateX(-50%);
+    /* opacity: 0; */
+    /* display: none; */
+    transition: 0.2s;
+    z-index: 1;
+}
+
+.files-menu .files-forms-div {
+    width: 100%;
+    padding: 0.7em 0.5em;
+    margin: 1em 0;
+    border-radius: 0.5em;
+}
+
+/* .files-menu .files-forms-div:hover {
+    background: #2a2d35;
+} */
+
+/* Active styles (added later) */
+.actived {
+    background: #23242a;
+}
+
+/* Open styles (added later) */
+.menu-open {
+    display: block;
+    opacity: 1;
+}
+
+/* Old Styling */
+
+.files-form-group {
+    min-width: 20rem;
+    margin-bottom: 2rem;
+}
+
+.files-form-group label,
+.files-form-group input {
+    display: block;
+}
+
+.form-group label {
+    font-size: 1.2rem;
+}
+
+.files-form-group input {
+    width: 95%;
+    margin: 0.5rem 0;
+    padding: 0.5rem 0.3rem;
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.862);
+    outline: 0;
+    border-radius: 0.3rem;
+    /* border: none; */
+    border: 1px solid #5858583c;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.files-form-group input:hover {
+    border: 1px solid #0c81bb;
+}
+
+.files-form-group input:focus {
+    border: 1px solid #0c81bb;
+}
+
+form .files-btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.files-btn .files-submit-btn {
+    padding: 0.9rem 2rem;
+    height: 44px;
+    width: 80%;
+    font-size: 1rem;
+    border-radius: 9px;
+    border: none;
+    color: #fff;
+    background-color: #0c81bb;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.files-btn .files-submit-btn i {
+    padding-left: 0.5rem;
+}
+
+.files-btn .files-submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+    z-index: 1;
+    transition: all 0.5s ease;
+    animation: slide 2s linear infinite;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.files-btn .files-submit-btn:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.8);
+}

@@ -76,6 +76,39 @@
       "year": "2023",
       "group": "",
       "isLoggedin": true
+    },
+    {
+      "id": "8",
+      "first_name": "JOY",
+      "last_name": "OFFERE",
+      "email": "j.offere@alustudent.com",
+      "password": "12345",
+      "month": "January",
+      "year": "2023",
+      "group": "",
+      "isLoggedin": false
+    },
+    {
+      "id": "9",
+      "first_name": "JOY",
+      "last_name": "OFFERE",
+      "email": "j.offere@alustudentt.com",
+      "password": "12345",
+      "month": "January",
+      "year": "2022",
+      "group": "8",
+      "isLoggedin": true
+    },
+    {
+      "id": "10",
+      "first_name": "JOHN",
+      "last_name": "ASAPH",
+      "email": "e.asaph@alustudentt.com",
+      "password": "12345",
+      "month": "January",
+      "year": "2022",
+      "group": "1",
+      "isLoggedin": true
     }
   ],
   "groups": [
@@ -87,55 +120,101 @@
             {
               "id": "1",
               "group1": {
-                "Project Name": "first project",
-                "Project Description": "testing the group",
+                "Project Name": "First project",
+                "Project Description": "Testing the first group. Wroking and ready to accept new members",
                 "usersId": [
-                  2
+                  2,
+                  10
                 ],
-                "length": 1
+                "length": 2
               }
             },
             {
-              "id": "2",
-              "group2": {
-                "Project Name": "second group",
-                "Project Description": "testing second group",
+              "id": "9",
+              "group9": {
+                "Project Name": "TedX Project",
+                "Project Description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 'What If...? is here again!'",
                 "usersId": [],
                 "length": 0
               }
             },
             {
-              "id": "3",
-              "group3": {
-                "Project Name": "third project group",
-                "Project Description": "testing third project group and this is beyond awesome.",
+              "id": "10",
+              "group10": {
+                "Project Name": "Summative Group Work",
+                "Project Description": "My summative for the term",
                 "usersId": [],
                 "length": 0
               }
             },
             {
-              "id": "4",
-              "group4": {
-                "Project Name": "the fourth group",
-                "Project Description": "july 27th",
+              "id": "12",
+              "group12": {
+                "Project Name": "121th group",
+                "Project Description": "the champions group",
                 "usersId": [],
                 "length": 0
               }
             },
             {
-              "id": "5",
-              "group5": {
-                "Project Name": "new group",
-                "Project Description": "this is a group 5",
+              "id": "8",
+              "group8": {
+                "Project Name": "Excel's Project",
+                "Project Description": "A brief summary of an Art gallery showcase. Bringing art pieces to life again",
                 "usersId": [],
                 "length": 0
               }
             },
             {
-              "id": "6",
-              "group6": {
-                "Project Name": "the real nigga challenge",
-                "Project Description": "group6",
+              "id": "13",
+              "group13": {
+                "Project Name": "sdfgh",
+                "Project Description": "asdfghj",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "11",
+              "group11": {
+                "Project Name": "Artefact Documentary",
+                "Project Description": "Artefact documentary for the May 2024 semester",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "14",
+              "group14": {
+                "Project Name": "New Artefact Documentary",
+                "Project Description": "testing group 14",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "15",
+              "group15": {
+                "Project Name": "Friday the 15th",
+                "Project Description": "THE FIFTEENTH GROUP",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "16",
+              "group16": {
+                "Project Name": "16TH",
+                "Project Description": "GROUP",
+                "usersId": [],
+                "length": 0
+              }
+            },
+            {
+              "id": "17",
+              "group17": {
+                "Project Name": "17th group",
+                "Project Description": "17th is the lucky charm",
                 "usersId": [],
                 "length": 0
               }
@@ -167,7 +246,7 @@
               "id": "3",
               "group3": {
                 "Project Name": "group3",
-                "Project Description": "grouppe 3",
+                "Project Description": "group 3",
                 "usersId": [],
                 "length": 0
               }
@@ -286,51 +365,6 @@
       "group": "1"
     },
     {
-      "id": "11",
-      "userId": "1",
-      "text": "last comment by me",
-      "dateObject": "28/07/2024, 21:55:25",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "12",
-      "userId": "1",
-      "text": "new comment now",
-      "dateObject": "28/07/2024, 23:22:26",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "13",
-      "userId": "1",
-      "text": "final comment",
-      "dateObject": "28/07/2024, 23:23:00",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "14",
-      "userId": "1",
-      "text": "11:24 comment",
-      "dateObject": "28/07/2024, 23:24:49",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "15",
-      "userId": "1",
-      "text": "11:24 comment",
-      "dateObject": "30/06/2024, 23:24:49",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
       "id": "16",
       "userId": "1",
       "text": "Hey, man. How are you?",
@@ -340,46 +374,10 @@
       "group": "1"
     },
     {
-      "id": "17",
-      "userId": "1",
-      "text": "hey what's up man",
-      "dateObject": "28/07/2024, 23:39:01",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "20",
-      "userId": "1",
-      "text": "abiodun just came in",
-      "dateObject": "28/07/2024, 23:41:47",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "21",
-      "userId": "1",
-      "text": "abiodun just came in",
-      "dateObject": "28/07/2024, 23:42:24",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
       "id": "22",
       "userId": "1",
       "text": "the project is awesome",
       "dateObject": "28/07/2024, 23:45:48",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "23",
-      "userId": "1",
-      "text": "Okay, tell me more about i",
-      "dateObject": "28/07/2024, 23:54:56",
       "intakeYear": "2022",
       "intakeMonth": "January",
       "group": "1"
@@ -403,31 +401,103 @@
       "group": "1"
     },
     {
-      "id": "26",
+      "id": "36",
       "userId": "1",
-      "text": "How far that baddie na😒 ",
-      "dateObject": "28/07/2024, 23:57:19",
+      "text": "Hahahh, welcome Joy 🙂",
+      "dateObject": "30/07/2024, 17:37:53",
       "intakeYear": "2022",
       "intakeMonth": "January",
       "group": "1"
     },
     {
-      "id": "27",
-      "userId": "2",
-      "text": "Which one? Amaka? 🥲",
-      "dateObject": "28/07/2024, 23:57:44",
+      "id": "37",
+      "userId": "9",
+      "text": "Thank you, Excel",
+      "dateObject": "30/07/2024, 17:38:55",
       "intakeYear": "2022",
       "intakeMonth": "January",
       "group": "1"
     },
     {
-      "id": "28",
-      "userId": "2",
-      "text": "na shantel dey hot now",
-      "dateObject": "29/07/2024, 00:02:30",
+      "id": "39",
+      "userId": "1",
+      "text": "So, how is your project going?",
+      "dateObject": "31/07/2024, 01:10:55",
       "intakeYear": "2022",
       "intakeMonth": "January",
       "group": "1"
+    },
+    {
+      "id": "40",
+      "userId": "9",
+      "text": "Hello guys, when is the project starting?",
+      "dateObject": "31/07/2024, 19:47:03",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "41",
+      "userId": "10",
+      "text": "It's starting now",
+      "dateObject": "31/07/2024, 19:48:30",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "1",
+      "userId": "9",
+      "text": "hey",
+      "dateObject": "31/07/2024, 22:24:25",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "10"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "text": "I am good",
+      "dateObject": "31/07/2024, 22:24:39",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "10"
+    },
+    {
+      "id": "3",
+      "userId": "9",
+      "text": "how was your day?",
+      "dateObject": "31/07/2024, 22:25:03",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "10"
+    },
+    {
+      "id": "4",
+      "userId": "1",
+      "text": "my day was good and you?",
+      "dateObject": "31/07/2024, 22:25:20",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "10"
+    },
+    {
+      "id": "1",
+      "userId": "1",
+      "text": "Hey this is a new group",
+      "dateObject": "31/07/2024, 22:32:53",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "8"
+    },
+    {
+      "id": "2",
+      "userId": "9",
+      "text": "ooh welcome excel",
+      "dateObject": "31/07/2024, 22:33:13",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "8"
     }
   ],
   "files": [
@@ -457,6 +527,42 @@
       "intakeYear": "2022",
       "intakeMonth": "January",
       "group": "1"
+    },
+    {
+      "id": "4",
+      "userId": "1",
+      "filename": "ALX RWANDA",
+      "url": "https://google.com",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "5",
+      "userId": "1",
+      "filename": "QwikAid",
+      "url": "https://qwikaid.com",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "6",
+      "userId": "1",
+      "filename": "Life Prescriber",
+      "url": "https://google.com",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "1"
+    },
+    {
+      "id": "1",
+      "userId": "1",
+      "filename": "Ne wfilke",
+      "url": "https://google.com",
+      "intakeYear": "2022",
+      "intakeMonth": "January",
+      "group": "8"
     }
   ]
 }
