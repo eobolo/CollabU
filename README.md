@@ -1,11 +1,11 @@
 # CollabU
 
-CollabU is a collaborative platform built with React, designed to help students create and manage project groups, share files, and engage in discussions. It also features future plans for teacher monitoring and student insights.
+CollabU is a collaborative platform built with React designed to help students create and manage project groups, share files, and engage in discussions. It also features future plans for teacher monitoring and student insights.
 
 ## Features
 
 - **User Authentication**: 
-  - Students can sign up with their details (firstname, lastname, email, intake year and month, password).
+  - Students can sign up with their details (first name, last name, email, intake year and month, password).
   - Registered users can log in using their email and password.
 
 - **Group Management**:
@@ -16,16 +16,16 @@ CollabU is a collaborative platform built with React, designed to help students 
 - **Real-time Discussions**:
   - Group members can participate in discussions through a real-time chat interface.
   - The discussion page displays project details and a chat section for communication.
-  - A "Jump to" button allows users to quickly scroll to the bottom of the chat.
+  - A "Jump to" button allows users to scroll to the bottom of the chat quickly.
 
 - **File Sharing**:
   - Users can share files within their groups.
-  - The file sharing page allows users to add files by providing a file name and link.
+  - The file-sharing page allows users to add files by providing a file name and link.
   - Shared files are displayed in a folder icon format, and clicking a folder redirects to the file link in a new tab.
 
 - **Upcoming Features**:
   - **Teacher Section**: A feature for teachers to monitor group progress and student performance.
-  - **Insights Section**: A section to track student contributions and engagement in projects.
+  - **Insights Section**: A section to track student contributions and project engagement.
 
 ## Table of Contents
 
@@ -81,7 +81,7 @@ Ensure you have the following installed on your machine:
 3. **Explore the application features**:
    - **Homepage**: 
      - HomeHeader: Displays the current page and a dropdown for navigation.
-     - My Group: Shows student's group information or allows creating/joining a group.
+     - My Group: Shows students' group information or allows them to create/join a group.
      - All Groups: Lists all groups based on the student's intake year and month.
 
    - **Group Features**:
@@ -93,7 +93,7 @@ Ensure you have the following installed on your machine:
      - Group members can participate in discussions through a real-time chat interface.
 
    - **File Sharing**:
-     - Students can upload and share files in real-time with group members.
+     - Students can upload and share files in real time with group members.
        
 For more detailed information on each feature, please refer to the [Documentation](link-to-documentation).
 
@@ -109,11 +109,11 @@ We welcome contributions from the community! If you would like to contribute to 
 
 ### Reporting Issues
 
-If you encounter any bugs, issues, or have suggestions for improvements, please [create a new issue](link-to-issue-tracker) in our issue tracker. When reporting an issue, provide a clear and concise description of the problem, along with steps to reproduce it.
+If you encounter any bugs or issues or have suggestions for improvements, please [create a new issue](link-to-issue-tracker) in our issue tracker. When reporting an issue, provide a clear and concise description of the problem, along with steps to reproduce it.
 
 ### Submitting Feature Requests
 
-If you have an idea for a new feature or enhancement, please [submit a feature request](link-to-issue-tracker) in our issue tracker. Describe the feature in detail, including its purpose and expected behavior.
+If you have a new feature or enhancement idea, please [submit a feature request](link-to-issue-tracker) in our issue tracker. Describe the feature in detail, including its purpose and expected behavior.
 ```
 
 ### Submitting Pull Requests
