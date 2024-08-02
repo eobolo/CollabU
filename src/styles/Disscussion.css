@@ -372,5 +372,6 @@
 
     100% {
         transform: translateY(250%);
+        display: none;
     }
 }
