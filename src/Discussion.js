@@ -18,6 +18,7 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
     const [lastScroll, setLastScroll] = useState(null);
     const textareaRef = useRef(null);
     const lastDiv = useRef(null);
+    const timeOutIntervalid = useRef(0);
 
     // this group is the group number and the members is the members count
     const { id, year, month, group, members, project_name } = useParams();
@@ -218,10 +219,17 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
         const discussionSectionHeight = e.currentTarget.clientHeight;
         const discussionSectionScrollTop = e.currentTarget.scrollTop;
         const checkHeight = ((percentage / 100) * (parseInt(discussionSectionHeight)));
-        console.log(discussionSectionHeight);
-        console.log(checkHeight);
-        console.log(animationToUse);
         if (checkHeight >= discussionSectionScrollTop) {
+            clearInterval(timeOutIntervalid.current);
+            const intervalId = setTimeout(() => {
+                if (animationToUse === "slidein") {
+                    setAnimation(true);
+                    setAnimationToUse("slideout");
+                } else {
+                    // do nothing.
+                }                
+            }, 4000)
+            timeOutIntervalid.current = intervalId;
             setAnimation(true);
             setAnimationToUse("slidein");
             setLastScroll(discussionSectionScrollTop);
@@ -282,7 +290,7 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
                                                                 <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
                                                             </div>
                                                         </div>
-                                                        <div className='comment-right-text' ref={lastDiv}>
+                                                        <div id="lastdiv" className='comment-right-text' ref={lastDiv}>
                                                             {comment.text}
                                                         </div>
                                                     </div>
@@ -333,7 +341,7 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
                                                                 <span>{comment.dateObject}{parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) > 0 ? parseInt(comment.dateObject.split(",")[1].trim().split(":")[0]) < 12 ? "AM" : "PM" : "AM"}</span>
                                                             </div>
                                                         </div>
-                                                        <div className='comment-left-text'>
+                                                        <div id="lastdiv" className='comment-left-text'>
                                                             {comment.text}
                                                         </div>
                                                     </div>
