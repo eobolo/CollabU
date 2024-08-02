@@ -11,3 +11,5 @@ server.use(middlewares);
 server.use(router);
 
 server.listen(port);
+
+//"build": "echo 'Build step not needed'",
