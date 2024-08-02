@@ -1,70 +1,150 @@
-# Getting Started with Create React App
+# CollabU
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+CollabU is a collaborative platform built with React, designed to help students create and manage project groups, share files, and engage in discussions. It also features future plans for teacher monitoring and student insights.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **User Authentication**: 
+  - Students can sign up with their details (firstname, lastname, email, intake year and month, password).
+  - Registered users can log in using their email and password.
 
-### `npm start`
+- **Group Management**:
+  - Users can create or join groups based on their selected intake year and month.
+  - Each student can belong to only one group at a time.
+  - Group details include project name, description, and member list.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Real-time Discussions**:
+  - Group members can participate in discussions through a real-time chat interface.
+  - The discussion page displays project details and a chat section for communication.
+  - A "Jump to" button allows users to quickly scroll to the bottom of the chat.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **File Sharing**:
+  - Users can share files within their groups.
+  - The file sharing page allows users to add files by providing a file name and link.
+  - Shared files are displayed in a folder icon format, and clicking a folder redirects to the file link in a new tab.
 
-### `npm test`
+- **Upcoming Features**:
+  - **Teacher Section**: A feature for teachers to monitor group progress and student performance.
+  - **Insights Section**: A section to track student contributions and engagement in projects.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Table of Contents
 
-### `npm run build`
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To access and use CollabU, follow these steps:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Prerequisites
 
-### `npm run eject`
+Ensure you have the following installed on your machine:
+- [Node.js](https://nodejs.org/) (version 14 or higher)
+- [npm](https://www.npmjs.com/) (Node package manager, comes with Node.js)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Installation
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Clone the repository:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+   ```bash
+   git clone https://github.com/excel-asaph/CollabU.git
+   cd CollabU
+   
+2. Install dependencies:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  ```bash
+  npm install
+  ```
 
-## Learn More
+3. Start the development server:
+   ```bash
+   npm start
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. Access the application:
+   - Open [http://localhost:3000](http://localhost:3000) to view it in your browser
+   - You should see the application running
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Usage
 
-### Code Splitting
+1. **Create an account**:
+   - Click on the "Sign Up" button.
+   - Fill in the required information and submit.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2. **Log in to the application**:
+   - Enter your registered email and password.
+   - Click on the "Login" button.
 
-### Analyzing the Bundle Size
+3. **Explore the application features**:
+   - **Homepage**: 
+     - HomeHeader: Displays the current page and a dropdown for navigation.
+     - My Group: Shows student's group information or allows creating/joining a group.
+     - All Groups: Lists all groups based on the student's intake year and month.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+   - **Group Features**:
+     - Students can create or join groups based on their selected intake year and month.
+     - Each student can belong to only one group at a time.
+     - Group details include project name, description, and member list.
 
-### Making a Progressive Web App
+   - **Discussions**:
+     - Group members can participate in discussions through a real-time chat interface.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+   - **File Sharing**:
+     - Students can upload and share files in real-time with group members.
+       
+For more detailed information on each feature, please refer to the [Documentation](link-to-documentation).
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Contributing
 
-### Deployment
+This section should outline the guidelines for contributing to the project, including how to report issues, submit feature requests, and submit pull requests.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```markdown
+## Contributing
 
-### `npm run build` fails to minify
+We welcome contributions from the community! If you would like to contribute to this project, please follow these guidelines:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Reporting Issues
+
+If you encounter any bugs, issues, or have suggestions for improvements, please [create a new issue](link-to-issue-tracker) in our issue tracker. When reporting an issue, provide a clear and concise description of the problem, along with steps to reproduce it.
+
+### Submitting Feature Requests
+
+If you have an idea for a new feature or enhancement, please [submit a feature request](link-to-issue-tracker) in our issue tracker. Describe the feature in detail, including its purpose and expected behavior.
+```
+
+### Submitting Pull Requests
+
+1. **Fork the repository**.
+
+2. **Create a new branch for your feature or bug fix**:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+   
+3. Make your changes and commit them:
+  ```bash
+  git commit -m "Add your commit message"
+  ```
+
+4. Push your changes to your fork:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+5. Open a new pull request in the main repository
+
+6. Provide a clear description of your changes and the problem they solve
+
+7. Reference any related issues or feature requests
+
+We will review your pull request and provide feedback or merge it if it meets the project's standards and guidelines.
+
+Thank you for your contributions!
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
