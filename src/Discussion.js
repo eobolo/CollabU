@@ -6,6 +6,7 @@ import userAxios from './apis/userApi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 export default function Discussion({ users, appDropDown, handleAppDropDown, showDropDown, handleShowDropDown }) {
     const [userGroupComments, setUserGroupComments] = useState([]);
@@ -210,7 +211,7 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
                 //do nothing
             }
         }
-    }, [userGroupComments,prevLength]);
+    }, [userGroupComments, prevLength]);
 
     const handleScrollAction = (e) => {
         const percentage = 90;
@@ -340,14 +341,15 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
                                             )}
                                         </div>
                                     ))}
-                                    <div className={animation ? animationToUse : animationToUse} onClick={() => {lastDiv.current.scrollIntoView({behavior: 'smooth'})}}>
-                                        <p>Jump to bottom</p>
+                                    <div className={animation ? animationToUse : animationToUse} onClick={() => { lastDiv.current.scrollIntoView({ behavior: 'smooth' }) }}>
+                                        
+                                        <p><FontAwesomeIcon icon={faArrowDown} className='fa-jumpbottom'/>Jump to bottom</p>
                                     </div>
                                 </div>
                             </div>
                         ) : (
                             <div className='discussion-no-comment-section'>
-                                No comment yet. Start new discussion 📤
+                                No comment yet. Start new discussion 💬
                             </div>
                         )}
                         <div className='discussion-message-box chat-input-container'>

@@ -371,6 +371,11 @@
     }
 
     100% {
-        transform: translateY(250%);
+        transform: translateY(240%);
+        display: none;
     }
+}
+
+.fa-jumpbottom {
+    margin-right: 0.5rem;
 }
