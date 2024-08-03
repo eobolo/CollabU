@@ -5,7 +5,7 @@ import axios from "axios";
     an export it out
 */
 const userAxios = axios.create({
-    baseURL: "http://localhost:3500",
+    baseURL: "https://collabu.onrender.com",
 })
 
 export default userAxios;
