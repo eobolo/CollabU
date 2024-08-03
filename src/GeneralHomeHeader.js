@@ -12,6 +12,7 @@ export default function GeneralHomeHeader({ month, year, id, title, users, membe
 
     useEffect(() => {
         const getUser = users.find((user) => user.id === id);
+        console.log(getUser);
         if (getUser) {
             setIsUserGotten(true);
             setTriedFetch(true);

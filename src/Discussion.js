@@ -10,6 +10,7 @@ import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 export default function Discussion({ users, appDropDown, handleAppDropDown, showDropDown, handleShowDropDown }) {
     const [userGroupComments, setUserGroupComments] = useState([]);
+    const [allGroupComments, setAllGroupComments] = useState([]);
     const [commentExist, setCommentExist] = useState(false);
     const [newMessage, setNewMessage] = useState("");
     const [prevLength, setPrevLength] = useState(0);
@@ -32,8 +33,10 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
         const intervalId = setInterval(() => {
             const fetchComments = async () => {
                 try {
-                    let groupComments = await userAxios.get(`/comments?year=${year}&month=${month}&group=${group}`);
-                    groupComments = groupComments.data;
+                    let allComments = await userAxios.get("/comments");
+                    let groupComments;
+                    allComments = allComments.data;
+                    groupComments = allComments.filter((groupComment) => groupComment.intakeYear === year && groupComment.intakeMonth === month && groupComment.group === group);
                     if (groupComments.length > 0) {
                         // sort the groupComments inplace
                         groupComments.sort((a, b) => {
@@ -71,12 +74,13 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
                             else {
                                 return 0;
                             }
-                        })
-
+                        });
                         setUserGroupComments(groupComments);
+                        setAllGroupComments(allComments);
                         setCommentExist(true)
                     } else {
                         setUserGroupComments([]);
+                        setAllGroupComments(allComments);
                         setCommentExist(false);
                     }
                 } catch (error) {
@@ -98,8 +102,9 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
     const handleSendMessage = (e) => {
         e.preventDefault();
 
-        let newId = userGroupComments.length ? userGroupComments.reduce((accumulator, currentValue) => typeof accumulator === "number" ? parseInt(accumulator) > parseInt(currentValue.id) ? parseInt(accumulator) : parseInt(currentValue.id) : parseInt(accumulator.id) > parseInt(currentValue.id) ? parseInt(accumulator.id) : parseInt(currentValue.id), 0) : 0;
+        let newId = allGroupComments.length ? allGroupComments.reduce((accumulator, currentValue) => typeof accumulator === "number" ? parseInt(accumulator) > parseInt(currentValue.id) ? parseInt(accumulator) : parseInt(currentValue.id) : parseInt(accumulator.id) > parseInt(currentValue.id) ? parseInt(accumulator.id) : parseInt(currentValue.id), 0) : 0;
         newId = parseInt(newId) + 1;
+        console.log(newId);
 
         const date_created = new Date();
         const formatDate = (date) => {
@@ -165,12 +170,16 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
 
         const postNewComment = async (comment_data) => {
             try {
-                const data = await userAxios.post(`/comments/`, comment_data);
+                await userAxios.post(`/comments/`, comment_data);
             } catch (error) {
-                console.error("post unsuccessful 🥲");
+                console.error("Fetch Unsuccessful!!!", {
+                    message: error.message,
+                    response: error.response ? error.response.data : null,
+                    config: error.config
+                });
             }
         }
-
+        console.log(new_message);
         postNewComment(new_message);
         setUserGroupComments(allNewComments);
         setCommentExist(true);
@@ -226,7 +235,7 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
                 } else {
                     // do nothing.
                 }                
-            }, 4000)
+            }, 2000)
             timeOutIntervalid.current = intervalId;
             setAnimation(true);
             setAnimationToUse("slidein");

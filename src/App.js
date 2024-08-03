@@ -108,7 +108,7 @@ function App() {
     // post the data to the server
     const addUser = async (user) => {
       try {
-        const userData = await userAxios.post(`/users/`, user);
+        await userAxios.post(`/users/`, user);
       } catch (error) {
         console.error(`An error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`)
       }
@@ -160,7 +160,7 @@ function App() {
     newUserData = [...newUserData, authenticateUser[0]];
     const changeUserIsLoggedin = async (id) => {
       try {
-        const changeIsLoggedIn = await userAxios.patch(`/users/${id}/`, { isLoggedin: true });
+        await userAxios.patch(`/users/${id}/`, { isLoggedin: true });
         const month = authenticateUser[0].month;
         const year = authenticateUser[0].year;
 
@@ -177,21 +177,21 @@ function App() {
     setEmail('');
     setSigninError('');
   }
-  
+
   const handleShowDropDown = () => {
     if (showDropDown) {
-        setShowDropDown(false);
+      setShowDropDown(false);
     } else {
-        setShowDropDown(true);
-        setAppDropDown(true);
+      setShowDropDown(true);
+      setAppDropDown(true);
     }
   }
   const handleAppDropDown = () => {
     if (showDropDown) {
-        setAppDropDown(false);
-        setShowDropDown(false);
+      setAppDropDown(false);
+      setShowDropDown(false);
     } else {
-        setAppDropDown(true);
+      setAppDropDown(true);
     }
   }
 

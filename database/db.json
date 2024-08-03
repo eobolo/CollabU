@@ -8,7 +8,7 @@
       "password": "12345",
       "month": "January",
       "year": "2022",
-      "group": "",
+      "group": "18",
       "isLoggedin": true
     },
     {
@@ -218,6 +218,17 @@
                 "usersId": [],
                 "length": 0
               }
+            },
+            {
+              "id": "18",
+              "group18": {
+                "Project Name": "18th  group",
+                "Project Description": "this is a group",
+                "usersId": [
+                  1
+                ],
+                "length": 1
+              }
             }
           ]
         },
@@ -347,157 +358,58 @@
   ],
   "comments": [
     {
-      "id": "9",
-      "userId": "1",
-      "text": "latest comment by me",
-      "dateObject": "28/07/2024, 21:54:25",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "10",
-      "userId": "1",
-      "text": "new comment by me",
-      "dateObject": "28/07/2024, 21:54:30",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "16",
-      "userId": "1",
-      "text": "Hey, man. How are you?",
-      "dateObject": "28/07/2024, 23:36:53",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "22",
-      "userId": "1",
-      "text": "the project is awesome",
-      "dateObject": "28/07/2024, 23:45:48",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "24",
-      "userId": "2",
-      "text": "So, it's more about databases, you know 😁",
-      "dateObject": "28/07/2024, 23:55:28",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "25",
-      "userId": "1",
-      "text": "Oh, I see 😂",
-      "dateObject": "28/07/2024, 23:55:49",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "36",
-      "userId": "1",
-      "text": "Hahahh, welcome Joy 🙂",
-      "dateObject": "30/07/2024, 17:37:53",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "37",
-      "userId": "9",
-      "text": "Thank you, Excel",
-      "dateObject": "30/07/2024, 17:38:55",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "39",
-      "userId": "1",
-      "text": "So, how is your project going?",
-      "dateObject": "31/07/2024, 01:10:55",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "40",
-      "userId": "9",
-      "text": "Hello guys, when is the project starting?",
-      "dateObject": "31/07/2024, 19:47:03",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "41",
-      "userId": "10",
-      "text": "It's starting now",
-      "dateObject": "31/07/2024, 19:48:30",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
       "id": "1",
-      "userId": "9",
+      "userId": "1",
       "text": "hey",
-      "dateObject": "31/07/2024, 22:24:25",
+      "dateObject": "03/08/2024, 16:59:14",
       "intakeYear": "2022",
       "intakeMonth": "January",
-      "group": "10"
+      "group": "18"
     },
     {
       "id": "2",
       "userId": "1",
-      "text": "I am good",
-      "dateObject": "31/07/2024, 22:24:39",
+      "text": "hello",
+      "dateObject": "03/08/2024, 17:04:21",
       "intakeYear": "2022",
       "intakeMonth": "January",
-      "group": "10"
+      "group": "18"
     },
     {
       "id": "3",
-      "userId": "9",
-      "text": "how was your day?",
-      "dateObject": "31/07/2024, 22:25:03",
+      "userId": "1",
+      "text": "done",
+      "dateObject": "03/08/2024, 17:20:29",
       "intakeYear": "2022",
       "intakeMonth": "January",
-      "group": "10"
+      "group": "18"
     },
     {
       "id": "4",
       "userId": "1",
-      "text": "my day was good and you?",
-      "dateObject": "31/07/2024, 22:25:20",
+      "text": "dhhtrha",
+      "dateObject": "03/08/2024, 17:20:38",
       "intakeYear": "2022",
       "intakeMonth": "January",
-      "group": "10"
+      "group": "18"
     },
     {
-      "id": "1",
+      "id": "5",
       "userId": "1",
-      "text": "Hey this is a new group",
-      "dateObject": "31/07/2024, 22:32:53",
+      "text": "eefgg",
+      "dateObject": "03/08/2024, 17:31:39",
       "intakeYear": "2022",
       "intakeMonth": "January",
-      "group": "8"
+      "group": "18"
     },
     {
-      "id": "2",
-      "userId": "9",
-      "text": "ooh welcome excel",
-      "dateObject": "31/07/2024, 22:33:13",
+      "id": "6",
+      "userId": "1",
+      "text": "We just dey fix bugs now",
+      "dateObject": "03/08/2024, 17:32:33",
       "intakeYear": "2022",
       "intakeMonth": "January",
-      "group": "8"
+      "group": "18"
     }
   ],
   "files": [
@@ -554,15 +466,6 @@
       "intakeYear": "2022",
       "intakeMonth": "January",
       "group": "1"
-    },
-    {
-      "id": "1",
-      "userId": "1",
-      "filename": "Ne wfilke",
-      "url": "https://google.com",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "8"
     }
   ]
 }

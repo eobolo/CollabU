@@ -97,12 +97,6 @@ Ensure you have the following installed on your machine:
        
 For more detailed information on each feature, please refer to the [Documentation](link-to-documentation).
 
-
-## Contributing
-
-This section should outline the guidelines for contributing to the project, including how to report issues, submit feature requests, and submit pull requests.
-
-```markdown
 ## Contributing
 
 We welcome contributions from the community! If you would like to contribute to this project, please follow these guidelines:
@@ -114,7 +108,6 @@ If you encounter any bugs or issues or have suggestions for improvements, please
 ### Submitting Feature Requests
 
 If you have a new feature or enhancement idea, please [submit a feature request](link-to-issue-tracker) in our issue tracker. Describe the feature in detail, including its purpose and expected behavior.
-```
 
 ### Submitting Pull Requests
 
