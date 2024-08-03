@@ -64,8 +64,6 @@ export default function FileSharing({ users, appDropDown, handleAppDropDown, sho
 
         let newId = userGroupFiles.length ? userGroupFiles.reduce((accumulator, currentValue) => typeof accumulator === "number" ? parseInt(accumulator) > parseInt(currentValue.id) ? parseInt(accumulator) : parseInt(currentValue.id) : parseInt(accumulator.id) > parseInt(currentValue.id) ? parseInt(accumulator.id) : parseInt(currentValue.id), 0) : 0;
         newId = parseInt(newId) + 1;
-        console.log(newId);
-
         const new_file = {
             id: `${newId}`,
             userId: id,
@@ -81,7 +79,6 @@ export default function FileSharing({ users, appDropDown, handleAppDropDown, sho
         const postNewsharedFile = async (file_data) => {
             try {
                 const data = await userAxios.post(`/files/`, file_data);
-                console.log(data);
             } catch (error) {
                 console.error("post unsuccessful 🥲");
             }
@@ -113,7 +110,7 @@ export default function FileSharing({ users, appDropDown, handleAppDropDown, sho
                     />
                 </div>
                 {group ? (
-                    <div className='filesharing-container' onClick={handleAppDropDown}>
+                    <div className={`filesharing-container ${data ? "" : null}`} onClick={handleAppDropDown}>
                         <div className="files-dropdown">
                             <div className="select" onClick={handleShowAddFile}>
                                 <span type="button" className="selected">Click to Add File</span>

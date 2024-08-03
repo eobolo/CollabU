@@ -99,7 +99,6 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
 
         let newId = userGroupComments.length ? userGroupComments.reduce((accumulator, currentValue) => typeof accumulator === "number" ? parseInt(accumulator) > parseInt(currentValue.id) ? parseInt(accumulator) : parseInt(currentValue.id) : parseInt(accumulator.id) > parseInt(currentValue.id) ? parseInt(accumulator.id) : parseInt(currentValue.id), 0) : 0;
         newId = parseInt(newId) + 1;
-        console.log(newId);
 
         const date_created = new Date();
         const formatDate = (date) => {
@@ -166,7 +165,6 @@ export default function Discussion({ users, appDropDown, handleAppDropDown, show
         const postNewComment = async (comment_data) => {
             try {
                 const data = await userAxios.post(`/comments/`, comment_data);
-                console.log(data);
             } catch (error) {
                 console.error("post unsuccessful 🥲");
             }

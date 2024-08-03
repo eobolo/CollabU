@@ -50,10 +50,6 @@ export default function HomepageHeader({ month, year, id, users, groups, appDrop
         }
     }, [users, id, groups, month, year]);
 
-
-    console.log(showDropDown);
-    console.log(appDropDown);
-
     return (
         <div className="homepageheader-container">
             {triedFetch ? isUserGotten ? (

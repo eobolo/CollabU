@@ -47,7 +47,6 @@ export default function MyGroup({ groups, setGroups, month, year, yearId, id, us
     const handleLeaveGroup = () => {
         const newgroups = { ...groups };
         const group = newgroups[year][monthObj[month] - 1][month];
-        console.log(group);
         const userId = parseInt(id);
         (myGroup[`group${loggedUser.group}`]["usersId"]).splice((myGroup[`group${loggedUser.group}`]["usersId"]).indexOf(userId), 1);
         myGroup[`group${loggedUser.group}`]["length"] = (myGroup[`group${loggedUser.group}`]["usersId"]).length;
@@ -69,7 +68,6 @@ export default function MyGroup({ groups, setGroups, month, year, yearId, id, us
                 const sentGroupData = await userAxios.put(`/groups/${yearId}`, newgroups);
                 if (sentGroupData) {
                     // Do nothing
-                    console.log(groups)
                 }
             } catch (error) {
                 console.error("An error occured!");
@@ -81,8 +79,7 @@ export default function MyGroup({ groups, setGroups, month, year, yearId, id, us
             try {
                 const sentUserGroup = await userAxios.patch(`/users/${id}`, { group: "" });
                 if (sentUserGroup) {
-                    // do nothing
-                    console.log(users);
+                    // Do nothing
                 }
             } catch (error) {
                 console.error(``);

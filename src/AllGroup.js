@@ -24,9 +24,7 @@ export default function AllGroup({ groups, setGroups, month, year, yearId, id, u
             "September": 3,
         }
         const allGroupData = groups[year][monthObj[month] - 1][month];
-        console.log(allGroupData);
         if (allGroupData.length > 0) {
-            console.log(allGroupData);
             setAllGroups(allGroupData);
             setIsAllGroupGotten(true);
         } else {
@@ -41,7 +39,6 @@ export default function AllGroup({ groups, setGroups, month, year, yearId, id, u
             setUser({});
             setIsLoggedUserGotten(false);
         } else {
-            console.log(getUser);
             setUser(getUser);
             setIsLoggedUserGotten(true);
         }
@@ -69,8 +66,7 @@ export default function AllGroup({ groups, setGroups, month, year, yearId, id, u
         const groupId = parseInt(group_id);
         let groupIndex;
         const arrayToCheck = groups[year][monthObj[month] - 1][month];
-        groupIndex = arrayToCheck.findIndex((element) => parseInt(element.id) === groupId) + 1;
-        console.log(groupIndex);              
+        groupIndex = arrayToCheck.findIndex((element) => parseInt(element.id) === groupId) + 1;            
         allGroups[groupIndex - 1][`group${groupId}`]["usersId"].push(parseInt(id));
         allGroups[groupIndex - 1][`group${groupId}`]["length"] = (allGroups[groupIndex - 1][`group${groupId}`]["usersId"]).length
         const newgroups = { ...groups };
@@ -90,7 +86,6 @@ export default function AllGroup({ groups, setGroups, month, year, yearId, id, u
                 const sentGroupData = await userAxios.put(`/groups/${yearId}`, newgroups);
                 if (sentGroupData) {
                     // Do nothing
-                    console.log(groups)
                 }
             } catch (error) {
                 console.error("An error occured!");
@@ -103,7 +98,6 @@ export default function AllGroup({ groups, setGroups, month, year, yearId, id, u
                 const sentUserGroup = await userAxios.patch(`/users/${id}`, { group: `${groupId}` });
                 if (sentUserGroup) {
                     // do nothing
-                    console.log(users);
                 }
             } catch (error) {
                 console.error(``);

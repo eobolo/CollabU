@@ -15,7 +15,6 @@ const HomeHeader = ({ authUser, users, setUsers }) => {
 
     const handleLogOut = () => {
         // get the users that are not this logged user
-        console.log(authUser);
         if (!authUser.length) {
             navigate("/");
             return;
@@ -29,8 +28,6 @@ const HomeHeader = ({ authUser, users, setUsers }) => {
         const logOutUser = async (id) => {
             try {
                 const changeIsLoggedIn = await userAxios.patch(`/users/${id}/`, { isLoggedin: false });
-                console.log(changeIsLoggedIn);
-                console.log(users);
                 navigate("/");
             } catch (error) {
                 console.error(`An Error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`);

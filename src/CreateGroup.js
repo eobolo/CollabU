@@ -76,7 +76,6 @@ const CreateGroup = ({ groups, setGroups, month, year, yearId, id, users, setUse
                 const sentUserGroup = await userAxios.patch(`/users/${id}`, { group: `${newId}` });
                 if (sentUserGroup) {
                     // do nothing
-                    console.log(users);
                 }
             } catch (error) {
                 console.error(``);
