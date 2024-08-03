@@ -39,7 +39,7 @@ const HomeHeader = ({ authUser, users, setUsers }) => {
     return (
         <header>
             <nav>
-                <a href="#" className='logo'>
+                <Link to="/" className='logo'>
                     <img
                         src={Logo}
                         alt="collabU-logo"
@@ -50,7 +50,7 @@ const HomeHeader = ({ authUser, users, setUsers }) => {
                         alt="collabU-sm-logo"
                         className='logo-sm-icon'
                     />
-                </a>
+                </Link>
                 <ul className="nav-list">
                     <li className="nav-links1"><Link to="/">
                         <FontAwesomeIcon icon={faRightToBracket} className='fa-icon' />
