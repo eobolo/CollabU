@@ -1,3 +1,8 @@
+Prompt 1: The community sports council is organizing a 6-day marathon event and as a member of the organizing committee, I have been tasked with shopping for items needed. I need to buy exactly 100 items and I have two options, Package A and Package B.
+
+I want you to help me write a Python application that can determine the combination of packages that minimizes cost. If both combinations have the same cost, the application should explain which one provides better value in terms of unused items. The values for Package A and Package B (number of items, and cost of package) should be received as user input.
+
+
 import math
 
 def find_best_package_combination():
