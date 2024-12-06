@@ -1,3 +1,75 @@
+import math
+
+def find_best_package_combination():
+    # Get user inputs for package details
+    package_a_items = int(input("Enter the number of items in Package A: "))
+    package_a_cost = float(input("Enter the cost of Package A: "))
+    package_b_items = int(input("Enter the number of items in Package B: "))
+    package_b_cost = float(input("Enter the cost of Package B: "))
+    total_items = 100
+
+    # Solve analytically for x (number of Package A) and y (number of Package B)
+    # Let x be the number of Package A units, y be the number of Package B units
+    min_cost = float('inf')
+    best_combination = (0, 0, float('inf'))  # (num_a, num_b, unused_items)
+
+    for x in range(total_items // package_a_items + 1):
+        # Calculate y to satisfy the total_items constraint
+        remaining_items = total_items - (x * package_a_items)
+        if remaining_items < 0:
+            break  # x is too large
+        y = math.ceil(remaining_items / package_b_items)
+
+        # Calculate cost and unused items
+        total_items_bought = (x * package_a_items) + (y * package_b_items)
+        total_cost = (x * package_a_cost) + (y * package_b_cost)
+        unused_items = total_items_bought - total_items
+
+        # Check if this is the best solution
+        if total_cost < min_cost or (total_cost == min_cost and unused_items < best_combination[2]):
+            min_cost = total_cost
+            best_combination = (x, y, unused_items)
+
+    # Display the result
+    num_a, num_b, unused_items = best_combination
+    print(f"\nBest combination:")
+    print(f"  Package A: {num_a} ({package_a_items} items each)")
+    print(f"  Package B: {num_b} ({package_b_items} items each)")
+    print(f"  Total Cost: ${min_cost:.2f}")
+    print(f"  Unused Items: {unused_items}")
+
+if __name__ == "__main__":
+    find_best_package_combination()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def find_best_package_combination():
     # Get user inputs for package details
     package_a_items = int(input("Enter the number of items in Package A: "))
