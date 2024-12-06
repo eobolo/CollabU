@@ -1,17 +1,19 @@
 def find_best_package_combination():
-    package_a_items = 15
-    package_a_cost = 10
-    package_b_items = 10
-    package_b_cost = 8
-    total_items = 100
+    # Get user inputs for package details
+    package_a_items = int(input("Enter the number of items in Package A: "))
+    package_a_cost = float(input("Enter the cost of Package A: "))
+    package_b_items = int(input("Enter the number of items in Package B: "))
+    package_b_cost = float(input("Enter the cost of Package B: "))
+    total_items = 100  # Fixed target for the problem
 
     min_cost = float('inf')
     best_combinations = []
 
+    # Iterate through possible combinations of Package A and Package B
     for num_a in range(total_items // package_a_items + 1):  # Max possible A packages
         for num_b in range(total_items // package_b_items + 1):  # Max possible B packages
             total_items_bought = num_a * package_a_items + num_b * package_b_items
-            if total_items_bought >= total_items:  # Only valid if it meets or exceeds the target
+            if total_items_bought >= total_items:  # Valid combinations
                 total_cost = num_a * package_a_cost + num_b * package_b_cost
                 unused_items = total_items_bought - total_items
 
@@ -28,10 +30,10 @@ def find_best_package_combination():
 
     # Display the results
     num_a, num_b, unused_items = best_choice
-    print(f"Best combination:")
-    print(f"  Package A: {num_a} (15 items each)")
-    print(f"  Package B: {num_b} (10 items each)")
-    print(f"  Total Cost: ${min_cost}")
+    print(f"\nBest combination:")
+    print(f"  Package A: {num_a} ({package_a_items} items each)")
+    print(f"  Package B: {num_b} ({package_b_items} items each)")
+    print(f"  Total Cost: ${min_cost:.2f}")
     print(f"  Unused Items: {unused_items}")
 
     if len(best_combinations) > 1:
