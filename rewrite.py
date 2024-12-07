@@ -1,9 +1,9 @@
 module production_cycle (
-    input wire clk,             // Clock signal
-    input wire reset,           // Reset signal
+    input wire clk,              // Clock signal
+    input wire reset,            // Reset signal
     output reg [31:0] total_time, // Total production time
-    output reg valid_input,     // Flag for valid input
-    output reg cycle_detected   // Flag for circular dependencies
+    output reg valid_input,       // Flag for valid input
+    output reg cycle_detected     // Flag for circular dependencies
 );
 
     parameter NUM_PRODUCTS = 6;
@@ -75,11 +75,10 @@ module production_cycle (
 
             if (valid_input) begin
                 // Cycle detection and completion time calculation
+                cycle_detected <= 0; // Reset cycle detection flag
                 for (i = 0; i < NUM_PRODUCTS; i = i + 1) begin
                     if (!visited[i] && !cycle_detected) begin
-                        if (!calculate_completion_time(i)) begin
-                            cycle_detected <= 1; // Circular dependency detected
-                        end
+                        cycle_detected <= !calculate_completion_time(i); // Set cycle_detected flag if cycle found
                     end
                 end
                 if (!cycle_detected) begin
@@ -95,7 +94,7 @@ module production_cycle (
         end
     end
 
-    // Function to calculate completion time using a DFS-like approach
+    // Task to calculate completion time using a DFS-like approach
     function calculate_completion_time;
         input integer product_index;
         reg [31:0] max_dependency_time;
