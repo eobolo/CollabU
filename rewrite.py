@@ -1,12 +1,4 @@
-C:\Users\Excel\Desktop\Python>iverilog -o product_manager.vvp product_manager.v
-product_manager.v:117: error: Enable of unknown task ``return''.
-1 error(s) during elaboration.
-
-    
-    
-    
-    
-    module production_cycle (
+module production_cycle (
     input wire clk,             // Clock signal
     input wire reset,           // Reset signal
     output reg [31:0] total_time, // Total production time
@@ -32,7 +24,7 @@ product_manager.v:117: error: Enable of unknown task ``return''.
     parameter [NUM_PRODUCTS-1:0] DEPENDENCY_4 = 6'b001000;
     parameter [NUM_PRODUCTS-1:0] DEPENDENCY_5 = 6'b010000;
 
-    // Array to store production times
+    // Array to store production times and dependencies
     reg [31:0] production_times[NUM_PRODUCTS-1:0];
     reg [NUM_PRODUCTS-1:0] dependencies[NUM_PRODUCTS-1:0];
 
@@ -104,7 +96,8 @@ product_manager.v:117: error: Enable of unknown task ``return''.
     end
 
     // Function to calculate completion time using a DFS-like approach
-    function calculate_completion_time(input integer product_index);
+    function calculate_completion_time;
+        input integer product_index;
         reg [31:0] max_dependency_time;
         begin
             if (stack[product_index]) begin
@@ -133,7 +126,7 @@ product_manager.v:117: error: Enable of unknown task ``return''.
                 // Calculate completion time
                 completion_time[product_index] = max_dependency_time + production_times[product_index];
                 stack[product_index] = 0;
-                calculate_completion_time = 1;
+                calculate_completion_time = 1; // Return value indicating no cycle
             end
         end
     endfunction
