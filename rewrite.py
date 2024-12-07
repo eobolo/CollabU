@@ -1,11 +1,3 @@
-C:\Users\Excel\Desktop\Python>iverilog -o product_manager.vvp product_manager.v
-product_manager.v:11: syntax error
-product_manager.v:11: error: syntax error in parameter list.
-product_manager.v:12: syntax error
-product_manager.v:12: error: syntax error in parameter list.
-
-
-
 module production_cycle (
     input wire clk,             // Clock signal
     input wire reset,           // Reset signal
@@ -13,18 +5,28 @@ module production_cycle (
     output reg valid_input,     // Flag for valid input
     output reg cycle_detected   // Flag for circular dependencies
 );
-    
-    // Example of predefined production times and dependencies
+
     parameter NUM_PRODUCTS = 6;
-    parameter [31:0] PRODUCTION_TIMES[NUM_PRODUCTS-1:0] = {10, 5, 7, 3, 8, 4}; // Production times in days
-    parameter [NUM_PRODUCTS-1:0] DEPENDENCIES[NUM_PRODUCTS-1:0] = {
-        6'b000000, // No dependencies for product 0
-        6'b000001, // Product 1 depends on product 0
-        6'b000001, // Product 2 depends on product 0
-        6'b000110, // Product 3 depends on products 1 and 2
-        6'b001000, // Product 4 depends on product 3
-        6'b010000  // Product 5 depends on product 4
-    };
+
+    // Production times for products (encoded as individual parameters)
+    parameter [31:0] PRODUCTION_TIME_0 = 10;
+    parameter [31:0] PRODUCTION_TIME_1 = 5;
+    parameter [31:0] PRODUCTION_TIME_2 = 7;
+    parameter [31:0] PRODUCTION_TIME_3 = 3;
+    parameter [31:0] PRODUCTION_TIME_4 = 8;
+    parameter [31:0] PRODUCTION_TIME_5 = 4;
+
+    // Dependencies represented as packed arrays (1 bit per dependency)
+    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_0 = 6'b000000;
+    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_1 = 6'b000001;
+    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_2 = 6'b000001;
+    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_3 = 6'b000110;
+    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_4 = 6'b001000;
+    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_5 = 6'b010000;
+
+    // Array to store production times
+    reg [31:0] production_times[NUM_PRODUCTS-1:0];
+    reg [NUM_PRODUCTS-1:0] dependencies[NUM_PRODUCTS-1:0];
 
     // Internal signals
     reg [31:0] completion_time[NUM_PRODUCTS-1:0]; // Stores the completion time for each product
@@ -33,7 +35,7 @@ module production_cycle (
 
     integer i, j; // Loop variables
 
-    // Reset logic
+    // Initialize arrays at reset
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             total_time <= 0;
@@ -46,11 +48,27 @@ module production_cycle (
                 visited[i] <= 0;
                 stack[i] <= 0;
             end
+
+            // Load production times
+            production_times[0] <= PRODUCTION_TIME_0;
+            production_times[1] <= PRODUCTION_TIME_1;
+            production_times[2] <= PRODUCTION_TIME_2;
+            production_times[3] <= PRODUCTION_TIME_3;
+            production_times[4] <= PRODUCTION_TIME_4;
+            production_times[5] <= PRODUCTION_TIME_5;
+
+            // Load dependencies
+            dependencies[0] <= DEPENDENCY_0;
+            dependencies[1] <= DEPENDENCY_1;
+            dependencies[2] <= DEPENDENCY_2;
+            dependencies[3] <= DEPENDENCY_3;
+            dependencies[4] <= DEPENDENCY_4;
+            dependencies[5] <= DEPENDENCY_5;
         end else begin
             // Input validation
             valid_input <= 1;
             for (i = 0; i < NUM_PRODUCTS; i = i + 1) begin
-                if (|DEPENDENCIES[i] & (i >= NUM_PRODUCTS)) begin
+                if (|dependencies[i] & (i >= NUM_PRODUCTS)) begin
                     valid_input <= 0; // Invalid dependency detected
                 end
             end
@@ -92,7 +110,7 @@ module production_cycle (
 
                 max_dependency_time = 0;
                 for (j = 0; j < NUM_PRODUCTS; j = j + 1) begin
-                    if (DEPENDENCIES[product_index][j]) begin
+                    if (dependencies[product_index][j]) begin
                         if (!calculate_completion_time(j)) begin
                             calculate_completion_time = 0; // Cycle detected in dependency
                             stack[product_index] = 0;
@@ -105,7 +123,7 @@ module production_cycle (
                 end
 
                 // Calculate completion time
-                completion_time[product_index] = max_dependency_time + PRODUCTION_TIMES[product_index];
+                completion_time[product_index] = max_dependency_time + production_times[product_index];
                 stack[product_index] = 0;
                 calculate_completion_time = 1;
             end
