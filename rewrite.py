@@ -1,236 +1,183 @@
-C#:
-
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-public class ProductionScheduler
+public class ProductionCycleManager
 {
-    public static string CalculateProductionTime(List<Dictionary<string, object>> products)
+    public static string ManageProduction(List<Dictionary<string, object>> products)
     {
-        int n = products.Count;
-
-        // Edge case: Empty product list
-        if (n == 0)
-            return "0";
-
-        // Helper function to check if all required keys are present in the product dictionaries
-        bool ValidateInput()
+        // Validate input
+        if (!products.All(p => IsValidProduct(p)))
         {
-            for (int i = 0; i < n; i++)
-            {
-                var product = products[i];
-                if (!product.ContainsKey("type") || !product.ContainsKey("days") || !product.ContainsKey("dependency"))
-                    return false;
-                if (!(product["type"] is string) || !(product["days"] is int) || !(product["dependency"] is List<int>))
-                    return false;
-                var dependency = (List<int>)product["dependency"];
-                foreach (var dep in dependency)
-                {
-                    if (dep < 0 || dep >= n)
-                        return false;
-                }
-            }
-            return true;
-        }
-
-        // Step 1: Validate the input for missing keys or invalid values
-        if (!ValidateInput())
             return "Invalid Input";
+        }
 
-        // Step 2: Detect circular dependencies using DFS
-        int[] visited = new int[n]; // 0 = unvisited, 1 = visiting, 2 = visited
-        int[] completionTime = new int[n]; // Track the time when each product is completed
-
-        bool Dfs(int productIndex)
+        Dictionary<int, Product> productDictionary = new Dictionary<int, Product>();
+        foreach (var productData in products)
         {
-            if (visited[productIndex] == 1)
-                return false; // Cycle detected
-            if (visited[productIndex] == 2)
-                return true; // Already processed product
-
-            visited[productIndex] = 1; // Mark as visiting
-
-            var dependencyList = (List<int>)products[productIndex]["dependency"];
-            foreach (int depIndex in dependencyList)
+            var product = new Product
             {
-                if (depIndex >= n || depIndex < 0 || !Dfs(depIndex))
-                    return false;
-            }
+                Id = (int)productData["id"],
+                Type = (string)productData["type"],
+                Days = (int)productData["days"],
+                Dependencies = (int[])productData["dependency"]
+            };
+            productDictionary[product.Id] = product;
+        }
 
-            visited[productIndex] = 2; // Mark as visited
+        // Check for circular dependencies
+        if (HasCircularDependency(productDictionary))
+        {
+            return "Invalid Cycle Detected";
+        }
+
+        // Topological sorting
+        int totalDays = 0;
+        var queue = new Queue<Product>(products.Select(p => productDictionary[(int)p["id"]]).Where(p => !p.Dependencies.Any()));
+
+        while (queue.Count > 0)
+        {
+            var currentProduct = queue.Dequeue();
+            totalDays += currentProduct.Days;
+
+            foreach (var product in productDictionary.Values)
+            {
+                if (product.Dependencies.Contains(currentProduct.Id))
+                {
+                    product.Dependencies.Remove(currentProduct.Id);
+                    if (!product.Dependencies.Any())
+                    {
+                        queue.Enqueue(product);
+                    }
+                }
+            }
+        }
+
+        return totalDays.ToString();
+    }
+
+    private static bool HasCircularDependency(Dictionary<int, Product> products)
+    {
+        var visited = new HashSet<int>();
+        var stack = new Stack<int>();
+
+        foreach (var product in products.Values)
+        {
+            if (DFS(product, products, visited, stack))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static bool DFS(Product product, Dictionary<int, Product> products, HashSet<int> visited, Stack<int> stack)
+    {
+        if (stack.Contains(product.Id))
+        {
             return true;
         }
 
-        // Step 3: Check for cycles in the dependency graph
-        for (int i = 0; i < n; i++)
+        if (visited.Contains(product.Id))
         {
-            if (visited[i] == 0 && !Dfs(i))
-                return "Invalid Cycle Detected";
+            return false;
         }
 
-        // Step 4: Calculate the completion time for each product
-        int CalculateCompletionTime(int productIndex)
-        {
-            if (completionTime[productIndex] > 0)
-                return completionTime[productIndex];
+        visited.Add(product.Id);
+        stack.Push(product.Id);
 
-            int maxDependencyTime = 0;
-            var dependencyList = (List<int>)products[productIndex]["dependency"];
-            foreach (int depIndex in dependencyList)
+        foreach (var dependency in product.Dependencies)
+        {
+            if (DFS(products[dependency], products, visited, stack))
             {
-                maxDependencyTime = Math.Max(maxDependencyTime, CalculateCompletionTime(depIndex));
+                return true;
             }
-
-            completionTime[productIndex] = maxDependencyTime + (int)products[productIndex]["days"];
-            return completionTime[productIndex];
         }
 
-        // Step 5: Calculate the total production time
-        int totalTime = 0;
-        for (int i = 0; i < n; i++)
-        {
-            totalTime = Math.Max(totalTime, CalculateCompletionTime(i));
-        }
-
-        return totalTime.ToString();
+        stack.Pop();
+        return false;
     }
 
-    public static void Main()
+    private static bool IsValidProduct(Dictionary<string, object> product)
     {
-        var products1 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "type", "A" }, { "days", 10 }, { "dependency", new List<int>() } },
-            new Dictionary<string, object> { { "type", "B" }, { "days", 5 }, { "dependency", new List<int>{0} } },
-            new Dictionary<string, object> { { "type", "C" }, { "days", 7 }, { "dependency", new List<int>{0} } },
-            new Dictionary<string, object> { { "type", "A" }, { "days", 3 }, { "dependency", new List<int>{1, 2} } },
-            new Dictionary<string, object> { { "type", "B" }, { "days", 8 }, { "dependency", new List<int>{3} } },
-            new Dictionary<string, object> { { "type", "C" }, { "days", 4 }, { "dependency", new List<int>{4} } }
-        };
+        return product.Keys.All(k => k == "id" || k == "type" || k == "days" || k == "dependency") &&
+               product.Values.All(v =>
+                   v is int || v is string &&
+                   (v is int && (int)v >= 0) ||
+                   (v is string && !string.IsNullOrEmpty((string)v)) ||
+                   (v is int[] && ((int[])v).All(d => d >= 0))
+               );
+    }
 
-        var products2 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "type", "A" }, { "days", 10 }, { "dependency", new List<int>() } },
-            new Dictionary<string, object> { { "type", "B" }, { "days", 5 }, { "dependency", new List<int>() } },
-            new Dictionary<string, object> { { "type", "C" }, { "days", 7 }, { "dependency", new List<int>() } }
-        };
-
-        Console.WriteLine(CalculateProductionTime(products1));
-        Console.WriteLine(CalculateProductionTime(products2));
+    class Product
+    {
+        public int Id { get; set; }
+        public string Type { get; set; }
+        public int Days { get; set; }
+        public int[] Dependencies { get; set; }
     }
 }
 
 
 
+var products_1 = new List<Dictionary<string, object>>()
+{
+    new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 10 }, { "dependency", new int[] { } } },
+    new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 5 }, { "dependency", new int[] { 0 } } },
+    new Dictionary<string, object> { { "id", 2 }, { "type", "C" }, { "days", 7 }, { "dependency", new int[] { 0 } } },
+    new Dictionary<string, object> { { "id", 3 }, { "type", "A" }, { "days", 3 }, { "dependency", new int[] { 1, 2 } } },
+    new Dictionary<string, object> { { "id", 4 }, { "type", "B" }, { "days", 8 }, { "dependency", new int[] { 3 } } },
+    new Dictionary<string, object> { { "id", 5 }, { "type", "C" }, { "days", 4 }, { "dependency", new int[] { 4 } } }
+};
 
-Swift:
+Console.WriteLine(ProductionCycleManager.ManageProduction(products_1));  // Expected output: "37"
+var products_2 = new List<Dictionary<string, object>>()
+{
+    new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 10 }, { "dependency", new int[] { } } },
+    new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 5 }, { "dependency", new int[] { } } },
+    new Dictionary<string, object> { { "id", 2 }, { "type", "C" }, { "days", 7 }, { "dependency", new int[] { } } }
+};
 
-import Foundation
+Console.WriteLine(ProductionCycleManager.ManageProduction(products_2));  // Expected output: "22"
 
-func calculateProductionTime(products: [[String: Any]]) -> Any {
-    let n = products.count
-    
-    // Edge case: Empty product list
-    if n == 0 {
-        return 0
-    }
-    
-    // Helper function to check if all required keys are present in the product dictionaries
-    func validateInput() -> Bool {
-        for product in products {
-            guard let type = product["type"] as? String,
-                  let days = product["days"] as? Int,
-                  let dependency = product["dependency"] as? [Int] else {
-                return false
-            }
-            
-            for dep in dependency {
-                if dep < 0 || dep >= n {
-                    return false
-                }
-            }
-        }
-        return true
-    }
-    
-    // Step 1: Validate the input for missing keys or invalid values
-    if !validateInput() {
-        return "Invalid Input"
-    }
-    
-    // Step 2: Detect circular dependencies using DFS
-    var visited = [Int](repeating: 0, count: n) // 0 = unvisited, 1 = visiting, 2 = visited
-    var completionTime = [Int](repeating: 0, count: n) // Track the time when each product is completed
-    
-    func dfs(productIndex: Int) -> Bool {
-        if visited[productIndex] == 1 {
-            return false // Cycle detected
-        }
-        if visited[productIndex] == 2 {
-            return true // Already processed product
-        }
-        
-        visited[productIndex] = 1 // Mark as visiting
-        
-        if let dependencyList = products[productIndex]["dependency"] as? [Int] {
-            for depIndex in dependencyList {
-                if depIndex >= n || depIndex < 0 || !dfs(productIndex: depIndex) {
-                    return false
-                }
-            }
-        }
-        
-        visited[productIndex] = 2 // Mark as visited
-        return true
-    }
-    
-    // Step 3: Check for cycles in the dependency graph
-    for i in 0..<n {
-        if visited[i] == 0 && !dfs(productIndex: i) {
-            return "Invalid Cycle Detected"
-        }
-    }
-    
-    // Step 4: Calculate the completion time for each product
-    func calculateCompletionTime(productIndex: Int) -> Int {
-        if completionTime[productIndex] > 0 {
-            return completionTime[productIndex]
-        }
-        
-        var maxDependencyTime = 0
-        if let dependencyList = products[productIndex]["dependency"] as? [Int] {
-            for depIndex in dependencyList {
-                maxDependencyTime = max(maxDependencyTime, calculateCompletionTime(productIndex: depIndex))
-            }
-        }
-        
-        completionTime[productIndex] = maxDependencyTime + (products[productIndex]["days"] as! Int)
-        return completionTime[productIndex]
-    }
-    
-    // Step 5: Calculate the total production time
-    var totalTime = 0
-    for i in 0..<n {
-        totalTime = max(totalTime, calculateCompletionTime(productIndex: i))
-    }
-    
-    return totalTime
-}
+var products_3 = new List<Dictionary<string, object>>()
+{
+    new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 12 }, { "dependency", new int[] { } } }
+};
 
-// Example usage
-let products1 = [
-    ["type": "A", "days": 10, "dependency": []],
-    ["type": "B", "days": 5, "dependency": [0]],
-    ["type": "C", "days": 7, "dependency": [0]],
-    ["type": "A", "days": 3, "dependency": [1, 2]],
-    ["type": "B", "days": 8, "dependency": [3]],
-    ["type": "C", "days": 4, "dependency": [4]]
-]
+Console.WriteLine(ProductionCycleManager.ManageProduction(products_3));  // Expected output: "12"
 
-let products2 = [
-    ["type": "A", "days": 10, "dependency": []],
-    ["type": "B", "days": 5, "dependency": []],
-    ["type": "C", "days": 7, "dependency": []]
-]
+var products_4 = new List<Dictionary<string, object>>()
+{
+    new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 10 }, { "dependency", new int[] { 1 } } },
+    new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 5 }, { "dependency", new int[] { 0 } } }
+};
 
-print(calculateProductionTime(products: products1))
-print(calculateProductionTime(products: products2))
+Console.WriteLine(ProductionCycleManager.ManageProduction(products_4));  // Expected output: "Invalid Cycle Detected"
+
+var products_5 = new List<Dictionary<string, object>>()
+{
+    new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 10 }, { "dependency", new int[] { } } },
+    new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 5 }, { "dependency", new int[] { } } },
+    new Dictionary<string, object> { { "id", 2 }, { "type", "C" }, { "days", 7 }, { "dependency", new int[] { } } },
+    new Dictionary<string, object> { { "id", 3 }, { "type", "A" }, { "days", 3 } }  // Missing "dependency"
+};
+
+Console.WriteLine(ProductionCycleManager.ManageProduction(products_5));  // Expected output: "Invalid Input"
+
+var products_6 = new List<Dictionary<string, object>>()
+{
+    new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 10 }, { "dependency", new int[] { 3 } } },  // Dependency on non-existent product
+    new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 5 }, { "dependency", new int[] { } } }
+};
+
+Console.WriteLine(ProductionCycleManager.ManageProduction(products_6));  // Expected output: "Invalid Input"
+
+var products_7 = new List<Dictionary<string, object>>()
+{
+    new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 5 }, { "dependency", new int[] { } } },
+    new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 8 }, { "dependency", new int[] { } } },
+    new Dictionary<string, object> { { "id", 2 }, { "type", "C" }, { "days", 10 }, { "dependency", new int[] { } } }
+};
+
+Console.WriteLine(ProductionCycleManager.ManageProduction(products_7));  // Expected output: "23"
