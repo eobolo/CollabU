@@ -1,3 +1,7 @@
+iverilog -o my_design.vvp my_design.v
+
+
+
 module production_cycle (
     input wire clk,             // Clock signal
     input wire reset,           // Reset signal
