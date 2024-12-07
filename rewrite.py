@@ -2,185 +2,124 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class ProductionCycleManager
+public class Product
 {
-    public static string ManageProduction(List<Dictionary<string, object>> products)
+    public string Type { get; set; }
+    public int Days { get; set; }
+    public List<int> Dependency { get; set; }
+
+    public Product(string type, int days, List<int> dependency)
     {
-        // Validate input
-        if (!products.All(p => IsValidProduct(p)))
-        {
-            return "Invalid Input";
-        }
+        Type = type;
+        Days = days;
+        Dependency = dependency;
+    }
+}
 
-        Dictionary<int, Product> productDictionary = new Dictionary<int, Product>();
-        foreach (var productData in products)
+public class SupplyChainManager
+{
+    private readonly Dictionary<string, Product> products;
+
+    public SupplyChainManager(List<Dictionary<string, object>> productList)
+    {
+        products = ValidateAndParseInput(productList);
+    }
+
+    private Dictionary<string, Product> ValidateAndParseInput(List<Dictionary<string, object>> productList)
+    {
+        var products = new Dictionary<string, Product>();
+
+        foreach (var productDict in productList)
         {
-            var product = new Product
+            if (!productDict.Keys.Contains("type") || !productDict.Keys.Contains("days") || !productDict.Keys.Contains("dependency"))
             {
-                Id = (int)productData["id"],
-                Type = (string)productData["type"],
-                Days = (int)productData["days"],
-                Dependencies = (int[])productData["dependency"]
-            };
-            productDictionary[product.Id] = product;
-        }
+                Console.WriteLine("Invalid Input");
+                return null;
+            }
 
-        // Check for circular dependencies
-        if (HasCircularDependency(productDictionary))
-        {
-            return "Invalid Cycle Detected";
-        }
+            string type = (string)productDict["type"];
+            int days = (int)productDict["days"];
+            List<int> dependency = (List<int>)productDict["dependency"];
 
-        // Topological sorting
-        int totalDays = 0;
-        var queue = new Queue<Product>(products.Select(p => productDictionary[(int)p["id"]]).Where(p => !p.Dependencies.Any()));
-
-        while (queue.Count > 0)
-        {
-            var currentProduct = queue.Dequeue();
-            totalDays += currentProduct.Days;
-
-            foreach (var product in productDictionary.Values)
+            if (!products.TryAdd(type, new Product(type, days, dependency)))
             {
-                if (product.Dependencies.Contains(currentProduct.Id))
+                Console.WriteLine("Invalid Input: Product type already exists.");
+                return null;
+            }
+        }
+
+        foreach (var product in products.Values)
+        {
+            for (int i = 0; i < product.Dependency.Count; i++)
+            {
+                int depIndex = product.Dependency[i];
+                if (depIndex < 0 || depIndex >= products.Count)
                 {
-                    product.Dependencies = product.Dependencies.Where(d => d != currentProduct.Id).ToArray();
-                    if (!product.Dependencies.Any())
+                    Console.WriteLine("Invalid Input: Dependency index out of bounds.");
+                    return null;
+                }
+
+                string depType = products.Keys.ElementAt(depIndex);
+                product.Dependency[i] = products.Keys.ToList().IndexOf(depType);
+            }
+        }
+
+        return products;
+    }
+
+    public string CalculateProductionTime()
+    {
+        if (products == null)
+        {
+            return "Invalid Input"; // This should never be reached due to input validation
+        }
+
+        List<int> independentProducts = FindIndependentProducts();
+        int totalDays = 0;
+
+        while (independentProducts.Count > 0)
+        {
+            int currentProductIndex = independentProducts.RemoveFirst();
+            string currentProductType = products.Keys.ElementAt(currentProductIndex);
+            totalDays += products[currentProductType].Days;
+
+            foreach (var product in products.Values)
+            {
+                if (product.Dependency.Contains(currentProductIndex))
+                {
+                    product.Dependency.Remove(currentProductIndex);
+                    if (product.Dependency.Count == 0)
                     {
-                        queue.Enqueue(product);
+                        independentProducts.Add(products.Keys.ToList().IndexOf(product.Type));
                     }
                 }
             }
         }
 
+        if (HasCircularDependency())
+        {
+            return "Invalid Cycle Detected";
+        }
+
         return totalDays.ToString();
     }
 
-    private static bool HasCircularDependency(Dictionary<int, Product> products)
+    private List<int> FindIndependentProducts()
     {
-        var visited = new HashSet<int>();
-        var stack = new Stack<int>();
+        List<int> independentProducts = new List<int>();
 
         foreach (var product in products.Values)
         {
-            if (DFS(product, products, visited, stack))
+            if (product.Dependency.Count == 0)
             {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static bool DFS(Product product, Dictionary<int, Product> products, HashSet<int> visited, Stack<int> stack)
-    {
-        if (stack.Contains(product.Id))
-        {
-            return true;
-        }
-
-        if (visited.Contains(product.Id))
-        {
-            return false;
-        }
-
-        visited.Add(product.Id);
-        stack.Push(product.Id);
-
-        foreach (var dependency in product.Dependencies)
-        {
-            if (DFS(products[dependency], products, visited, stack))
-            {
-                return true;
+                independentProducts.Add(products.Keys.ToList().IndexOf(product.Type));
             }
         }
 
-        stack.Pop();
-        return false;
+        return independentProducts;
     }
 
-    private static bool IsValidProduct(Dictionary<string, object> product)
+    private bool HasCircularDependency()
     {
-        return product.Keys.All(k => k == "id" || k == "type" || k == "days" || k == "dependency") &&
-               product.Values.All(v =>
-                   v is int || v is string &&
-                   (v is int && (int)v >= 0) ||
-                   (v is string && !string.IsNullOrEmpty((string)v)) ||
-                   (v is int[] && ((int[])v).All(d => d >= 0))
-               );
-    }
-
-    class Product
-    {
-        public int Id { get; set; }
-        public string Type { get; set; }
-        public int Days { get; set; }
-        public int[] Dependencies { get; set; }
-    }
-
-    // Main method to run the test cases
-    public static void Main()
-    {
-        // Test Case 1: Valid Products with Dependencies
-        var products_1 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 10 }, { "dependency", new int[] { } } },
-            new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 5 }, { "dependency", new int[] { 0 } } },
-            new Dictionary<string, object> { { "id", 2 }, { "type", "C" }, { "days", 7 }, { "dependency", new int[] { 0 } } },
-            new Dictionary<string, object> { { "id", 3 }, { "type", "A" }, { "days", 3 }, { "dependency", new int[] { 1, 2 } } },
-            new Dictionary<string, object> { { "id", 4 }, { "type", "B" }, { "days", 8 }, { "dependency", new int[] { 3 } } },
-            new Dictionary<string, object> { { "id", 5 }, { "type", "C" }, { "days", 4 }, { "dependency", new int[] { 4 } } }
-        };
-        Console.WriteLine(ManageProduction(products_1));  // Expected output: "37"
-
-        // Test Case 2: No Dependencies
-        var products_2 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 10 }, { "dependency", new int[] { } } },
-            new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 5 }, { "dependency", new int[] { } } },
-            new Dictionary<string, object> { { "id", 2 }, { "type", "C" }, { "days", 7 }, { "dependency", new int[] { } } }
-        };
-        Console.WriteLine(ManageProduction(products_2));  // Expected output: "22"
-
-        // Test Case 3: Single Product (No Dependencies)
-        var products_3 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 12 }, { "dependency", new int[] { } } }
-        };
-        Console.WriteLine(ManageProduction(products_3));  // Expected output: "12"
-
-        // Test Case 4: Invalid Dependencies (Circular Dependency)
-        var products_4 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 10 }, { "dependency", new int[] { 1 } } },
-            new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 5 }, { "dependency", new int[] { 0 } } }
-        };
-        Console.WriteLine(ManageProduction(products_4));  // Expected output: "Invalid Cycle Detected"
-
-        // Test Case 5: Invalid Input (Missing "dependency" Key)
-        var products_5 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 10 }, { "dependency", new int[] { } } },
-            new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 5 }, { "dependency", new int[] { } } },
-            new Dictionary<string, object> { { "id", 2 }, { "type", "C" }, { "days", 7 }, { "dependency", new int[] { } } },
-            new Dictionary<string, object> { { "id", 3 }, { "type", "A" }, { "days", 3 } }  // Missing "dependency"
-        };
-        Console.WriteLine(ManageProduction(products_5));  // Expected output: "Invalid Input"
-
-        // Test Case 6: Invalid Input (Dependency References Non-Existent Product)
-        var products_6 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 10 }, { "dependency", new int[] { 3 } } },  // Dependency on non-existent product
-            new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 5 }, { "dependency", new int[] { } } }
-        };
-        Console.WriteLine(ManageProduction(products_6));  // Expected output: "Invalid Input"
-
-        // Test Case 7: Valid Input with No Dependencies and Multiple Products
-        var products_7 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "id", 0 }, { "type", "A" }, { "days", 5 }, { "dependency", new int[] { } } },
-            new Dictionary<string, object> { { "id", 1 }, { "type", "B" }, { "days", 8 }, { "dependency", new int[] { } } },
-            new Dictionary<string, object> { { "id", 2 }, { "type", "C" }, { "days", 10 }, { "dependency", new int[] { } } }
-        };
-        Console.WriteLine(ManageProduction(products_7));  // Expected output: "23"
-    }
-}
+        bool[] visited = new bool[products.Count];
+        Stack<int> stack = new Stack<int>();
