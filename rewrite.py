@@ -1,4 +1,12 @@
-module production_cycle (
+C:\Users\Excel\Desktop\Python>iverilog -o product_manager.vvp product_manager.v
+product_manager.v:117: error: Enable of unknown task ``return''.
+1 error(s) during elaboration.
+
+    
+    
+    
+    
+    module production_cycle (
     input wire clk,             // Clock signal
     input wire reset,           // Reset signal
     output reg [31:0] total_time, // Total production time
