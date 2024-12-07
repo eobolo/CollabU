@@ -2,124 +2,143 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Product
+public class ProductionManager
 {
-    public string Type { get; set; }
-    public int Days { get; set; }
-    public List<int> Dependency { get; set; }
-
-    public Product(string type, int days, List<int> dependency)
+    public string CalculateProductionTime(List<Dictionary<string, object>> products)
     {
-        Type = type;
-        Days = days;
-        Dependency = dependency;
-    }
-}
-
-public class SupplyChainManager
-{
-    private readonly Dictionary<string, Product> products;
-
-    public SupplyChainManager(List<Dictionary<string, object>> productList)
-    {
-        products = ValidateAndParseInput(productList);
-    }
-
-    private Dictionary<string, Product> ValidateAndParseInput(List<Dictionary<string, object>> productList)
-    {
-        var products = new Dictionary<string, Product>();
-
-        foreach (var productDict in productList)
+        // Validate the input data
+        if (!products.All(p => p.Keys.Contains("type") && p.Keys.Contains("days") && p.Keys.Contains("dependency")))
         {
-            if (!productDict.Keys.Contains("type") || !productDict.Keys.Contains("days") || !productDict.Keys.Contains("dependency"))
-            {
-                Console.WriteLine("Invalid Input");
-                return null;
-            }
-
-            string type = (string)productDict["type"];
-            int days = (int)productDict["days"];
-            List<int> dependency = (List<int>)productDict["dependency"];
-
-            if (!products.TryAdd(type, new Product(type, days, dependency)))
-            {
-                Console.WriteLine("Invalid Input: Product type already exists.");
-                return null;
-            }
+            return "Invalid Input";
         }
 
-        foreach (var product in products.Values)
+        if (!products.All(p => int.TryParse(p["days"].ToString(), out _)))
         {
-            for (int i = 0; i < product.Dependency.Count; i++)
+            return "Invalid Input";
+        }
+
+        var productDict = new Dictionary<int, Product>();
+
+        for (int i = 0; i < products.Count; i++)
+        {
+            var product = new Product
             {
-                int depIndex = product.Dependency[i];
-                if (depIndex < 0 || depIndex >= products.Count)
-                {
-                    Console.WriteLine("Invalid Input: Dependency index out of bounds.");
-                    return null;
-                }
+                Id = i,
+                Type = products[i]["type"].ToString(),
+                Days = int.Parse(products[i]["days"].ToString()),
+                Dependencies = (products[i]["dependency"] as List<object>)?.Select(o => int.Parse(o.ToString())).ToList() ?? new List<int>()
+            };
 
-                string depType = products.Keys.ElementAt(depIndex);
-                product.Dependency[i] = products.Keys.ToList().IndexOf(depType);
-            }
-        }
-
-        return products;
-    }
-
-    public string CalculateProductionTime()
-    {
-        if (products == null)
-        {
-            return "Invalid Input"; // This should never be reached due to input validation
-        }
-
-        List<int> independentProducts = FindIndependentProducts();
-        int totalDays = 0;
-
-        while (independentProducts.Count > 0)
-        {
-            int currentProductIndex = independentProducts.RemoveFirst();
-            string currentProductType = products.Keys.ElementAt(currentProductIndex);
-            totalDays += products[currentProductType].Days;
-
-            foreach (var product in products.Values)
+            // Validate dependencies
+            if (product.Dependencies.Any(d => d < 0 || d >= products.Count))
             {
-                if (product.Dependency.Contains(currentProductIndex))
-                {
-                    product.Dependency.Remove(currentProductIndex);
-                    if (product.Dependency.Count == 0)
-                    {
-                        independentProducts.Add(products.Keys.ToList().IndexOf(product.Type));
-                    }
-                }
+                return "Invalid Input";
             }
+
+            productDict.Add(product.Id, product);
         }
 
-        if (HasCircularDependency())
+        bool hasCircularDependency = hasCircularDependencyUtil(productDict, new List<int>());
+        if (hasCircularDependency)
         {
             return "Invalid Cycle Detected";
+        }
+
+        var queue = new Queue<Product>();
+        foreach (var product in productDict.Values where !product.Dependencies.Any())
+        {
+            queue.Enqueue(product);
+        }
+
+        int totalDays = 0;
+        while (queue.Count > 0)
+        {
+            var currentProduct = queue.Dequeue();
+            totalDays += currentProduct.Days;
+
+            foreach (var product in productDict.Values where product.Dependencies.Contains(currentProduct.Id))
+            {
+                product.Dependencies.Remove(currentProduct.Id);
+                if (!product.Dependencies.Any())
+                {
+                    queue.Enqueue(product);
+                }
+            }
+        }
+
+        // Check if there are any remaining products with dependencies, indicating an invalid state
+        if (productDict.Values.Any(p => p.Dependencies.Any()))
+        {
+            return "Invalid Input";
         }
 
         return totalDays.ToString();
     }
 
-    private List<int> FindIndependentProducts()
+    private bool hasCircularDependencyUtil(Dictionary<int, Product> productDict, List<int> visited)
     {
-        List<int> independentProducts = new List<int>();
+        visited.AddRange(productDict.Keys);
 
-        foreach (var product in products.Values)
+        foreach (var product in productDict.Values)
         {
-            if (product.Dependency.Count == 0)
+            foreach (var dependency in product.Dependencies)
             {
-                independentProducts.Add(products.Keys.ToList().IndexOf(product.Type));
+                if (visited.Contains(dependency))
+                {
+                    return true;
+                }
+
+                if (hasCircularDependencyUtil(productDict, visited))
+                {
+                    return true;
+                }
             }
         }
 
-        return independentProducts;
+        return false;
     }
 
-    private bool HasCircularDependency()
+    public class Product
     {
-        bool[] visited = new bool[products.Count];
-        Stack<int> stack = new Stack<int>();
+        public int Id { get; set; }
+        public string Type { get; set; }
+        public int Days { get; set; }
+        public List<int> Dependencies { get; set; }
+    }
+
+    public static void Main()
+    {
+        var productionManager = new ProductionManager();
+
+        List<Dictionary<string, object>> productList1 = new List<Dictionary<string, object>>()
+        {
+            new Dictionary<string, object> { { "type", "Coffee dust" }, { "days", 2 }, { "dependency", new[] {} } },
+            new Dictionary<string, object> { { "type", "Coffee cups" }, { "days", 3 }, { "dependency", new[] { 0 } } },
+            new Dictionary<string, object> { { "type", "Coffee sealing" }, { "days", 1 }, { "dependency", new[] { 0 } } },
+        };
+
+        Console.WriteLine("Example 1 Output: " + productionManager.CalculateProductionTime(productList1)); // Output: 6
+
+        List<Dictionary<string, object>> productList2 = new List<Dictionary<string, object>>()
+        {
+            new Dictionary<string, object> { { "type", "A" }, { "days", 1 }, { "dependency", new[] { 1 } } },
+            new Dictionary<string, object> { { "type", "B" }, { "days", 1 }, { "dependency", new[] { 0 } } },
+        };
+
+        Console.WriteLine("Example 2 Output: " + productionManager.CalculateProductionTime(productList2)); // Output: Invalid Cycle Detected
+
+        List<Dictionary<string, object>> productList3 = new List<Dictionary<string, object>>()
+        {
+            new Dictionary<string, object> { { "type", "A" }, { "days", 1 }, { "dependency", new[] {} } },  // Missing "dependency" key in B
+        };
+
+        Console.WriteLine("Example 3 Output: " + productionManager.CalculateProductionTime(productList3)); // Output: Invalid Input
+
+        List<Dictionary<string, object>> productList4 = new List<Dictionary<string, object>>()
+        {
+            new Dictionary<string, object> { { "type", "A" }, { "days", "1" }, { "dependency", new[] {} } },  // Invalid value for "days"
+        };
+
+        Console.WriteLine("Example 4 Output: " + productionManager.CalculateProductionTime(productList4)); // Output: Invalid Input
+    }
+}
