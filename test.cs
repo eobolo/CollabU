@@ -1,121 +1,119 @@
-using System;
-using System.Collections.Generic;
+from datetime import datetime, timedelta
 
-public class ProductionScheduler
-{
-    // This method calculates the total production time, considering product dependencies.
-    public static string CalculateProductionTime(List<Dictionary<string, object>> products)
-    {
-        int n = products.Count;  // Number of products
+class Book:
+    def __init__(self, book_id, title, author, copies_available, fine_per_day):
+        self.book_id = book_id
+        self.title = title
+        self.author = author
+        self.copies_available = copies_available
+        self.fine_per_day = fine_per_day
+        self.status = "available"
 
-        // Edge case: Empty product list (no products to process)
-        if (n == 0)
-            return "0";
+    def checkout(self):
+        if self.copies_available > 0:
+            self.copies_available -= 1
+            self.status = "checked_out"
+            return True
+        return False
 
-        // Helper function to validate input
-        bool ValidateInput()
-        {
-            // Loop through each product
-            for (int i = 0; i < n; i++)
-            {
-                var product = products[i];
-                
-                // Check if required keys are present: "type", "days", and "dependency"
-                if (!product.ContainsKey("type") || !product.ContainsKey("days") || !product.ContainsKey("dependency"))
-                    return false;
+    def return_book(self, return_date, due_date):
+        if return_date > due_date:
+            self.status = "overdue"
+            return True  # Book is overdue
+        else:
+            self.status = "available"
+            return False  # Book is returned on time
 
-                // Ensure the correct types for each key
-                if (!(product["type"] is string) || !(product["days"] is int) || !(product["dependency"] is List<int>))
-                    return false;
+class User:
+    def __init__(self, user_id):
+        self.user_id = user_id
+        self.borrowed_books = {}
+        self.fines = {}
 
-                // Validate dependencies for each product (must reference valid products)
-                var dependency = (List<int>)product["dependency"];
-                foreach (var dep in dependency)
-                {
-                    if (dep < 0 || dep >= n)  // Dependency should be within valid product indices
-                        return false;
-                }
-            }
-            return true;
-        }
+    def borrow_book(self, book_id):
+        self.borrowed_books[book_id] = datetime.now()
+        self.fines[book_id] = 0  # Initialize fines for this book
 
-        // Step 1: Validate the input
-        if (!ValidateInput())
-            return "Invalid Input";
+    def return_book(self, book_id):
+        if book_id in self.borrowed_books:
+            return_date = datetime.now()
+            due_date = self.borrowed_books[book_id] + timedelta(days=14)  # Assume a 14-day loan period
+            is_overdue = self.fines[book_id] > 0
+            
+            if is_overdue:
+                print(f"Book was overdue. Please pay your fine for {book_id}.")
+                return True  # Indicates overdue book due for fine payment
+            
+            return return_date > due_date
+        return False  # Book not borrowed by user
 
-        // Step 2: Prepare for cycle detection and completion time calculation
-        int[] visited = new int[n];  // 0 = unvisited, 1 = visiting, 2 = visited
-        int[] completionTime = new int[n];  // Track the time when each product is completed
+    def pay_fine(self, book_id, amount):
+        if book_id in self.fines and self.fines[book_id] > 0:
+            self.fines[book_id] -= amount
+            if self.fines[book_id] <= 0:
+                self.fines[book_id] = 0  # Fine is cleared
+            print(f"Fine paid for book {book_id}. Remaining fine: {self.fines[book_id]}")
+            return True
+        return False
 
-        // Depth First Search to detect cycles
-        bool Dfs(int productIndex)
-        {
-            if (visited[productIndex] == 1)  // Cycle detected (currently being visited)
-                return false;
-            if (visited[productIndex] == 2)  // Already processed
-                return true;
+class Library:
+    def __init__(self):
+        self.books = {}
+        self.users = {}
 
-            visited[productIndex] = 1;  // Mark product as being visited
+    def add_book(self, book_id, title, author, copies_available, fine_per_day):
+        if book_id in self.books:
+            return "Book ID Already Exists"
+        self.books[book_id] = Book(book_id, title, author, copies_available, fine_per_day)
+        return "Book added successfully"
 
-            var dependencyList = (List<int>)products[productIndex]["dependency"];
-            foreach (int depIndex in dependencyList)
-            {
-                if (depIndex >= n || depIndex < 0 || !Dfs(depIndex))  // Check if dependency is valid
-                    return false;
-            }
+    def add_user(self, user_id):
+        if user_id not in self.users:
+            self.users[user_id] = User(user_id)
+            return "User added successfully"
+        return "User already exists"
 
-            visited[productIndex] = 2;  // Mark product as fully visited
-            return true;
-        }
+    def checkout_book(self, user_id, book_id):
+        if book_id not in self.books:
+            return "Invalid Input"
+        book = self.books[book_id]
+        if book.checkout():
+            self.users[user_id].borrow_book(book_id)
+            return "Book checked out successfully"
+        return "No available copies"
 
-        // Step 3: Detect cycles in the dependency graph
-        for (int i = 0; i < n; i++)
-        {
-            if (visited[i] == 0 && !Dfs(i))  // If a cycle is found
-                return "Invalid Cycle Detected";
-        }
+    def return_book(self, user_id, book_id):
+        if user_id not in self.users or book_id not in self.books:
+            return "Invalid Input"
+        
+        user = self.users[user_id]
+        if user.return_book(book_id):
+            book = self.books[book_id]
+            overdue = book.return_book(datetime.now(), user.borrowed_books[book_id])
+            if overdue:
+                days_late = (datetime.now() - (user.borrowed_books[book_id] + timedelta(days=14))).days
+                fine_amount = days_late * book.fine_per_day
+                user.fines[book_id] += fine_amount
+                print(f"Book returned late. Fine incurred: {fine_amount}")
+            del user.borrowed_books[book_id]  # Remove book from borrowed list
+            book.copies_available += 1  # Increase the available copies
+            return "Book returned successfully"
+        return "You have not borrowed this book"
 
-        // Step 4: Calculate the completion time for each product
-        int CalculateCompletionTime(int productIndex)
-        {
-            if (completionTime[productIndex] > 0)  // Return pre-calculated time
-                return completionTime[productIndex];
+    def pay_fine(self, user_id, book_id, amount):
+        if user_id not in self.users or book_id not in self.books:
+            return "Invalid Input"
+        
+        user = self.users[user_id]
+        if user.pay_fine(book_id, amount):
+            book = self.books[book_id]
+            book.status = "available"  # Book is available after fine payment
+            return "Fine paid successfully"
+        return "No fines to pay"
 
-            int maxDependencyTime = 0;
-            var dependencyList = (List<int>)products[productIndex]["dependency"];
-            foreach (int depIndex in dependencyList)
-            {
-                maxDependencyTime = Math.Max(maxDependencyTime, CalculateCompletionTime(depIndex));  // Get max of dependencies
-            }
-
-            completionTime[productIndex] = maxDependencyTime + (int)products[productIndex]["days"];
-            return completionTime[productIndex];
-        }
-
-        // Step 5: Calculate the total production time
-        int totalTime = 0;
-        for (int i = 0; i < n; i++)
-        {
-            totalTime = Math.Max(totalTime, CalculateCompletionTime(i));  // Max time considering all products
-        }
-
-        // Return total production time
-        return totalTime.ToString();
-    }
-
-    public static void Main()
-    {
-        // Example product lists and calls to CalculateProductionTime
-        var products1 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "type", "A" }, { "days", 10 }, { "dependency", new List<int>() } },
-            new Dictionary<string, object> { { "type", "B" }, { "days", 5 }, { "dependency", new List<int>{0} } },
-            new Dictionary<string, object> { { "type", "C" }, { "days", 7 }, { "dependency", new List<int>{0} } },
-            new Dictionary<string, object> { { "type", "A" }, { "days", 3 }, { "dependency", new List<int>{1, 2} } },
-            new Dictionary<string, object> { { "type", "B" }, { "days", 8 }, { "dependency", new List<int>{3} } },
-            new Dictionary<string, object> { { "type", "C" }, { "days", 4 }, { "dependency", new List<int>{4} } }
-        };
-
-        Console.WriteLine(CalculateProductionTime(products1));  // Output: Expected total time based on dependencies
-    }
-}
+# Example usage:
+library = Library()
+library.add_user("user1")
+library.add_book("book1", "Python Programming", "Author A", 3, 1)
+print(library.checkout_book("user1", "book1"))  # Checkout book
+print(library.return_book("user1", "book1"))    # Return book
