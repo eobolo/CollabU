@@ -1,132 +1,236 @@
-module production_cycle (
-    input wire clk,              // Clock signal
-    input wire reset,            // Reset signal
-    output reg [31:0] total_time, // Total production time
-    output reg valid_input,       // Flag for valid input
-    output reg cycle_detected     // Flag for circular dependencies
-);
+C#:
 
-    parameter NUM_PRODUCTS = 6;
+using System;
+using System.Collections.Generic;
 
-    // Production times for products (encoded as individual parameters)
-    parameter [31:0] PRODUCTION_TIME_0 = 10;
-    parameter [31:0] PRODUCTION_TIME_1 = 5;
-    parameter [31:0] PRODUCTION_TIME_2 = 7;
-    parameter [31:0] PRODUCTION_TIME_3 = 3;
-    parameter [31:0] PRODUCTION_TIME_4 = 8;
-    parameter [31:0] PRODUCTION_TIME_5 = 4;
+public class ProductionScheduler
+{
+    public static string CalculateProductionTime(List<Dictionary<string, object>> products)
+    {
+        int n = products.Count;
 
-    // Dependencies represented as packed arrays (1 bit per dependency)
-    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_0 = 6'b000000;
-    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_1 = 6'b000001;
-    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_2 = 6'b000001;
-    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_3 = 6'b000110;
-    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_4 = 6'b001000;
-    parameter [NUM_PRODUCTS-1:0] DEPENDENCY_5 = 6'b010000;
+        // Edge case: Empty product list
+        if (n == 0)
+            return "0";
 
-    // Array to store production times and dependencies
-    reg [31:0] production_times[NUM_PRODUCTS-1:0];
-    reg [NUM_PRODUCTS-1:0] dependencies[NUM_PRODUCTS-1:0];
+        // Helper function to check if all required keys are present in the product dictionaries
+        bool ValidateInput()
+        {
+            for (int i = 0; i < n; i++)
+            {
+                var product = products[i];
+                if (!product.ContainsKey("type") || !product.ContainsKey("days") || !product.ContainsKey("dependency"))
+                    return false;
+                if (!(product["type"] is string) || !(product["days"] is int) || !(product["dependency"] is List<int>))
+                    return false;
+                var dependency = (List<int>)product["dependency"];
+                foreach (var dep in dependency)
+                {
+                    if (dep < 0 || dep >= n)
+                        return false;
+                }
+            }
+            return true;
+        }
 
-    // Internal signals
-    reg [31:0] completion_time[NUM_PRODUCTS-1:0]; // Stores the completion time for each product
-    reg [NUM_PRODUCTS-1:0] visited;              // Visited flags for cycle detection
-    reg [NUM_PRODUCTS-1:0] stack;                // Stack for cycle detection
+        // Step 1: Validate the input for missing keys or invalid values
+        if (!ValidateInput())
+            return "Invalid Input";
 
-    integer i, j; // Loop variables
+        // Step 2: Detect circular dependencies using DFS
+        int[] visited = new int[n]; // 0 = unvisited, 1 = visiting, 2 = visited
+        int[] completionTime = new int[n]; // Track the time when each product is completed
 
-    // Initialize arrays at reset
-    always @(posedge clk or posedge reset) begin
-        if (reset) begin
-            total_time <= 0;
-            valid_input <= 1;
-            cycle_detected <= 0;
+        bool Dfs(int productIndex)
+        {
+            if (visited[productIndex] == 1)
+                return false; // Cycle detected
+            if (visited[productIndex] == 2)
+                return true; // Already processed product
 
-            // Reset all registers
-            for (i = 0; i < NUM_PRODUCTS; i = i + 1) begin
-                completion_time[i] <= 0;
-                visited[i] <= 0;
-                stack[i] <= 0;
-            end
+            visited[productIndex] = 1; // Mark as visiting
 
-            // Load production times
-            production_times[0] <= PRODUCTION_TIME_0;
-            production_times[1] <= PRODUCTION_TIME_1;
-            production_times[2] <= PRODUCTION_TIME_2;
-            production_times[3] <= PRODUCTION_TIME_3;
-            production_times[4] <= PRODUCTION_TIME_4;
-            production_times[5] <= PRODUCTION_TIME_5;
+            var dependencyList = (List<int>)products[productIndex]["dependency"];
+            foreach (int depIndex in dependencyList)
+            {
+                if (depIndex >= n || depIndex < 0 || !Dfs(depIndex))
+                    return false;
+            }
 
-            // Load dependencies
-            dependencies[0] <= DEPENDENCY_0;
-            dependencies[1] <= DEPENDENCY_1;
-            dependencies[2] <= DEPENDENCY_2;
-            dependencies[3] <= DEPENDENCY_3;
-            dependencies[4] <= DEPENDENCY_4;
-            dependencies[5] <= DEPENDENCY_5;
-        end else begin
-            // Input validation
-            valid_input <= 1;
-            for (i = 0; i < NUM_PRODUCTS; i = i + 1) begin
-                if (|dependencies[i] & (i >= NUM_PRODUCTS)) begin
-                    valid_input <= 0; // Invalid dependency detected
-                end
-            end
+            visited[productIndex] = 2; // Mark as visited
+            return true;
+        }
 
-            if (valid_input) begin
-                // Cycle detection and completion time calculation
-                cycle_detected <= 0; // Reset cycle detection flag
-                for (i = 0; i < NUM_PRODUCTS; i = i + 1) begin
-                    if (!visited[i] && !cycle_detected) begin
-                        cycle_detected <= !calculate_completion_time(i); // Set cycle_detected flag if cycle found
-                    end
-                end
-                if (!cycle_detected) begin
-                    // Calculate total production time
-                    total_time <= 0;
-                    for (i = 0; i < NUM_PRODUCTS; i = i + 1) begin
-                        if (completion_time[i] > total_time) begin
-                            total_time <= completion_time[i];
-                        end
-                    end
-                end
-            end
-        end
-    end
+        // Step 3: Check for cycles in the dependency graph
+        for (int i = 0; i < n; i++)
+        {
+            if (visited[i] == 0 && !Dfs(i))
+                return "Invalid Cycle Detected";
+        }
 
-    // Task to calculate completion time using a DFS-like approach
-    function calculate_completion_time;
-        input integer product_index;
-        reg [31:0] max_dependency_time;
-        begin
-            if (stack[product_index]) begin
-                calculate_completion_time = 0; // Cycle detected
-            end else if (visited[product_index]) begin
-                calculate_completion_time = 1; // Already processed
-            end else begin
-                // Mark as visiting
-                stack[product_index] = 1;
-                visited[product_index] = 1;
+        // Step 4: Calculate the completion time for each product
+        int CalculateCompletionTime(int productIndex)
+        {
+            if (completionTime[productIndex] > 0)
+                return completionTime[productIndex];
 
-                max_dependency_time = 0;
-                for (j = 0; j < NUM_PRODUCTS; j = j + 1) begin
-                    if (dependencies[product_index][j]) begin
-                        if (!calculate_completion_time(j)) begin
-                            calculate_completion_time = 0; // Cycle detected in dependency
-                            stack[product_index] = 0;
-                            return;
-                        end
-                        if (completion_time[j] > max_dependency_time) begin
-                            max_dependency_time = completion_time[j];
-                        end
-                    end
-                end
+            int maxDependencyTime = 0;
+            var dependencyList = (List<int>)products[productIndex]["dependency"];
+            foreach (int depIndex in dependencyList)
+            {
+                maxDependencyTime = Math.Max(maxDependencyTime, CalculateCompletionTime(depIndex));
+            }
 
-                // Calculate completion time
-                completion_time[product_index] = max_dependency_time + production_times[product_index];
-                stack[product_index] = 0;
-                calculate_completion_time = 1; // Return value indicating no cycle
-            end
-        end
-    endfunction
-endmodule
+            completionTime[productIndex] = maxDependencyTime + (int)products[productIndex]["days"];
+            return completionTime[productIndex];
+        }
+
+        // Step 5: Calculate the total production time
+        int totalTime = 0;
+        for (int i = 0; i < n; i++)
+        {
+            totalTime = Math.Max(totalTime, CalculateCompletionTime(i));
+        }
+
+        return totalTime.ToString();
+    }
+
+    public static void Main()
+    {
+        var products1 = new List<Dictionary<string, object>>()
+        {
+            new Dictionary<string, object> { { "type", "A" }, { "days", 10 }, { "dependency", new List<int>() } },
+            new Dictionary<string, object> { { "type", "B" }, { "days", 5 }, { "dependency", new List<int>{0} } },
+            new Dictionary<string, object> { { "type", "C" }, { "days", 7 }, { "dependency", new List<int>{0} } },
+            new Dictionary<string, object> { { "type", "A" }, { "days", 3 }, { "dependency", new List<int>{1, 2} } },
+            new Dictionary<string, object> { { "type", "B" }, { "days", 8 }, { "dependency", new List<int>{3} } },
+            new Dictionary<string, object> { { "type", "C" }, { "days", 4 }, { "dependency", new List<int>{4} } }
+        };
+
+        var products2 = new List<Dictionary<string, object>>()
+        {
+            new Dictionary<string, object> { { "type", "A" }, { "days", 10 }, { "dependency", new List<int>() } },
+            new Dictionary<string, object> { { "type", "B" }, { "days", 5 }, { "dependency", new List<int>() } },
+            new Dictionary<string, object> { { "type", "C" }, { "days", 7 }, { "dependency", new List<int>() } }
+        };
+
+        Console.WriteLine(CalculateProductionTime(products1));
+        Console.WriteLine(CalculateProductionTime(products2));
+    }
+}
+
+
+
+
+Swift:
+
+import Foundation
+
+func calculateProductionTime(products: [[String: Any]]) -> Any {
+    let n = products.count
+    
+    // Edge case: Empty product list
+    if n == 0 {
+        return 0
+    }
+    
+    // Helper function to check if all required keys are present in the product dictionaries
+    func validateInput() -> Bool {
+        for product in products {
+            guard let type = product["type"] as? String,
+                  let days = product["days"] as? Int,
+                  let dependency = product["dependency"] as? [Int] else {
+                return false
+            }
+            
+            for dep in dependency {
+                if dep < 0 || dep >= n {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
+    // Step 1: Validate the input for missing keys or invalid values
+    if !validateInput() {
+        return "Invalid Input"
+    }
+    
+    // Step 2: Detect circular dependencies using DFS
+    var visited = [Int](repeating: 0, count: n) // 0 = unvisited, 1 = visiting, 2 = visited
+    var completionTime = [Int](repeating: 0, count: n) // Track the time when each product is completed
+    
+    func dfs(productIndex: Int) -> Bool {
+        if visited[productIndex] == 1 {
+            return false // Cycle detected
+        }
+        if visited[productIndex] == 2 {
+            return true // Already processed product
+        }
+        
+        visited[productIndex] = 1 // Mark as visiting
+        
+        if let dependencyList = products[productIndex]["dependency"] as? [Int] {
+            for depIndex in dependencyList {
+                if depIndex >= n || depIndex < 0 || !dfs(productIndex: depIndex) {
+                    return false
+                }
+            }
+        }
+        
+        visited[productIndex] = 2 // Mark as visited
+        return true
+    }
+    
+    // Step 3: Check for cycles in the dependency graph
+    for i in 0..<n {
+        if visited[i] == 0 && !dfs(productIndex: i) {
+            return "Invalid Cycle Detected"
+        }
+    }
+    
+    // Step 4: Calculate the completion time for each product
+    func calculateCompletionTime(productIndex: Int) -> Int {
+        if completionTime[productIndex] > 0 {
+            return completionTime[productIndex]
+        }
+        
+        var maxDependencyTime = 0
+        if let dependencyList = products[productIndex]["dependency"] as? [Int] {
+            for depIndex in dependencyList {
+                maxDependencyTime = max(maxDependencyTime, calculateCompletionTime(productIndex: depIndex))
+            }
+        }
+        
+        completionTime[productIndex] = maxDependencyTime + (products[productIndex]["days"] as! Int)
+        return completionTime[productIndex]
+    }
+    
+    // Step 5: Calculate the total production time
+    var totalTime = 0
+    for i in 0..<n {
+        totalTime = max(totalTime, calculateCompletionTime(productIndex: i))
+    }
+    
+    return totalTime
+}
+
+// Example usage
+let products1 = [
+    ["type": "A", "days": 10, "dependency": []],
+    ["type": "B", "days": 5, "dependency": [0]],
+    ["type": "C", "days": 7, "dependency": [0]],
+    ["type": "A", "days": 3, "dependency": [1, 2]],
+    ["type": "B", "days": 8, "dependency": [3]],
+    ["type": "C", "days": 4, "dependency": [4]]
+]
+
+let products2 = [
+    ["type": "A", "days": 10, "dependency": []],
+    ["type": "B", "days": 5, "dependency": []],
+    ["type": "C", "days": 7, "dependency": []]
+]
+
+print(calculateProductionTime(products: products1))
+print(calculateProductionTime(products: products2))
