@@ -1,3 +1,19 @@
+module test;
+    initial begin
+        $display("Hello, Verilog!");
+        $finish;
+    end
+endmodule
+
+iverilog -o test.vvp test.v
+
+
+vvp test.vvp
+
+
+
+
+
 iverilog -o my_design.vvp my_design.v
 
 
