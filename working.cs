@@ -1,188 +1,164 @@
-using System;
-using System.Collections.Generic;
+from datetime import datetime, timedelta
 
-public class ProductionScheduler
-{
-    // This method calculates the total production time, considering product dependencies.
-    public static string CalculateProductionTime(List<Dictionary<string, object>> products)
-    {
-        int n = products.Count;  // Number of products
+class Book:
+    def __init__(self, book_id, title, author, copies_available, fine_per_day):
+        self.book_id = book_id
+        self.title = title
+        self.author = author
+        self.copies_available = copies_available
+        self.fine_per_day = fine_per_day
+        self.due_dates = {}  # Tracks due dates for each user who checked out the book
 
-        // Edge case: Empty product list (no products to process)
-        if (n == 0)
-            return "0";
+    def checkout(self, user_id):
+        if self.copies_available > 0 and user_id not in self.due_dates:
+            self.copies_available -= 1
+            due_date = datetime.now() + timedelta(days=14)  # Fixed 14-day due date
+            self.due_dates[user_id] = due_date
+            return "Checkout Successful", due_date.strftime("%Y-%m-%d")
+        elif user_id in self.due_dates:
+            return "User Already Borrowed This Book", None
+        else:
+            return "Book Unavailable", None
 
-        // Helper function to validate input
-        bool ValidateInput()
-        {
-            // Loop through each product
-            for (int i = 0; i < n; i++)
-            {
-                var product = products[i];
-                
-                // Check if required keys are present: "type", "days", and "dependency"
-                if (!product.ContainsKey("type") || !product.ContainsKey("days") || !product.ContainsKey("dependency"))
-                    return false;
+    def return_book(self, user_id, return_date_str):
+        if user_id not in self.due_dates:
+            return "Book Not Borrowed by User", 0
 
-                // Ensure the correct types for each key
-                if (!(product["type"] is string) || !(product["days"] is int) || !(product["dependency"] is List<int>))
-                    return false;
+        try:
+            return_date = datetime.strptime(return_date_str, "%Y-%m-%d")
+        except ValueError:
+            return "Invalid Date Format", 0
 
-                // Validate dependencies for each product (must reference valid products)
-                var dependency = (List<int>)product["dependency"];
-                foreach (var dep in dependency)
-                {
-                    if (dep < 0 || dep >= n)  // Dependency should be within valid product indices
-                        return false;
-                }
-            }
-            return true;
-        }
+        due_date = self.due_dates.pop(user_id)
+        self.copies_available += 1
 
-        // Step 1: Validate the input
-        if (!ValidateInput())
-            return "Invalid Input";
+        if return_date > due_date:
+            overdue_days = (return_date - due_date).days
+            fine = overdue_days * self.fine_per_day
+            return f"Book Returned, Fine: {fine}", fine
+        return "Book Returned On Time", 0
 
-        // Step 2: Prepare for cycle detection and completion time calculation
-        int[] visited = new int[n];  // 0 = unvisited, 1 = visiting, 2 = visited
-        int[] completionTime = new int[n];  // Track the time when each product is completed
 
-        // Depth First Search to detect cycles
-        bool Dfs(int productIndex)
-        {
-            if (visited[productIndex] == 1)  // Cycle detected (currently being visited)
-                return false;
-            if (visited[productIndex] == 2)  // Already processed
-                return true;
+class User:
+    def __init__(self, user_id, name):
+        self.user_id = user_id
+        self.name = name
+        self.borrowed_books = {}  # Tracks book_id, due_date, and fine
 
-            visited[productIndex] = 1;  // Mark product as being visited
+    def borrow_book(self, book_id, due_date):
+        if book_id in self.borrowed_books:
+            return "User Already Borrowed This Book"
+        self.borrowed_books[book_id] = {"due_date": due_date, "fine": 0}
+        return "Book Borrowed Successfully"
 
-            var dependencyList = (List<int>)products[productIndex]["dependency"];
-            foreach (int depIndex in dependencyList)
-            {
-                if (depIndex >= n || depIndex < 0 || !Dfs(depIndex))  // Check if dependency is valid
-                    return false;
-            }
+    def return_book(self, book_id, fine):
+        if book_id in self.borrowed_books:
+            self.borrowed_books[book_id]["fine"] = fine  # Update fine
+            return "Book Returned Successfully"
+        return "Book Not Borrowed by User"
 
-            visited[productIndex] = 2;  // Mark product as fully visited
-            return true;
-        }
+    def pay_fine(self, book_id):
+        if book_id in self.borrowed_books:
+            fine = self.borrowed_books[book_id]["fine"]
+            if fine > 0:
+                self.borrowed_books[book_id]["fine"] = 0
+                return f"Fine of {fine} Paid Successfully"
+            return "No Fine Due for This Book"
+        return "Book Not Borrowed by User"
 
-        // Step 3: Detect cycles in the dependency graph
-        for (int i = 0; i < n; i++)
-        {
-            if (visited[i] == 0 && !Dfs(i))  // If a cycle is found
-                return "Invalid Cycle Detected";
-        }
 
-        // Step 4: Calculate the completion time for each product
-        int CalculateCompletionTime(int productIndex)
-        {
-            if (completionTime[productIndex] > 0)  // Return pre-calculated time
-                return completionTime[productIndex];
+class Library:
+    def __init__(self):
+        self.books = {}
+        self.users = {}
 
-            int maxDependencyTime = 0;
-            var dependencyList = (List<int>)products[productIndex]["dependency"];
-            foreach (int depIndex in dependencyList)
-            {
-                maxDependencyTime = Math.Max(maxDependencyTime, CalculateCompletionTime(depIndex));  // Get max of dependencies
-            }
+    def add_book(self, book_id, title, author, copies_available, fine_per_day):
+        if book_id in self.books:
+            return "Book ID Already Exists"
+        self.books[book_id] = Book(book_id, title, author, copies_available, fine_per_day)
+        return "Book Added Successfully"
 
-            completionTime[productIndex] = maxDependencyTime + (int)products[productIndex]["days"];
-            return completionTime[productIndex];
-        }
+    def add_user(self, user_id, name):
+        if user_id in self.users:
+            return "User ID Already Exists"
+        self.users[user_id] = User(user_id, name)
+        return "User Added Successfully"
 
-        // Step 5: Calculate the total production time
-        int totalTime = 0;
-        for (int i = 0; i < n; i++)
-        {
-            totalTime = Math.Max(totalTime, CalculateCompletionTime(i));  // Max time considering all products
-        }
+    def checkout_book(self, user_id, book_id):
+        if user_id not in self.users or book_id not in self.books:
+            return "Invalid Input"
+        
+        user = self.users[user_id]
+        book = self.books[book_id]
+        result, due_date = book.checkout(user_id)
+        if result == "Checkout Successful":
+            user.borrow_book(book_id, due_date)
+            return f"Checkout Successful, Due Date: {due_date}"
+        return result
 
-        // Return total production time
-        return totalTime.ToString();
-    }
+    def return_book(self, user_id, book_id, return_date):
+        if user_id not in self.users or book_id not in self.books:
+            return "Invalid Input"
 
-    public static void Main()
-    {
-        // Example product lists and calls to CalculateProductionTime
-        var products1 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "type", "A" }, { "days", 10 }, { "dependency", new List<int>() } },
-            new Dictionary<string, object> { { "type", "B" }, { "days", 5 }, { "dependency", new List<int>{0} } },
-            new Dictionary<string, object> { { "type", "C" }, { "days", 7 }, { "dependency", new List<int>{0} } },
-            new Dictionary<string, object> { { "type", "A" }, { "days", 3 }, { "dependency", new List<int>{1, 2} } },
-            new Dictionary<string, object> { { "type", "B" }, { "days", 8 }, { "dependency", new List<int>{3} } },
-            new Dictionary<string, object> { { "type", "C" }, { "days", 4 }, { "dependency", new List<int>{4} } }
-        };
-        var products2 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object> { { "type", "A" }, { "days", 10 }, { "dependency", new List<int>() } },
-            new Dictionary<string, object> { { "type", "B" }, { "days", 5 }, { "dependency", new List<int>() } },
-            new Dictionary<string, object> { { "type", "C" }, { "days", 7 }, { "dependency", new List<int>() } }
-        };
+        user = self.users[user_id]
+        book = self.books[book_id]
 
-        var products3 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object>()
-            {
-                { "type", "A" },
-                { "days", 12 },
-                { "dependency", new List<int>() }
-            }
-        };
+        result, fine = book.return_book(user_id, return_date)
+        if "Book Returned" in result:
+            user.return_book(book_id, fine)
+        return result
 
-        var products4 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object>()
-            {
-                { "type", "A" },
-                { "days", 10 },
-                { "dependency", new List<int> { 1 } }
-            },
-            new Dictionary<string, object>()
-            {
-                { "type", "B" },
-                { "days", 5 },
-                { "dependency", new List<int> { 0 } }
-            }
-        };
+    def pay_fine(self, user_id, book_id):
+        if user_id not in self.users:
+            return "Invalid User ID"
+        user = self.users[user_id]
+        return user.pay_fine(book_id)
 
-        var products5 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object>()
-            {
-                { "type", "A" },
-                { "days", 10 }
-            },
-            new Dictionary<string, object>()
-            {
-                { "type", "B" },
-                { "days", 5 },
-                { "dependency", new List<int>() }
-            }
-        };
+# Example Usage
+if __name__ == "__main__":
+    library = Library()
 
-        var products6 = new List<Dictionary<string, object>>()
-        {
-            new Dictionary<string, object>()
-            {
-                { "type", "A" },
-                { "days", 10 },
-                { "dependency", new List<int> { 3 } }
-            },
-            new Dictionary<string, object>()
-            {
-                { "type", "B" },
-                { "days", 5 },
-                { "dependency", new List<int>() }
-            }
-        };
-        Console.WriteLine(CalculateProductionTime(products1));
-        Console.WriteLine(CalculateProductionTime(products2));
-        Console.WriteLine(CalculateProductionTime(products3));
-        Console.WriteLine(CalculateProductionTime(products4));
-        Console.WriteLine(CalculateProductionTime(products5));
-        Console.WriteLine(CalculateProductionTime(products6));
-    }
-}
+    # Add books
+    print(library.add_book(1, "The Great Gatsby", "F. Scott Fitzgerald", 3, 1.0))  # Book Added Successfully
+    print(library.add_book(1, "The Great Gatsby", "F. Scott Fitzgerald", 3, 1.0))
+    print(library.add_book(2, "1984", "George Orwell", 2, 1.5))  # Book Added Successfully
+
+    # Add users
+    print(library.add_user(101, "Alice"))  # User Added Successfully
+    print(library.add_user(101, "Alice"))
+    print(library.add_user(102, "Bob"))    # User Added Successfully
+    print(library.add_user(103, "excel"))    # User Added Successfully
+
+    # Checkout books
+    print(library.checkout_book(101, 1))  # Checkout Successful, Due Date: YYYY-MM-DD
+    print(library.checkout_book(101, 1))  # User Already Borrowed This Book
+    print(library.checkout_book(102, 1))  # Checkout Successful, Due Date: YYYY-MM-DD
+    print(library.checkout_book(103, 1))  # Checkout Successful, Due Date: YYYY-MM-DD
+    print(library.checkout_book(104, 1))
+    print(library.add_user(104, "excel"))
+    print(library.checkout_book(104, 1))
+
+    # Return book on time
+    print(library.return_book(101, 1, "2024-12-15"))  # Book Returned On Time
+
+    # Return book late
+    print(library.return_book(102, 1, "2024-12-25"))  # Book Returned, Fine: 5.0
+
+    # # Test Case 12: User Tries to Return a Book Not Borrowed by Them (Invalid Case)
+    print(library.return_book(101, 2, "2024-12-01"))  # "Book Not Borrowed by User"
+
+    # # Test Case 13: Invalid Date Format (Invalid Date Format)
+    print(library.return_book(101, 1, "2024-12-32"))  # "Invalid Date Format"
+
+
+    # # Test Case 16: User Tries to Checkout a Book with Invalid User ID (Invalid User)
+    print(library.checkout_book(999, 1))  # "Invalid Input"
+
+    # # Test Case 17: User Tries to Checkout an Invalid Book ID (Invalid Book)
+    print(library.checkout_book(101, 999))  # "Invalid Input"
+
+
+    # Pay fine
+    print(library.pay_fine(102, 1))  # Fine Paid Successfully
+    print(library.pay_fine(102, 1))  # No Fine Due for This Book
+    print(library.pay_fine(102, 3))
