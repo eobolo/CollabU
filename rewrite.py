@@ -1,20 +1,8 @@
-module test;
-    initial begin
-        $display("Hello, Verilog!");
-        $finish;
-    end
-endmodule
-
-iverilog -o test.vvp test.v
-
-
-vvp test.vvp
-
-
-
-
-
-iverilog -o my_design.vvp my_design.v
+C:\Users\Excel\Desktop\Python>iverilog -o product_manager.vvp product_manager.v
+product_manager.v:11: syntax error
+product_manager.v:11: error: syntax error in parameter list.
+product_manager.v:12: syntax error
+product_manager.v:12: error: syntax error in parameter list.
 
 
 
