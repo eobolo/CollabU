@@ -441,3 +441,79 @@ if __name__ == "__main__":
     window = MindMapApp()
     window.show()
     sys.exit(app.exec_())
+
+
+========================================Whack-A-Mole===================================================
+
+import tkinter as tk
+import random
+from tkinter import messagebox
+import time
+
+# Global variables for score and mole position
+score = 0
+mole_position = None
+
+def generate_new_mole():
+    global mole_position
+    # Remove the current mole
+    if mole_position is not None:
+        buttons[mole_position].config(bg="lightgray", text="")
+
+    # Generate a new random position for the mole
+    mole_position = random.randint(0, 8)
+    buttons[mole_position].config(bg="brown", text="Mole")
+
+
+def hit_mole(index):
+    global score
+    if index == mole_position:
+        # Hit successful
+        score += 1
+        label_score.config(text=f"Score: {score}")
+        generate_new_mole()
+    else:
+        # Missed the mole
+        messagebox.showinfo("Missed", "You clicked the wrong spot!")
+
+
+def start_game():
+    global score
+    score = 0
+    label_score.config(text=f"Score: {score}")
+    generate_new_mole()
+    # Start the timer
+    root.after(30000, end_game)  # Game ends after 30 seconds
+
+
+def end_game():
+    # Disable all buttons
+    for button in buttons:
+        button.config(state="disabled", bg="lightgray", text="")
+    messagebox.showinfo("Game Over", f"Time's up! Your final score is {score}.")
+
+# Create the main tkinter window
+root = tk.Tk()
+root.title("Whack-A-Mole")
+
+# Create score label
+label_score = tk.Label(root, text=f"Score: {score}", font=("Arial", 16))
+label_score.pack(pady=10)
+
+# Create the grid of buttons
+frame_buttons = tk.Frame(root)
+frame_buttons.pack()
+
+buttons = []
+for i in range(9):
+    button = tk.Button(frame_buttons, width=10, height=5, bg="lightgray",
+                        command=lambda i=i: hit_mole(i))
+    button.grid(row=i // 3, column=i % 3, padx=5, pady=5)
+    buttons.append(button)
+
+# Create start button
+btn_start = tk.Button(root, text="Start Game", font=("Arial", 14), command=start_game)
+btn_start.pack(pady=10)
+
+# Run the application
+root.mainloop()
