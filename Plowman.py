@@ -210,3 +210,147 @@ def find_best_package_combination():
 
 if __name__ == "__main__":
     find_best_package_combination()
+
+
+
+=============================================================================MIND MAPPING TOOL=====================================================================
+
+
+import sys
+from PyQt5.QtWidgets import (
+    QApplication, QMainWindow, QGraphicsScene, QGraphicsView, QGraphicsEllipseItem,
+    QGraphicsLineItem, QGraphicsTextItem, QToolBar, QAction, QColorDialog, QFileDialog
+)
+from PyQt5.QtGui import QPen, QBrush, QColor, QImage, QPainter
+from PyQt5.QtCore import Qt, QPointF
+import json
+
+class MindMapApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Advanced Mind Mapping Tool")
+        self.setGeometry(100, 100, 1200, 800)
+
+        # Scene and View
+        self.scene = QGraphicsScene(self)
+        self.view = QGraphicsView(self.scene, self)
+        self.setCentralWidget(self.view)
+
+        # Toolbar
+        self.init_toolbar()
+
+        # Node and Link management
+        self.selected_color = QColor(Qt.white)
+        self.current_nodes = []
+        self.current_links = []
+
+    def init_toolbar(self):
+        toolbar = QToolBar("Main Toolbar", self)
+        self.addToolBar(toolbar)
+
+        # Add Node Action
+        add_node_action = QAction("Add Node", self)
+        add_node_action.triggered.connect(self.add_node)
+        toolbar.addAction(add_node_action)
+
+        # Change Node Color
+        color_action = QAction("Change Color", self)
+        color_action.triggered.connect(self.change_color)
+        toolbar.addAction(color_action)
+
+        # Save/Load
+        save_action = QAction("Save", self)
+        save_action.triggered.connect(self.save_map)
+        toolbar.addAction(save_action)
+
+        load_action = QAction("Load", self)
+        load_action.triggered.connect(self.load_map)
+        toolbar.addAction(load_action)
+
+        # Export to Image
+        export_action = QAction("Export as Image", self)
+        export_action.triggered.connect(self.export_as_image)
+        toolbar.addAction(export_action)
+
+    def add_node(self):
+        # Create a basic node
+        node = QGraphicsEllipseItem(0, 0, 100, 50)
+        node.setBrush(QBrush(self.selected_color))
+        node.setFlag(QGraphicsEllipseItem.ItemIsMovable)
+        node.setFlag(QGraphicsEllipseItem.ItemIsSelectable)
+
+        # Add text to the node
+        text = QGraphicsTextItem("Node")
+        text.setDefaultTextColor(Qt.black)
+        text.setParentItem(node)
+        text.setPos(25, 15)
+
+        self.scene.addItem(node)
+        self.current_nodes.append(node)
+
+    def change_color(self):
+        # Select color for new nodes
+        color = QColorDialog.getColor()
+        if color.isValid():
+            self.selected_color = color
+
+    def save_map(self):
+        # Save map to a file (e.g., JSON)
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save Mind Map", "", "JSON Files (*.json)")
+        if file_path:
+            data = []
+            for node in self.current_nodes:
+                pos = node.scenePos()
+                color = node.brush().color().name()
+                data.append({
+                    'x': pos.x(),
+                    'y': pos.y(),
+                    'color': color,
+                    'text': node.childItems()[0].toPlainText()
+                })
+            with open(file_path, 'w') as file:
+                json.dump(data, file, indent=4)
+
+    def load_map(self):
+        # Load map from a file (e.g., JSON)
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open Mind Map", "", "JSON Files (*.json)")
+        if file_path:
+            with open(file_path, 'r') as file:
+                data = json.load(file)
+                self.scene.clear()
+                self.current_nodes = []
+                for item in data:
+                    node = QGraphicsEllipseItem(0, 0, 100, 50)
+                    node.setBrush(QBrush(QColor(item['color'])))
+                    node.setPos(QPointF(item['x'], item['y']))
+                    node.setFlag(QGraphicsEllipseItem.ItemIsMovable)
+                    node.setFlag(QGraphicsEllipseItem.ItemIsSelectable)
+
+                    text = QGraphicsTextItem(item['text'])
+                    text.setDefaultTextColor(Qt.black)
+                    text.setParentItem(node)
+                    text.setPos(25, 15)
+
+                    self.scene.addItem(node)
+                    self.current_nodes.append(node)
+
+    def export_as_image(self):
+        # Export the scene as an image
+        file_path, _ = QFileDialog.getSaveFileName(self, "Export as Image", "", "PNG Files (*.png)")
+        if file_path:
+            rect = self.scene.sceneRect()
+            image = QImage(rect.width(), rect.height(), QImage.Format_ARGB32)
+            image.fill(Qt.white)
+
+            painter = QPainter(image)
+            self.scene.render(painter)
+            painter.end()
+
+            image.save(file_path)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MindMapApp()
+    window.show()
+    sys.exit(app.exec_())
+
