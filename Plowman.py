@@ -210,3 +210,376 @@ def find_best_package_combination():
 
 if __name__ == "__main__":
     find_best_package_combination()
+
+
+
+=============================================================================MIND MAPPING TOOL=====================================================================
+
+
+import sys
+from PyQt5.QtWidgets import (
+    QApplication, QMainWindow, QGraphicsScene, QGraphicsView, QGraphicsEllipseItem,
+    QGraphicsLineItem, QGraphicsTextItem, QToolBar, QAction, QColorDialog, QFileDialog, QVBoxLayout, QWidget, QPushButton
+)
+from PyQt5.QtGui import QPen, QBrush, QColor, QImage, QPainter
+from PyQt5.QtCore import Qt, QPointF
+import json
+
+class MindMapApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Advanced Mind Mapping Tool")
+        self.setGeometry(100, 100, 1200, 800)
+
+        # Scene and View
+        self.scene = QGraphicsScene(self)
+        self.view = QGraphicsView(self.scene, self)
+        self.setCentralWidget(self.view)
+
+        # Toolbar
+        self.init_toolbar()
+
+        # Node and Link management
+        self.selected_color = QColor(Qt.white)
+        self.current_nodes = []
+        self.current_links = []
+        self.start_node = None
+
+        # Customization Panel
+        self.init_customization_panel()
+
+    def init_toolbar(self):
+        toolbar = QToolBar("Main Toolbar", self)
+        self.addToolBar(toolbar)
+
+        # Add Node Action
+        add_node_action = QAction("Add Node", self)
+        add_node_action.triggered.connect(self.add_node)
+        toolbar.addAction(add_node_action)
+
+        # Change Node Color
+        color_action = QAction("Change Color", self)
+        color_action.triggered.connect(self.change_color)
+        toolbar.addAction(color_action)
+
+        # Add Link Action
+        add_link_action = QAction("Add Link", self)
+        add_link_action.triggered.connect(self.add_link_mode)
+        toolbar.addAction(add_link_action)
+
+        # Save/Load
+        save_action = QAction("Save", self)
+        save_action.triggered.connect(self.save_map)
+        toolbar.addAction(save_action)
+
+        load_action = QAction("Load", self)
+        load_action.triggered.connect(self.load_map)
+        toolbar.addAction(load_action)
+
+        # Export to Image
+        export_action = QAction("Export as Image", self)
+        export_action.triggered.connect(self.export_as_image)
+        toolbar.addAction(export_action)
+
+    def init_customization_panel(self):
+        customization_panel = QWidget(self)
+        customization_panel.setWindowTitle("Customization Panel")
+        layout = QVBoxLayout()
+
+        zoom_in_button = QPushButton("Zoom In")
+        zoom_in_button.clicked.connect(self.zoom_in)
+        layout.addWidget(zoom_in_button)
+
+        zoom_out_button = QPushButton("Zoom Out")
+        zoom_out_button.clicked.connect(self.zoom_out)
+        layout.addWidget(zoom_out_button)
+
+        customization_panel.setLayout(layout)
+        customization_panel.setGeometry(1050, 100, 150, 100)
+        customization_panel.show()
+
+    def add_node(self):
+        # Create a basic node
+        node = QGraphicsEllipseItem(0, 0, 100, 50)
+        node.setBrush(QBrush(self.selected_color))
+        node.setFlag(QGraphicsEllipseItem.ItemIsMovable)
+        node.setFlag(QGraphicsEllipseItem.ItemIsSelectable)
+
+        # Add text to the node
+        text = QGraphicsTextItem("Node")
+        text.setDefaultTextColor(Qt.black)
+        text.setParentItem(node)
+        text.setPos(25, 15)
+
+        self.scene.addItem(node)
+        self.current_nodes.append(node)
+
+    def change_color(self):
+        # Select color for new nodes
+        color = QColorDialog.getColor()
+        if color.isValid():
+            self.selected_color = color
+
+    def add_link_mode(self):
+        # Enable link creation
+        self.view.setDragMode(QGraphicsView.NoDrag)
+        self.scene.mousePressEvent = self.start_link
+        self.scene.mouseReleaseEvent = self.end_link
+
+    def start_link(self, event):
+        items = self.scene.items(event.scenePos())
+        for item in items:
+            if isinstance(item, QGraphicsEllipseItem):
+                self.start_node = item
+                break
+
+    def end_link(self, event):
+        if not self.start_node:
+            return
+
+        items = self.scene.items(event.scenePos())
+        for item in items:
+            if isinstance(item, QGraphicsEllipseItem) and item != self.start_node:
+                end_node = item
+
+                start_center = self.start_node.sceneBoundingRect().center()
+                end_center = end_node.sceneBoundingRect().center()
+
+                link = QGraphicsLineItem(start_center.x(), start_center.y(), end_center.x(), end_center.y())
+                link.setPen(QPen(Qt.black, 2))
+
+                self.scene.addItem(link)
+                self.current_links.append((self.start_node, end_node, link))
+                break
+
+        self.start_node = None
+
+    def zoom_in(self):
+        self.view.scale(1.2, 1.2)
+
+    def zoom_out(self):
+        self.view.scale(0.8, 0.8)
+
+    def save_map(self):
+        # Save map to a file (e.g., JSON)
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save Mind Map", "", "JSON Files (*.json)")
+        if file_path:
+            data = {
+                'nodes': [],
+                'links': []
+            }
+            for node in self.current_nodes:
+                pos = node.scenePos()
+                color = node.brush().color().name()
+                data['nodes'].append({
+                    'x': pos.x(),
+                    'y': pos.y(),
+                    'color': color,
+                    'text': node.childItems()[0].toPlainText()
+                })
+            for start_node, end_node, _ in self.current_links:
+                data['links'].append({
+                    'start': self.current_nodes.index(start_node),
+                    'end': self.current_nodes.index(end_node)
+                })
+            with open(file_path, 'w') as file:
+                json.dump(data, file, indent=4)
+
+    def load_map(self):
+        # Load map from a file (e.g., JSON)
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open Mind Map", "", "JSON Files (*.json)")
+        if file_path:
+            with open(file_path, 'r') as file:
+                data = json.load(file)
+                self.scene.clear()
+                self.current_nodes = []
+                self.current_links = []
+                node_mapping = {}
+                for item in data['nodes']:
+                    node = QGraphicsEllipseItem(0, 0, 100, 50)
+                    node.setBrush(QBrush(QColor(item['color'])))
+                    node.setPos(QPointF(item['x'], item['y']))
+                    node.setFlag(QGraphicsEllipseItem.ItemIsMovable)
+                    node.setFlag(QGraphicsEllipseItem.ItemIsSelectable)
+
+                    text = QGraphicsTextItem(item['text'])
+                    text.setDefaultTextColor(Qt.black)
+                    text.setParentItem(node)
+                    text.setPos(25, 15)
+
+                    self.scene.addItem(node)
+                    self.current_nodes.append(node)
+                    node_mapping[len(self.current_nodes) - 1] = node
+                for link in data['links']:
+                    start_node = node_mapping[link['start']]
+                    end_node = node_mapping[link['end']]
+                    start_center = start_node.sceneBoundingRect().center()
+                    end_center = end_node.sceneBoundingRect().center()
+
+                    link_item = QGraphicsLineItem(start_center.x(), start_center.y(), end_center.x(), end_center.y())
+                    link_item.setPen(QPen(Qt.black, 2))
+
+                    self.scene.addItem(link_item)
+                    self.current_links.append((start_node, end_node, link_item))
+
+    def export_as_image(self):
+        # Export the scene as an image
+        file_path, _ = QFileDialog.getSaveFileName(self, "Export as Image", "", "PNG Files (*.png)")
+        if file_path:
+            rect = self.scene.sceneRect()
+            image = QImage(rect.width(), rect.height(), QImage.Format_ARGB32)
+            image.fill(Qt.white)
+
+            painter = QPainter(image)
+            self.scene.render(painter)
+            painter.end()
+
+            image.save(file_path)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MindMapApp()
+    window.show()
+    sys.exit(app.exec_())
+
+
+========================================Whack-A-Mole===================================================
+
+import tkinter as tk
+import random
+from tkinter import messagebox
+import time
+
+# Global variables for score, mole position, and game state
+score = 0
+mole_position = None
+highest_score = 0
+game_running = False
+mole_interval = 2000  # Mole shows every 1 second initially
+timer_id = None
+
+# Define the function to generate a new mole (rabbit emoji)
+def generate_new_mole():
+    global mole_position
+    if mole_position is not None:
+        buttons[mole_position].config(bg="lightgray", text="")
+    
+    # Generate a new random position for the mole
+    mole_position = random.randint(0, 8)
+    buttons[mole_position].config(bg="lightgray", text="🐇", font=("Arial", 24))
+
+# Function to handle the hit or miss on mole
+def hit_mole(index):
+    global score, mole_position
+    if index == mole_position:
+        # Hit successful, add 2 points
+        score += 2
+        label_score.config(text=f"Score: {score}")
+        generate_new_mole()
+    else:
+        # Missed the mole, show MISS with red background and bold font
+        label_score.config(text="MISS", fg="white", bg="red", font=("Arial", 16, "bold"))
+        root.after(500, lambda: label_score.config(text=f"Score: {score}", fg="black", bg="lightgray", font=("Arial", 16)))
+        generate_new_mole()
+
+    adjust_game_speed()
+
+# Function to adjust game speed
+def adjust_game_speed():
+    global mole_interval
+    if score >= 12 and score % 12 == 0:
+        if mole_interval > 500:
+            mole_interval -= 200  # Decrease the mole display interval
+
+# Start the game
+def start_game():
+    global score, game_running, mole_interval, timer_id
+    score = 0
+    label_score.config(text=f"Score: {score}")
+    game_running = True
+    btn_start.config(text="Pause Game", command=pause_game)
+    generate_new_mole()
+    start_mole_timer()
+    root.after(30000, end_game)  # End the game after 30 seconds
+
+# Pause the game
+def pause_game():
+    global game_running
+    game_running = False
+    btn_start.config(text="Resume Game", command=start_game)
+    if timer_id:
+        root.after_cancel(timer_id)  # Stop the mole timer
+
+# Start the mole timer
+def start_mole_timer():
+    global timer_id
+    if game_running:
+        generate_new_mole()
+        timer_id = root.after(mole_interval, start_mole_timer)
+
+# End the game when time is up
+def end_game():
+    global highest_score
+    if score > highest_score:
+        highest_score = score  # Update highest score if needed
+    # Disable all buttons
+    for button in buttons:
+        button.config(state="disabled", bg="lightgray", text="")
+    messagebox.showinfo("Game Over", f"Time's up! Your final score is {score}. Highest score: {highest_score}")
+    reset_game()
+
+# Reset the game for a new round
+def reset_game():
+    global score, mole_position, game_running
+    score = 0
+    mole_position = None
+    game_running = False
+    label_score.config(text=f"Score: {score}")
+    btn_start.config(text="Start Game", command=start_game)
+    for button in buttons:
+        button.config(state="normal")
+
+# Create the main tkinter window
+root = tk.Tk()
+root.title("Whack-A-Mole")
+
+# Create score label
+label_score = tk.Label(root, text=f"Score: {score}", font=("Arial", 16))
+label_score.pack(pady=10)
+
+# Create the grid of buttons
+frame_buttons = tk.Frame(root)
+frame_buttons.pack()
+
+buttons = []
+for i in range(9):
+    button = tk.Button(frame_buttons, width=10, height=5, bg="lightgray",
+                        command=lambda i=i: hit_mole(i))
+    button.grid(row=i // 3, column=i % 3, padx=5, pady=5)
+    buttons.append(button)
+
+# Create start/pause button
+btn_start = tk.Button(root, text="Start Game", font=("Arial", 14), command=start_game)
+btn_start.pack(pady=10)
+
+# Run the application
+root.mainloop()
+
+
+
+++++++++++++++++++++++++++++++
+
+$ python3 gameplay.py 
+Traceback (most recent call last):
+  File "C:\Users\Excel\Desktop\Python\WhackAMole\gameplay.py", line 128, in <module>
+    load_rabbit_image()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Excel\Desktop\Python\WhackAMole\gameplay.py", line 21, in load_rabbit_image
+    rabbit_image = PhotoImage(file="rabbit.png")  # Change to the correct path of your image
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.496.0_x64__qbz5n2kfra8p0\Lib\tkinter\__init__.py", line 4285, in __init__
+    Image.__init__(self, 'photo', name, cnf, master, **kw)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.496.0_x64__qbz5n2kfra8p0\Lib\tkinter\__init__.py", line 4232, in __init__
+    self.tk.call(('image', 'create', imgtype, name,) + options)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_tkinter.TclError: couldn't open "rabbit.png": no such file or directory
