@@ -448,6 +448,7 @@ if __name__ == "__main__":
 import tkinter as tk
 import random
 from tkinter import messagebox
+from tkinter import PhotoImage
 import time
 
 # Global variables for score, mole position, and game state
@@ -458,18 +459,25 @@ game_running = False
 mole_interval = 2000  # Mole shows every 1 second initially
 timer_id = None
 
-# Define the Rabbit emoji to use as the mole
-RABBIT_EMOJI = "🐇"
+# Global variable to store the rabbit image
+rabbit_image = None
 
+# Load the rabbit image (ensure you have a "rabbit.png" image in the working directory)
+def load_rabbit_image():
+    global rabbit_image
+    rabbit_image = PhotoImage(file="rabbit.png")  # Change to the correct path of your image
+
+# Define the function to generate a new mole (rabbit)
 def generate_new_mole():
-    global mole_position
+    global mole_position, rabbit_image
     if mole_position is not None:
-        buttons[mole_position].config(bg="lightgray", text="")
+        buttons[mole_position].config(bg="lightgray", image="", text="")
     
     # Generate a new random position for the mole
     mole_position = random.randint(0, 8)
-    buttons[mole_position].config(bg="lightgray", text=RABBIT_EMOJI, font=("Arial", 30))
+    buttons[mole_position].config(bg="lightgray", image=rabbit_image, text="")
 
+# Function to handle the hit or miss on mole
 def hit_mole(index):
     global score, mole_position
     if index == mole_position:
@@ -485,12 +493,14 @@ def hit_mole(index):
 
     adjust_game_speed()
 
+# Function to adjust game speed
 def adjust_game_speed():
     global mole_interval
     if score >= 12 and score % 12 == 0:
         if mole_interval > 500:
             mole_interval -= 200  # Decrease the mole display interval
 
+# Start the game
 def start_game():
     global score, game_running, mole_interval, timer_id
     score = 0
@@ -501,6 +511,7 @@ def start_game():
     start_mole_timer()
     root.after(30000, end_game)  # End the game after 30 seconds
 
+# Pause the game
 def pause_game():
     global game_running
     game_running = False
@@ -508,22 +519,25 @@ def pause_game():
     if timer_id:
         root.after_cancel(timer_id)  # Stop the mole timer
 
+# Start the mole timer
 def start_mole_timer():
     global timer_id
     if game_running:
         generate_new_mole()
         timer_id = root.after(mole_interval, start_mole_timer)
 
+# End the game when time is up
 def end_game():
     global highest_score
     if score > highest_score:
         highest_score = score  # Update highest score if needed
     # Disable all buttons
     for button in buttons:
-        button.config(state="disabled", bg="lightgray", text="")
+        button.config(state="disabled", bg="lightgray", image="", text="")
     messagebox.showinfo("Game Over", f"Time's up! Your final score is {score}. Highest score: {highest_score}")
     reset_game()
 
+# Reset the game for a new round
 def reset_game():
     global score, mole_position, game_running
     score = 0
@@ -556,6 +570,9 @@ for i in range(9):
 # Create start/pause button
 btn_start = tk.Button(root, text="Start Game", font=("Arial", 14), command=start_game)
 btn_start.pack(pady=10)
+
+# Load the rabbit image
+load_rabbit_image()
 
 # Run the application
 root.mainloop()
