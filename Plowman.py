@@ -448,45 +448,72 @@ if __name__ == "__main__":
 import tkinter as tk
 import random
 from tkinter import messagebox
-import time
 
-# Global variables for score and mole position
+# Global variables for score, mole position, and game state
 score = 0
 mole_position = None
+game_active = False
+timer_interval = 1000  # Initial mole display interval in milliseconds
 
 def generate_new_mole():
     global mole_position
     # Remove the current mole
     if mole_position is not None:
         buttons[mole_position].config(bg="lightgray", text="")
-
+    
     # Generate a new random position for the mole
     mole_position = random.randint(0, 8)
     buttons[mole_position].config(bg="brown", text="Mole")
-
+    
+    # Set a new interval based on the score
+    if score >= 12:
+        global timer_interval
+        if score >= 24:
+            timer_interval = 300  # 0.3 seconds
+        elif score >= 12:
+            timer_interval = 500  # 0.5 seconds
+        else:
+            timer_interval = 700  # 0.7 seconds
+    
+    # Schedule the next mole to appear
+    if game_active:
+        root.after(timer_interval, generate_new_mole)
 
 def hit_mole(index):
     global score
     if index == mole_position:
-        # Hit successful
-        score += 1
+        # Successful hit, increase score by 2
+        score += 2
         label_score.config(text=f"Score: {score}")
         generate_new_mole()
     else:
-        # Missed the mole
-        messagebox.showinfo("Missed", "You clicked the wrong spot!")
-
+        # Missed hit, show "MISS" briefly
+        label_score.config(text="MISS")
+        root.after(500, lambda: label_score.config(text=f"Score: {score}"))
 
 def start_game():
-    global score
+    global score, game_active, timer_interval
     score = 0
+    game_active = True
     label_score.config(text=f"Score: {score}")
     generate_new_mole()
-    # Start the timer
+    btn_start.config(text="Pause", command=pause_game)
     root.after(30000, end_game)  # Game ends after 30 seconds
 
+def pause_game():
+    global game_active
+    game_active = False
+    btn_start.config(text="Resume", command=start_game)
+
+def resume_game():
+    global game_active
+    game_active = True
+    btn_start.config(text="Pause", command=pause_game)
+    generate_new_mole()
 
 def end_game():
+    global game_active
+    game_active = False
     # Disable all buttons
     for button in buttons:
         button.config(state="disabled", bg="lightgray", text="")
@@ -511,7 +538,7 @@ for i in range(9):
     button.grid(row=i // 3, column=i % 3, padx=5, pady=5)
     buttons.append(button)
 
-# Create start button
+# Create start/pause button
 btn_start = tk.Button(root, text="Start Game", font=("Arial", 14), command=start_game)
 btn_start.pack(pady=10)
 
