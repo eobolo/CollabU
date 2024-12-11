@@ -576,3 +576,21 @@ load_rabbit_image()
 
 # Run the application
 root.mainloop()
+
+
+++++++++++++++++++++++++++++++
+
+$ python3 gameplay.py 
+Traceback (most recent call last):
+  File "C:\Users\Excel\Desktop\Python\WhackAMole\gameplay.py", line 128, in <module>
+    load_rabbit_image()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Excel\Desktop\Python\WhackAMole\gameplay.py", line 21, in load_rabbit_image
+    rabbit_image = PhotoImage(file="rabbit.png")  # Change to the correct path of your image
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.496.0_x64__qbz5n2kfra8p0\Lib\tkinter\__init__.py", line 4285, in __init__
+    Image.__init__(self, 'photo', name, cnf, master, **kw)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.496.0_x64__qbz5n2kfra8p0\Lib\tkinter\__init__.py", line 4232, in __init__
+    self.tk.call(('image', 'create', imgtype, name,) + options)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_tkinter.TclError: couldn't open "rabbit.png": no such file or directory
