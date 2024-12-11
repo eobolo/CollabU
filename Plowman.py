@@ -448,76 +448,88 @@ if __name__ == "__main__":
 import tkinter as tk
 import random
 from tkinter import messagebox
+import time
 
 # Global variables for score, mole position, and game state
 score = 0
 mole_position = None
-game_active = False
-timer_interval = 1000  # Initial mole display interval in milliseconds
+highest_score = 0
+game_running = False
+mole_interval = 1000  # Mole shows every 1 second initially
+timer_id = None
 
 def generate_new_mole():
     global mole_position
-    # Remove the current mole
     if mole_position is not None:
         buttons[mole_position].config(bg="lightgray", text="")
     
     # Generate a new random position for the mole
     mole_position = random.randint(0, 8)
     buttons[mole_position].config(bg="brown", text="Mole")
-    
-    # Set a new interval based on the score
-    if score >= 12:
-        global timer_interval
-        if score >= 24:
-            timer_interval = 300  # 0.3 seconds
-        elif score >= 12:
-            timer_interval = 500  # 0.5 seconds
-        else:
-            timer_interval = 700  # 0.7 seconds
-    
-    # Schedule the next mole to appear
-    if game_active:
-        root.after(timer_interval, generate_new_mole)
 
 def hit_mole(index):
-    global score
+    global score, mole_position
     if index == mole_position:
-        # Successful hit, increase score by 2
+        # Hit successful, add 2 points
         score += 2
         label_score.config(text=f"Score: {score}")
         generate_new_mole()
     else:
-        # Missed hit, show "MISS" briefly
+        # Missed the mole
         label_score.config(text="MISS")
         root.after(500, lambda: label_score.config(text=f"Score: {score}"))
+        generate_new_mole()
+
+    adjust_game_speed()
+
+def adjust_game_speed():
+    global mole_interval
+    if score >= 12 and score % 12 == 0:
+        if mole_interval > 500:
+            mole_interval -= 200  # Decrease the mole display interval
 
 def start_game():
-    global score, game_active, timer_interval
+    global score, game_running, mole_interval, timer_id
     score = 0
-    game_active = True
     label_score.config(text=f"Score: {score}")
+    game_running = True
+    btn_start.config(text="Pause Game", command=pause_game)
     generate_new_mole()
-    btn_start.config(text="Pause", command=pause_game)
-    root.after(30000, end_game)  # Game ends after 30 seconds
+    start_mole_timer()
+    root.after(30000, end_game)  # End the game after 30 seconds
 
 def pause_game():
-    global game_active
-    game_active = False
-    btn_start.config(text="Resume", command=start_game)
+    global game_running
+    game_running = False
+    btn_start.config(text="Resume Game", command=start_game)
+    if timer_id:
+        root.after_cancel(timer_id)  # Stop the mole timer
 
-def resume_game():
-    global game_active
-    game_active = True
-    btn_start.config(text="Pause", command=pause_game)
-    generate_new_mole()
+def start_mole_timer():
+    global timer_id
+    if game_running:
+        generate_new_mole()
+        timer_id = root.after(mole_interval, start_mole_timer)
 
 def end_game():
-    global game_active
-    game_active = False
+    global highest_score
+    if score > highest_score:
+        highest_score = score  # Update highest score if needed
     # Disable all buttons
     for button in buttons:
         button.config(state="disabled", bg="lightgray", text="")
-    messagebox.showinfo("Game Over", f"Time's up! Your final score is {score}.")
+    messagebox.showinfo("Game Over", f"Time's up! Your final score is {score}. Highest score: {highest_score}")
+    reset_game()
+
+def reset_game():
+    global score, mole_position, game_running
+    score = 0
+    mole_position = None
+    game_running = False
+    label_score.config(text=f"Score: {score}")
+    btn_start.config(text="Start Game", command=start_game)
+    for button in buttons:
+        button.config(state="normal")
 
 # Create the main tkinter window
 root = tk.Tk()
