@@ -458,6 +458,9 @@ game_running = False
 mole_interval = 2000  # Mole shows every 1 second initially
 timer_id = None
 
+# Define the Rabbit emoji to use as the mole
+RABBIT_EMOJI = "🐇"
+
 def generate_new_mole():
     global mole_position
     if mole_position is not None:
@@ -465,7 +468,7 @@ def generate_new_mole():
     
     # Generate a new random position for the mole
     mole_position = random.randint(0, 8)
-    buttons[mole_position].config(bg="brown", text="Mole")
+    buttons[mole_position].config(bg="lightgray", text=RABBIT_EMOJI, font=("Arial", 30))
 
 def hit_mole(index):
     global score, mole_position
@@ -475,9 +478,9 @@ def hit_mole(index):
         label_score.config(text=f"Score: {score}")
         generate_new_mole()
     else:
-        # Missed the mole
-        label_score.config(text="MISS")
-        root.after(500, lambda: label_score.config(text=f"Score: {score}"))
+        # Missed the mole, show MISS with red background and bold font
+        label_score.config(text="MISS", fg="white", bg="red", font=("Arial", 16, "bold"))
+        root.after(500, lambda: label_score.config(text=f"Score: {score}", fg="black", bg="lightgray", font=("Arial", 16)))
         generate_new_mole()
 
     adjust_game_speed()
