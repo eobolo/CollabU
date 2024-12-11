@@ -448,7 +448,6 @@ if __name__ == "__main__":
 import tkinter as tk
 import random
 from tkinter import messagebox
-from tkinter import PhotoImage
 import time
 
 # Global variables for score, mole position, and game state
@@ -459,23 +458,15 @@ game_running = False
 mole_interval = 2000  # Mole shows every 1 second initially
 timer_id = None
 
-# Global variable to store the rabbit image
-rabbit_image = None
-
-# Load the rabbit image (ensure you have a "rabbit.png" image in the working directory)
-def load_rabbit_image():
-    global rabbit_image
-    rabbit_image = PhotoImage(file="rabbit.png")  # Change to the correct path of your image
-
-# Define the function to generate a new mole (rabbit)
+# Define the function to generate a new mole (rabbit emoji)
 def generate_new_mole():
-    global mole_position, rabbit_image
+    global mole_position
     if mole_position is not None:
-        buttons[mole_position].config(bg="lightgray", image="", text="")
+        buttons[mole_position].config(bg="lightgray", text="")
     
     # Generate a new random position for the mole
     mole_position = random.randint(0, 8)
-    buttons[mole_position].config(bg="lightgray", image=rabbit_image, text="")
+    buttons[mole_position].config(bg="lightgray", text="🐇", font=("Arial", 24))
 
 # Function to handle the hit or miss on mole
 def hit_mole(index):
@@ -533,7 +524,7 @@ def end_game():
         highest_score = score  # Update highest score if needed
     # Disable all buttons
     for button in buttons:
-        button.config(state="disabled", bg="lightgray", image="", text="")
+        button.config(state="disabled", bg="lightgray", text="")
     messagebox.showinfo("Game Over", f"Time's up! Your final score is {score}. Highest score: {highest_score}")
     reset_game()
 
@@ -571,11 +562,9 @@ for i in range(9):
 btn_start = tk.Button(root, text="Start Game", font=("Arial", 14), command=start_game)
 btn_start.pack(pady=10)
 
-# Load the rabbit image
-load_rabbit_image()
-
 # Run the application
 root.mainloop()
+
 
 
 ++++++++++++++++++++++++++++++
