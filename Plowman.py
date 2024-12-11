@@ -455,7 +455,7 @@ score = 0
 mole_position = None
 highest_score = 0
 game_running = False
-mole_interval = 1000  # Mole shows every 1 second initially
+mole_interval = 2000  # Mole shows every 1 second initially
 timer_id = None
 
 def generate_new_mole():
