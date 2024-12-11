@@ -219,7 +219,7 @@ if __name__ == "__main__":
 import sys
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QGraphicsScene, QGraphicsView, QGraphicsEllipseItem,
-    QGraphicsLineItem, QGraphicsTextItem, QToolBar, QAction, QColorDialog, QFileDialog
+    QGraphicsLineItem, QGraphicsTextItem, QToolBar, QAction, QColorDialog, QFileDialog, QVBoxLayout, QWidget, QPushButton
 )
 from PyQt5.QtGui import QPen, QBrush, QColor, QImage, QPainter
 from PyQt5.QtCore import Qt, QPointF
@@ -243,6 +243,10 @@ class MindMapApp(QMainWindow):
         self.selected_color = QColor(Qt.white)
         self.current_nodes = []
         self.current_links = []
+        self.start_node = None
+
+        # Customization Panel
+        self.init_customization_panel()
 
     def init_toolbar(self):
         toolbar = QToolBar("Main Toolbar", self)
@@ -258,6 +262,11 @@ class MindMapApp(QMainWindow):
         color_action.triggered.connect(self.change_color)
         toolbar.addAction(color_action)
 
+        # Add Link Action
+        add_link_action = QAction("Add Link", self)
+        add_link_action.triggered.connect(self.add_link_mode)
+        toolbar.addAction(add_link_action)
+
         # Save/Load
         save_action = QAction("Save", self)
         save_action.triggered.connect(self.save_map)
@@ -271,6 +280,23 @@ class MindMapApp(QMainWindow):
         export_action = QAction("Export as Image", self)
         export_action.triggered.connect(self.export_as_image)
         toolbar.addAction(export_action)
+
+    def init_customization_panel(self):
+        customization_panel = QWidget(self)
+        customization_panel.setWindowTitle("Customization Panel")
+        layout = QVBoxLayout()
+
+        zoom_in_button = QPushButton("Zoom In")
+        zoom_in_button.clicked.connect(self.zoom_in)
+        layout.addWidget(zoom_in_button)
+
+        zoom_out_button = QPushButton("Zoom Out")
+        zoom_out_button.clicked.connect(self.zoom_out)
+        layout.addWidget(zoom_out_button)
+
+        customization_panel.setLayout(layout)
+        customization_panel.setGeometry(1050, 100, 150, 100)
+        customization_panel.show()
 
     def add_node(self):
         # Create a basic node
@@ -294,19 +320,67 @@ class MindMapApp(QMainWindow):
         if color.isValid():
             self.selected_color = color
 
+    def add_link_mode(self):
+        # Enable link creation
+        self.view.setDragMode(QGraphicsView.NoDrag)
+        self.scene.mousePressEvent = self.start_link
+        self.scene.mouseReleaseEvent = self.end_link
+
+    def start_link(self, event):
+        items = self.scene.items(event.scenePos())
+        for item in items:
+            if isinstance(item, QGraphicsEllipseItem):
+                self.start_node = item
+                break
+
+    def end_link(self, event):
+        if not self.start_node:
+            return
+
+        items = self.scene.items(event.scenePos())
+        for item in items:
+            if isinstance(item, QGraphicsEllipseItem) and item != self.start_node:
+                end_node = item
+
+                start_center = self.start_node.sceneBoundingRect().center()
+                end_center = end_node.sceneBoundingRect().center()
+
+                link = QGraphicsLineItem(start_center.x(), start_center.y(), end_center.x(), end_center.y())
+                link.setPen(QPen(Qt.black, 2))
+
+                self.scene.addItem(link)
+                self.current_links.append((self.start_node, end_node, link))
+                break
+
+        self.start_node = None
+
+    def zoom_in(self):
+        self.view.scale(1.2, 1.2)
+
+    def zoom_out(self):
+        self.view.scale(0.8, 0.8)
+
     def save_map(self):
         # Save map to a file (e.g., JSON)
         file_path, _ = QFileDialog.getSaveFileName(self, "Save Mind Map", "", "JSON Files (*.json)")
         if file_path:
-            data = []
+            data = {
+                'nodes': [],
+                'links': []
+            }
             for node in self.current_nodes:
                 pos = node.scenePos()
                 color = node.brush().color().name()
-                data.append({
+                data['nodes'].append({
                     'x': pos.x(),
                     'y': pos.y(),
                     'color': color,
                     'text': node.childItems()[0].toPlainText()
+                })
+            for start_node, end_node, _ in self.current_links:
+                data['links'].append({
+                    'start': self.current_nodes.index(start_node),
+                    'end': self.current_nodes.index(end_node)
                 })
             with open(file_path, 'w') as file:
                 json.dump(data, file, indent=4)
@@ -319,7 +393,9 @@ class MindMapApp(QMainWindow):
                 data = json.load(file)
                 self.scene.clear()
                 self.current_nodes = []
-                for item in data:
+                self.current_links = []
+                node_mapping = {}
+                for item in data['nodes']:
                     node = QGraphicsEllipseItem(0, 0, 100, 50)
                     node.setBrush(QBrush(QColor(item['color'])))
                     node.setPos(QPointF(item['x'], item['y']))
@@ -333,6 +409,18 @@ class MindMapApp(QMainWindow):
 
                     self.scene.addItem(node)
                     self.current_nodes.append(node)
+                    node_mapping[len(self.current_nodes) - 1] = node
+                for link in data['links']:
+                    start_node = node_mapping[link['start']]
+                    end_node = node_mapping[link['end']]
+                    start_center = start_node.sceneBoundingRect().center()
+                    end_center = end_node.sceneBoundingRect().center()
+
+                    link_item = QGraphicsLineItem(start_center.x(), start_center.y(), end_center.x(), end_center.y())
+                    link_item.setPen(QPen(Qt.black, 2))
+
+                    self.scene.addItem(link_item)
+                    self.current_links.append((start_node, end_node, link_item))
 
     def export_as_image(self):
         # Export the scene as an image
@@ -353,4 +441,3 @@ if __name__ == "__main__":
     window = MindMapApp()
     window.show()
     sys.exit(app.exec_())
-
