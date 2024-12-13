@@ -1,78 +1,15 @@
 [
     {
-        "order_id": "2",
-        "customer_name": "renoir",
-        "items": [
-            "latte"
-        ],
-        "is_high_priority": true,
-        "status": "completed"
-    },
-    {
-        "order_id": "4",
-        "customer_name": "obolo",
-        "items": [
-            "latte"
-        ],
-        "is_high_priority": true,
-        "status": "completed"
-    },
-    {
-        "order_id": "5",
-        "customer_name": "abiodun",
-        "items": [
-            "espresso"
-        ],
-        "is_high_priority": true,
-        "status": "completed"
-    },
-    {
-        "order_id": "7",
-        "customer_name": "faith",
-        "items": [
-            "espresso"
-        ],
-        "is_high_priority": true,
-        "status": "completed"
-    },
-    {
         "order_id": "1",
-        "customer_name": "kaze",
+        "customer_name": "exce",
         "items": [
-            "latte"
+            "latee"
         ],
         "is_high_priority": false,
         "status": "completed"
     },
     {
-        "order_id": "3",
-        "customer_name": "emma",
-        "items": [
-            "latte"
-        ],
-        "is_high_priority": false,
-        "status": "completed"
-    },
-    {
-        "order_id": "6",
-        "customer_name": "excel",
-        "items": [
-            "latte"
-        ],
-        "is_high_priority": false,
-        "status": "completed"
-    },
-    {
-        "order_id": "14",
-        "customer_name": "excellent",
-        "items": [
-            "latte"
-        ],
-        "is_high_priority": false,
-        "status": "completed"
-    },
-    {
-        "order_id": "15",
+        "order_id": "2",
         "customer_name": "emmanuel",
         "items": [
             "espresso"
@@ -81,17 +18,17 @@
         "status": "completed"
     },
     {
-        "order_id": "16",
-        "customer_name": "abbey",
+        "order_id": "3",
+        "customer_name": "wert",
         "items": [
-            "latte"
+            "latee"
         ],
         "is_high_priority": false,
         "status": "completed"
     },
     {
-        "order_id": "17",
-        "customer_name": "shittu",
+        "order_id": "4",
+        "customer_name": "serty",
         "items": [
             "latte"
         ],
@@ -99,18 +36,17 @@
         "status": "completed"
     },
     {
-        "order_id": "18",
+        "order_id": "5",
         "customer_name": "excel",
         "items": [
-            "latte",
-            "espresso"
+            "latte"
         ],
         "is_high_priority": true,
-        "status": "completed"
+        "status": "pending"
     },
     {
-        "order_id": "19",
-        "customer_name": "abbey",
+        "order_id": "6",
+        "customer_name": "emma",
         "items": [
             "espresso"
         ],
@@ -118,10 +54,10 @@
         "status": "pending"
     },
     {
-        "order_id": "20",
-        "customer_name": "mello",
+        "order_id": "abbbey",
+        "customer_name": "abbey",
         "items": [
-            "latte"
+            "espresso"
         ],
         "is_high_priority": true,
         "status": "pending"

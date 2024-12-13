@@ -1,0 +1,38 @@
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 2
+
+--- Pending Orders ---
+Order ID: 5, Customer: excel, Items: latte, Priority: Yes
+Order ID: abbbey, Customer: abbey, Items: espresso, Priority: Yes
+Order ID: 6, Customer: emma, Items: espresso, Priority: No
+
+
+Enter Order ID to process or 'exit' to quit:
+--- Pending Orders ---
+Order ID: 5, Customer: excel, Items: latte, Priority: Yes
+Order ID: abbbey, Customer: abbey, Items: espresso, Priority: Yes
+Order ID: 6, Customer: emma, Items: espresso, Priority: No
+
+
+Enter Order ID to process or 'exit' to quit: abbey
+Error: Order ID abbey not found or already processed.
+
+
+--- Pending Orders ---
+Order ID: 5, Customer: excel, Items: latte, Priority: Yes
+Order ID: abbbey, Customer: abbey, Items: espresso, Priority: Yes
+Order ID: 6, Customer: emma, Items: espresso, Priority: No
+
+
+Enter Order ID to process or 'exit' to quit:
+--- Pending Orders ---
+Order ID: 5, Customer: excel, Items: latte, Priority: Yes
+Order ID: abbbey, Customer: abbey, Items: espresso, Priority: Yes
+Order ID: 6, Customer: emma, Items: espresso, Priority: No
+
+
+Enter Order ID to process or 'exit' to quit:

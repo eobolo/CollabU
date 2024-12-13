@@ -1,0 +1,112 @@
+Welcome to the Order Management System!
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 2
+
+--- Pending Orders ---
+Order ID: 2, Customer: emmanuel, Items: espresso, Priority: Yes
+Order ID: 1, Customer: exce, Items: latee, Priority: No
+
+
+Enter Order ID to process or 'exit' to quit: 1
+Oops! You must process orders in sequence. Please check and try again!
+
+--- Pending Orders ---
+Order ID: 2, Customer: emmanuel, Items: espresso, Priority: Yes
+Order ID: 1, Customer: exce, Items: latee, Priority: No
+
+
+Enter Order ID to process or 'exit' to quit: 2
+Order 2 completed.
+
+
+--- Pending Orders ---
+Order ID: 1, Customer: exce, Items: latee, Priority: No
+
+
+Enter Order ID to process or 'exit' to quit: exit
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 1
+Enter Order ID: 3
+Enter Customer Name: wert
+Enter Items (comma-separated): latee
+Is this a High-Priority Order? (yes/no): no
+Order 3 added successfully.
+
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 1
+Enter Order ID: 4
+Enter Customer Name: serty
+Enter Items (comma-separated): latte
+Is this a High-Priority Order? (yes/no): yes
+Order 4 added successfully.
+
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 3
+
+--- Pending Orders ---
+Order ID: 4, Customer: serty, Items: latte, Priority: Yes
+Order ID: 1, Customer: exce, Items: latee, Priority: No
+Order ID: 3, Customer: wert, Items: latee, Priority: No
+
+
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 2
+
+--- Pending Orders ---
+Order ID: 4, Customer: serty, Items: latte, Priority: Yes
+Order ID: 1, Customer: exce, Items: latee, Priority: No
+Order ID: 3, Customer: wert, Items: latee, Priority: No
+
+
+Enter Order ID to process or 'exit' to quit: 1
+Oops! You must process orders in sequence. Please check and try again!
+
+--- Pending Orders ---
+Order ID: 4, Customer: serty, Items: latte, Priority: Yes
+Order ID: 1, Customer: exce, Items: latee, Priority: No
+Order ID: 3, Customer: wert, Items: latee, Priority: No
+
+
+Enter Order ID to process or 'exit' to quit: 4
+Order 4 completed.
+
+
+--- Pending Orders ---
+Order ID: 1, Customer: exce, Items: latee, Priority: No
+Order ID: 3, Customer: wert, Items: latee, Priority: No
+
+
+Enter Order ID to process or 'exit' to quit: 3
+Order 3 completed.
+
+
+--- Pending Orders ---
+Order ID: 1, Customer: exce, Items: latee, Priority: No
+
+
+Enter Order ID to process or 'exit' to quit:
