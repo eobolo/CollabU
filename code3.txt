@@ -1,0 +1,163 @@
+node fix.js 
+Welcome to the Order Management System!
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 2
+
+--- Pending Orders ---
+No pending orders.
+
+No pending orders to process.
+
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 1
+Enter Order ID: 25
+Enter Customer Name: abbey
+Enter Items (comma-separated): latte
+Is this a High-Priority Order? (yes/no): yes
+Order 25 added successfully.
+
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 1
+Enter Order ID: 26
+Enter Customer Name: abbey
+Enter Items (comma-separated): latte
+Is this a High-Priority Order? (yes/no): no
+Order 26 added successfully.
+
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 1
+Enter Order ID: 28
+Enter Customer Name: abbey
+Enter Items (comma-separated): late
+Is this a High-Priority Order? (yes/no): yes
+Order 28 added successfully.
+
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 2
+
+--- Pending Orders ---
+Order ID: 25, Customer: abbey, Items: latte, Priority: Yes
+Order ID: 28, Customer: abbey, Items: late, Priority: Yes
+Order ID: 26, Customer: abbey, Items: latte, Priority: No
+
+
+You must process high-priority orders first.
+Enter the first High-Priority Order ID (25) to process: 26
+Oops! You must process orders in sequence. Please check and try again!
+
+Do you want to continue processing orders? (yes/no): 25
+
+--- Pending Orders ---
+Order ID: 25, Customer: abbey, Items: latte, Priority: Yes
+Order ID: 28, Customer: abbey, Items: late, Priority: Yes
+Order ID: 26, Customer: abbey, Items: latte, Priority: No
+
+
+You must process high-priority orders first.
+Enter the first High-Priority Order ID (25) to process: 25
+Order 25 (High Priority) completed.
+
+Do you want to continue processing orders? (yes/no): yes
+
+--- Pending Orders ---
+Order ID: 28, Customer: abbey, Items: late, Priority: Yes
+Order ID: 26, Customer: abbey, Items: latte, Priority: No
+
+
+You must process high-priority orders first.
+Enter the first High-Priority Order ID (28) to process: no
+Oops! You must process orders in sequence. Please check and try again!
+
+Do you want to continue processing orders? (yes/no): no
+Returning to main menu...
+
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 1
+Enter Order ID: 30
+Enter Customer Name: abbey
+Enter Items (comma-separated): espresso
+Is this a High-Priority Order? (yes/no): no
+Order 30 added successfully.
+
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 2
+
+--- Pending Orders ---
+Order ID: 28, Customer: abbey, Items: late, Priority: Yes
+Order ID: 26, Customer: abbey, Items: latte, Priority: No
+Order ID: 30, Customer: abbey, Items: espresso, Priority: No
+
+
+You must process high-priority orders first.
+Enter the first High-Priority Order ID (28) to process: yes
+Oops! You must process orders in sequence. Please check and try again!
+
+Do you want to continue processing orders? (yes/no): yes
+
+--- Pending Orders ---
+Order ID: 28, Customer: abbey, Items: late, Priority: Yes
+Order ID: 26, Customer: abbey, Items: latte, Priority: No
+Order ID: 30, Customer: abbey, Items: espresso, Priority: No
+
+
+You must process high-priority orders first.
+Enter the first High-Priority Order ID (28) to process: 28
+Order 28 (High Priority) completed.
+
+Do you want to continue processing orders? (yes/no): yes
+
+--- Pending Orders ---
+Order ID: 26, Customer: abbey, Items: latte, Priority: No
+Order ID: 30, Customer: abbey, Items: espresso, Priority: No
+
+
+No high-priority orders pending. You can now process non-priority orders.
+Enter the first Non-Priority Order ID (26) to process: 30
+Oops! Please process the first non-priority order first. Try again!
+
+Do you want to continue processing orders? (yes/no): no
+Returning to main menu...
+
+
+1. Add a new order
+2. Process orders
+3. View pending orders
+4. Exit
+
+Enter your choice: 4
+Exiting the system. Goodbye!
