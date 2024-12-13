@@ -42,7 +42,7 @@
             "latte"
         ],
         "is_high_priority": true,
-        "status": "pending"
+        "status": "completed"
     },
     {
         "order_id": "6",
@@ -51,7 +51,7 @@
             "espresso"
         ],
         "is_high_priority": false,
-        "status": "pending"
+        "status": "completed"
     },
     {
         "order_id": "abbbey",
@@ -60,6 +60,51 @@
             "espresso"
         ],
         "is_high_priority": true,
+        "status": "completed"
+    },
+    {
+        "order_id": "21",
+        "customer_name": "wert",
+        "items": [
+            "latte"
+        ],
+        "is_high_priority": true,
+        "status": "completed"
+    },
+    {
+        "order_id": "25",
+        "customer_name": "abbey",
+        "items": [
+            "latte"
+        ],
+        "is_high_priority": true,
+        "status": "completed"
+    },
+    {
+        "order_id": "26",
+        "customer_name": "abbey",
+        "items": [
+            "latte"
+        ],
+        "is_high_priority": false,
+        "status": "pending"
+    },
+    {
+        "order_id": "28",
+        "customer_name": "abbey",
+        "items": [
+            "late"
+        ],
+        "is_high_priority": true,
+        "status": "completed"
+    },
+    {
+        "order_id": "30",
+        "customer_name": "abbey",
+        "items": [
+            "espresso"
+        ],
+        "is_high_priority": false,
         "status": "pending"
     }
 ]
