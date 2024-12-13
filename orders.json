@@ -87,11 +87,39 @@
             "latte"
         ],
         "is_high_priority": false,
-        "status": "pending"
+        "status": "completed"
     },
     {
         "order_id": "17",
         "customer_name": "shittu",
+        "items": [
+            "latte"
+        ],
+        "is_high_priority": true,
+        "status": "completed"
+    },
+    {
+        "order_id": "18",
+        "customer_name": "excel",
+        "items": [
+            "latte",
+            "espresso"
+        ],
+        "is_high_priority": true,
+        "status": "completed"
+    },
+    {
+        "order_id": "19",
+        "customer_name": "abbey",
+        "items": [
+            "espresso"
+        ],
+        "is_high_priority": false,
+        "status": "pending"
+    },
+    {
+        "order_id": "20",
+        "customer_name": "mello",
         "items": [
             "latte"
         ],
