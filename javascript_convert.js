@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const fs = require('fs');
 const readline = require('readline');
 
@@ -12,7 +10,7 @@ const extractData = (filePath, type) => {
                 pattern = /^\d\S+/gm;
                 break;
             case 'timestamp':
-                pattern = /.{26}(?<=\d)]/g;
+                pattern = /.{26}(?<=\d)\]/g;
                 break;
             case 'httpmethod':
                 pattern = /"(?=\w)(\w+.*?\w)"/g;
