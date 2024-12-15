@@ -18,16 +18,16 @@ const extractData = (filePath, type) => {
                 pattern = /"(?=\w)(\w+.*?\w)"/g; // Matches HTTP methods
                 break;
             case 'statuscode':
-                pattern = /\b\d{3}\b/g; // Matches 3-digit HTTP status codes
+                pattern = /" (GET|POST|PUT|DELETE|HEAD|OPTIONS|PATCH) .*?" (\d{3})/g; // Matches status codes after HTTP methods
                 break;
             case 'responsesize':
-                pattern = /\b\d+\b/gm; // Matches any number (response size) at the end of a line
+                pattern = /" \d{3} (\d+)$/gm; // Matches response size after the status code
                 break;
             default:
                 console.error(`Log Data '${type}' doesn't exist!!!`);
                 return [];
         }
-        return [...fileContents.matchAll(pattern)].map(match => match[1] || match[0]) || [];
+        return [...fileContents.matchAll(pattern)].map(match => match[2] || match[1] || match[0]) || [];
     } catch (err) {
         console.error(`An error occurred: ${err.message}`);
         return [];
