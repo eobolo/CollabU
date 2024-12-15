@@ -1,117 +1,113 @@
 import unittest
 import json
 import os
-from tempfile import TemporaryDirectory
-from shutil import copyfile
-
-# Path to the original code file
-original_orders_path = 'orders.json'
+import tempfile
 
 class TestOrderManagementSystem(unittest.TestCase):
 
     def setUp(self):
-        # Create a temporary directory to run tests without affecting real files
-        self.temp_dir = TemporaryDirectory()
-        self.temp_orders_path = os.path.join(self.temp_dir.name, 'orders.json')
-        
-        # Copy the original orders file to the temp directory to start with valid data
-        copyfile(original_orders_path, self.temp_orders_path)
+        # Create a temporary directory for test files
+        self.temp_dir = tempfile.TemporaryDirectory()
+        # Set the file path within the temporary directory
+        self.orders_file = os.path.join(self.temp_dir.name, 'orders.json')
+        # Clear any existing data
+        with open(self.orders_file, 'w') as file:
+            json.dump([], file)
 
     def tearDown(self):
-        # Clean up the temporary directory
+        # Remove the temporary directory and all its contents
         self.temp_dir.cleanup()
 
-    def test_order_init(self):
-        order = Order(1, "John Doe", ["item1", "item2"], True)
-        self.assertEqual(order.order_id, 1)
-        self.assertEqual(order.customer_name, "John Doe")
-        self.assertEqual(order.items, ["item1", "item2"])
-        self.assertTrue(order.is_high_priority)
-        self.assertEqual(order.status, 'pending')
+    def test_load_orders_empty(self):
+        # Ensure loading an empty file works correctly
+        orders = load_orders(file_path=self.orders_file)
+        self.assertEqual(len(orders), 0)
 
-    def test_load_orders(self):
-        orders = load_orders(self.temp_orders_path)
-        self.assertIsInstance(orders, list)
-        self.assertGreater(len(orders), 0)
+    def test_load_orders_single(self):
+        # Save a single order to the file
+        save_orders([Order('001', 'John Doe', ['item1', 'item2'], True)], file_path=self.orders_file)
+        # Load orders and verify correctness
+        orders = load_orders(file_path=self.orders_file)
+        self.assertEqual(len(orders), 1)
+        self.assertEqual(orders[0].order_id, '001')
+        self.assertEqual(orders[0].customer_name, 'John Doe')
+        self.assertEqual(orders[0].items, ['item1', 'item2'])
+        self.assertTrue(orders[0].is_high_priority)
 
-    def test_load_orders_empty_file(self):
-        with open(self.temp_orders_path, 'w') as file:
-            file.write('')
-        
-        orders = load_orders(self.temp_orders_path)
-        self.assertEqual(orders, [])
-
-    def test_load_orders_corrupted_file(self):
-        with open(self.temp_orders_path, 'w') as file:
-            file.write('invalid json')
-        
-        orders = load_orders(self.temp_orders_path)
-        self.assertEqual(orders, [])
-
-    def test_save_orders(self):
-        orders = load_orders(self.temp_orders_path)
-        new_order = Order(100, "New Customer", ["new item"], False)
-        orders.append(new_order)
-        save_orders(orders, self.temp_orders_path)
-
-        with open(self.temp_orders_path, 'r') as file:
-            saved_orders = json.load(file)
-        
-        self.assertEqual(len(saved_orders), len(orders))
-        self.assertIn(new_order.to_dict(), saved_orders)
-
-    def test_add_order(self):
-        orders = load_orders(self.temp_orders_path)
-        original_length = len(orders)
-        
-        add_order(orders, self.temp_orders_path, 101, "New Customer", ["new item"], False)
-        
-        self.assertEqual(len(orders), original_length + 1)
-        self.assertIn(Order(101, "New Customer", ["new item"], False).to_dict(), [order.to_dict() for order in orders])
-
-    def test_add_order_duplicate_id(self):
-        orders = load_orders(self.temp_orders_path)
-        original_length = len(orders)
-        
-        first_order = orders[0]
-        
-        add_order(orders, self.temp_orders_path, first_order.order_id, "New Customer", ["new item"], False)
-        
-        self.assertEqual(len(orders), original_length)
+    def test_save_orders_multiple(self):
+        # Save multiple orders to the file
+        save_orders([Order('001', 'John Doe', ['item1', 'item2'], True), 
+                     Order('002', 'Jane Smith', ['item3'], False)], 
+                    file_path=self.orders_file)
+        # Load and verify the saved orders
+        orders = load_orders(file_path=self.orders_file)
+        self.assertEqual(len(orders), 2)
+        self.assertEqual(orders[0].order_id, '001')
+        self.assertEqual(orders[1].order_id, '002')
 
     def test_show_pending_orders(self):
-        orders = load_orders(self.temp_orders_path)
-        pending_orders = [order for order in orders if order.status == 'pending']
-        show_pending_orders(pending_orders)
+        # Save some orders
+        save_orders([Order('001', 'John Doe', ['item1', 'item2'], True), 
+                     Order('002', 'Jane Smith', ['item3'], False)], 
+                    file_path=self.orders_file)
+        # Load orders and show pending
+        orders = load_orders(file_path=self.orders_file)
+        show_pending_orders(orders)
+        self.assertEqual(len(orders), 2)
+        # Assert that the first order is high priority
+        self.assertTrue(orders[0].is_high_priority)
 
-    def test_process_order(self):
-        # Simulate input for testing
-        def mock_input(prompt):
-            if "Order ID" in prompt:
-                return "1"
-            return None
-        
-        with unittest.mock.patch('builtins.input', side_effect=mock_input):
-            orders = load_orders(self.temp_orders_path)
-            first_order = orders[0]
-            
-            process_order(orders, self.temp_orders_path)
-            
-            self.assertEqual(orders[0].status, 'completed')
+    def test_process_order_high_priority(self):
+        # Save a high-priority order
+        save_orders([Order('001', 'John Doe', ['item1', 'item2'], True)], 
+                    file_path=self.orders_file)
+        # Load and process the order
+        orders = load_orders(file_path=self.orders_file)
+        process_order(orders)
+        self.assertEqual(len(orders), 1)
+        self.assertEqual(orders[0].status, 'completed')
 
-    def test_process_order_invalid_input(self):
-        # Simulate invalid input for testing
-        def mock_input(prompt):
-            if "Order ID" in prompt:
-                return "1000"  # Invalid order ID
-            return None
-        
-        with unittest.mock.patch('builtins.input', side_effect=mock_input):
-            orders = load_orders(self.temp_orders_path)
-            
-            process_order(orders, self.temp_orders_path)
-            
-            self.assertEqual(orders[0].status, 'pending')
+    def test_process_order_non_priority(self):
+        # Save a non-priority order
+        save_orders([Order('001', 'John Doe', ['item1', 'item2'], False)], 
+                    file_path=self.orders_file)
+        # Load and process the order
+        orders = load_orders(file_path=self.orders_file)
+        process_order(orders)
+        self.assertEqual(len(orders), 1)
+        self.assertEqual(orders[0].status, 'completed')
 
-if __name__ == "__main__":
-    unittest.main(argv=[''], exit=False)
+    def test_add_order_valid(self):
+        # Add a valid order
+        save_orders([], file_path=self.orders_file)
+        add_order(orders=[], file_path=self.orders_file)
+        orders = load_orders(file_path=self.orders_file)
+        self.assertEqual(len(orders), 1)
+        self.assertEqual(orders[0].order_id, '001')
+
+    def test_add_order_duplicate(self):
+        # Add a valid order
+        save_orders([Order('001', 'John Doe', ['item1', 'item2'], True)], 
+                    file_path=self.orders_file)
+        add_order(orders=[], file_path=self.orders_file)
+        orders = load_orders(file_path=self.orders_file)
+        self.assertEqual(len(orders), 1)
+
+    def test_add_order_empty_items(self):
+        # Add an order with empty items
+        save_orders([], file_path=self.orders_file)
+        add_order(orders=[], file_path=self.orders_file, items='')
+        orders = load_orders(file_path=self.orders_file)
+        self.assertEqual(len(orders), 1)
+        self.assertEqual(orders[0].items, [])
+
+    def test_load_orders_corrupted(self):
+        # Corrupt the order file
+        with open(self.orders_file, 'w') as file:
+            file.write('Invalid JSON')
+        # Load orders and check for handling
+        orders = load_orders(file_path=self.orders_file)
+        self.assertEqual(len(orders), 0)
+
+# To run the tests, execute the following line in your terminal or command prompt:
+# python -m unittest test_order_management_system.TestOrderManagementSystem
