@@ -12,7 +12,7 @@ const extractData = (filePath, type) => {
                 pattern = /^\d\S+/gm;
                 break;
             case 'timestamp':
-                pattern = /.{26}(?<=\d)]/g;
+                pattern = /\[(.*?)\]/g; // Updated regex to match everything inside square brackets
                 break;
             case 'httpmethod':
                 pattern = /"(?=\w)(\w+.*?\w)"/g;
@@ -27,7 +27,7 @@ const extractData = (filePath, type) => {
                 console.error(`Log Data '${type}' doesn't exist!!!`);
                 return [];
         }
-        return fileContents.match(pattern) || [];
+        return [...fileContents.matchAll(pattern)].map(match => match[1]) || [];
     } catch (err) {
         console.error(`An error occurred: ${err.message}`);
         return [];
