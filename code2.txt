@@ -1,39 +1,8 @@
-1. Add a new order
-2. Process orders
-3. View pending orders
-4. Exit
+$ python customer_console.py 
+Enter Order ID: 002
+Enter Customer Name: emmanuel
+Enter Items (comma-separated): latte
+Is this a High-Priority Order? (yes/no): no
+Order 002 added successfully.
 
-Enter your choice: 2
-
---- Pending Orders ---
-Order ID: 21, Customer: wert, Items: latte, Priority: Yes
-Order ID: 6, Customer: emma, Items: espresso, Priority: No
-
-
-Enter Order ID to process or 'exit' to quit: 6
-Error: Order ID 6 not found or already processed.
-
-
---- Pending Orders ---
-Order ID: 21, Customer: wert, Items: latte, Priority: Yes
-Order ID: 6, Customer: emma, Items: espresso, Priority: No
-
-
-Enter Order ID to process or 'exit' to quit: 21
-Order 21 completed.
-
-
---- Pending Orders ---
-Order ID: 6, Customer: emma, Items: espresso, Priority: No
-
-
-Enter Order ID to process or 'exit' to quit: 6
-Order 6 completed.
-
-
-1. Add a new order
-2. Process orders
-3. View pending orders
-4. Exit
-
-Enter your choice:
+EEEEnter Order ID: 
