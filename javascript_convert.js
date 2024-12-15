@@ -18,7 +18,7 @@ const extractData = (filePath, type) => {
                 pattern = /"(?=\w)(\w+.*?\w)"/g;
                 break;
             case 'statuscode':
-                pattern = /(?<=".\s)(\d+)/g;
+                pattern = /"\s\d{3}\s(\d{3})/g; // Matches status codes after HTTP methods
                 break;
             case 'responsesize':
                 pattern = /\d+$/gm;
