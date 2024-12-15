@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require('fs');
 const readline = require('readline');
 
@@ -7,19 +9,24 @@ const extractData = (filePath, type) => {
         let pattern;
         switch (type) {
             case 'ipaddress':
-                pattern = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g; // Valid IPv4 address
+                // Original Python regex: r'(?P<ipaddresses>^\d\S+)'
+                pattern = /^\d\S+/gm; 
                 break;
             case 'timestamp':
-                pattern = /\[(.*?)\]/g; // Matches content inside square brackets
+                // Original Python regex: r'(?P<timestamp>.{26})(?<=\d)\]'
+                pattern = /.{26}(?<=\d)\]/g; 
                 break;
             case 'httpmethod':
-                pattern = /"(?=\w)(\w+.*?\w)"/g; // Matches HTTP methods
+                // Original Python regex: r'"(?=\w)(?P<httpmethod>\w+.*?\w)"'
+                pattern = /"(?=\w)(\w+.*?\w)"/g;
                 break;
             case 'statuscode':
-                pattern = /\b\d{3}\b/g; // Matches 3-digit HTTP status codes
+                // Original Python regex: r'(?<=".\s)(?P<statuscode>\d+)'
+                pattern = /(?<=".\s)(\d+)/g;
                 break;
             case 'responsesize':
-                pattern = /\b\d+\b/gm; // Matches any number (response size) at the end of a line
+                // Original Python regex: r'(?P<response_size>\d+$)'
+                pattern = /\d+$/gm; 
                 break;
             default:
                 console.error(`Log Data '${type}' doesn't exist!!!`);
