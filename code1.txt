@@ -1,29 +1,4 @@
-node bug-response1.js 
-Enter '1' to add event, '2' to view events, '3' to book tickets, '4' to cancel tickets, '5' to exit: 1
-Enter event ID: 0011
-
-Enter event name: eexxcceell
-
-Enter event date and time (YYYY-MM-DD HH:MM:SS): 22002222--1199--1155  0088::00
-
-Enter total seats: 1122
-
-Enter ticket price: 1122
-
-node:internal/readline/emitKeypressEvents:74
-            throw err;
-            ^
-
-RangeError: Invalid time value
-    at Date.toISOString (<anonymous>)
-    at C:\Users\obolo\CollabU\bug-response1.js:108:30
-    at Array.map (<anonymous>)
-    at saveData (C:\Users\obolo\CollabU\bug-response1.js:105:60)
-    at C:\Users\obolo\CollabU\bug-response1.js:141:25
-    at [_onLine] [as _onLine] (node:internal/readline/interface:414:7)
-    at [_line] [as _line] (node:internal/readline/interface:887:18)
-    at [_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:1265:22)
-    at ReadStream.onkeypress (node:internal/readline/interface:264:20)
-    at ReadStream.emit (node:events:530:35)
-
-Node.js v20.12.2
+$ node fix.js
+Total words: 67
+Total sentences: 13
+Total paragraphs: 5
