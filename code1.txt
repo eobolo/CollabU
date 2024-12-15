@@ -1,112 +1,99 @@
-Welcome to the Order Management System!
+python -m unittest customer_console.py.TestOrderManagementSystem
+E
+======================================================================
+ERROR: py (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+AttributeError: module 'customer_console' has no attribute 'py'
 
-1. Add a new order
-2. Process orders
-3. View pending orders
-4. Exit
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
 
-Enter your choice: 2
+FAILED (errors=1)
 
---- Pending Orders ---
-Order ID: 2, Customer: emmanuel, Items: espresso, Priority: Yes
-Order ID: 1, Customer: exce, Items: latee, Priority: No
+obolo@Emmanuel MINGW64 ~/CollabU (master)
+$ python -m unittest customer_console.TestOrderManagementSystem
+EEEEEEEEEE
+======================================================================
+ERROR: test_add_order_duplicate (customer_console.TestOrderManagementSystem)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\obolo\CollabU\customer_console.py", line 231, in test_add_order_duplicate
+    save_orders([Order('001', 'John Doe', ['item1', 'item2'], True)],
+TypeError: save_orders() got an unexpected keyword argument 'file_path'
 
+======================================================================
+ERROR: test_add_order_empty_items (customer_console.TestOrderManagementSystem)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\obolo\CollabU\customer_console.py", line 239, in test_add_order_empty_items
+    save_orders([], file_path=self.orders_file)
+TypeError: save_orders() got an unexpected keyword argument 'file_path'
 
-Enter Order ID to process or 'exit' to quit: 1
-Oops! You must process orders in sequence. Please check and try again!
+======================================================================
+ERROR: test_add_order_valid (customer_console.TestOrderManagementSystem)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\obolo\CollabU\customer_console.py", line 223, in test_add_order_valid
+    save_orders([], file_path=self.orders_file)
+TypeError: save_orders() got an unexpected keyword argument 'file_path'
 
---- Pending Orders ---
-Order ID: 2, Customer: emmanuel, Items: espresso, Priority: Yes
-Order ID: 1, Customer: exce, Items: latee, Priority: No
+======================================================================
+ERROR: test_load_orders_corrupted (customer_console.TestOrderManagementSystem)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\obolo\CollabU\customer_console.py", line 250, in test_load_orders_corrupted
+    orders = load_orders(file_path=self.orders_file)
+TypeError: load_orders() got an unexpected keyword argument 'file_path'
 
+======================================================================
+ERROR: test_load_orders_empty (customer_console.TestOrderManagementSystem)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\obolo\CollabU\customer_console.py", line 164, in test_load_orders_empty
+    orders = load_orders(file_path=self.orders_file)
+TypeError: load_orders() got an unexpected keyword argument 'file_path'
 
-Enter Order ID to process or 'exit' to quit: 2
-Order 2 completed.
+======================================================================
+ERROR: test_load_orders_single (customer_console.TestOrderManagementSystem)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\obolo\CollabU\customer_console.py", line 169, in test_load_orders_single
+    save_orders([Order('001', 'John Doe', ['item1', 'item2'], True)], file_path=self.orders_file)
+TypeError: save_orders() got an unexpected keyword argument 'file_path'
 
+======================================================================
+ERROR: test_process_order_high_priority (customer_console.TestOrderManagementSystem)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\obolo\CollabU\customer_console.py", line 203, in test_process_order_high_priority
+    save_orders([Order('001', 'John Doe', ['item1', 'item2'], True)],
+TypeError: save_orders() got an unexpected keyword argument 'file_path'
 
---- Pending Orders ---
-Order ID: 1, Customer: exce, Items: latee, Priority: No
+======================================================================
+ERROR: test_process_order_non_priority (customer_console.TestOrderManagementSystem)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\obolo\CollabU\customer_console.py", line 213, in test_process_order_non_priority
+    save_orders([Order('001', 'John Doe', ['item1', 'item2'], False)],
+TypeError: save_orders() got an unexpected keyword argument 'file_path'
 
+======================================================================
+ERROR: test_save_orders_multiple (customer_console.TestOrderManagementSystem)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\obolo\CollabU\customer_console.py", line 180, in test_save_orders_multiple
+    save_orders([Order('001', 'John Doe', ['item1', 'item2'], True),
+TypeError: save_orders() got an unexpected keyword argument 'file_path'
 
-Enter Order ID to process or 'exit' to quit: exit
+======================================================================
+ERROR: test_show_pending_orders (customer_console.TestOrderManagementSystem)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\obolo\CollabU\customer_console.py", line 191, in test_show_pending_orders
+    save_orders([Order('001', 'John Doe', ['item1', 'item2'], True),
+TypeError: save_orders() got an unexpected keyword argument 'file_path'
 
-1. Add a new order
-2. Process orders
-3. View pending orders
-4. Exit
+----------------------------------------------------------------------
+Ran 10 tests in 0.043s
 
-Enter your choice: 1
-Enter Order ID: 3
-Enter Customer Name: wert
-Enter Items (comma-separated): latee
-Is this a High-Priority Order? (yes/no): no
-Order 3 added successfully.
-
-
-1. Add a new order
-2. Process orders
-3. View pending orders
-4. Exit
-
-Enter your choice: 1
-Enter Order ID: 4
-Enter Customer Name: serty
-Enter Items (comma-separated): latte
-Is this a High-Priority Order? (yes/no): yes
-Order 4 added successfully.
-
-
-1. Add a new order
-2. Process orders
-3. View pending orders
-4. Exit
-
-Enter your choice: 3
-
---- Pending Orders ---
-Order ID: 4, Customer: serty, Items: latte, Priority: Yes
-Order ID: 1, Customer: exce, Items: latee, Priority: No
-Order ID: 3, Customer: wert, Items: latee, Priority: No
-
-
-
-1. Add a new order
-2. Process orders
-3. View pending orders
-4. Exit
-
-Enter your choice: 2
-
---- Pending Orders ---
-Order ID: 4, Customer: serty, Items: latte, Priority: Yes
-Order ID: 1, Customer: exce, Items: latee, Priority: No
-Order ID: 3, Customer: wert, Items: latee, Priority: No
-
-
-Enter Order ID to process or 'exit' to quit: 1
-Oops! You must process orders in sequence. Please check and try again!
-
---- Pending Orders ---
-Order ID: 4, Customer: serty, Items: latte, Priority: Yes
-Order ID: 1, Customer: exce, Items: latee, Priority: No
-Order ID: 3, Customer: wert, Items: latee, Priority: No
-
-
-Enter Order ID to process or 'exit' to quit: 4
-Order 4 completed.
-
-
---- Pending Orders ---
-Order ID: 1, Customer: exce, Items: latee, Priority: No
-Order ID: 3, Customer: wert, Items: latee, Priority: No
-
-
-Enter Order ID to process or 'exit' to quit: 3
-Order 3 completed.
-
-
---- Pending Orders ---
-Order ID: 1, Customer: exce, Items: latee, Priority: No
-
-
-Enter Order ID to process or 'exit' to quit:
+FAILED (errors=10)
