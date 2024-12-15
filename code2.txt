@@ -1,8 +1,16 @@
-$ python customer_console.py 
-Enter Order ID: 002
-Enter Customer Name: emmanuel
-Enter Items (comma-separated): latte
-Is this a High-Priority Order? (yes/no): no
-Order 002 added successfully.
+node bug-response2.js
+C:\Users\obolo\CollabU\bug-response2.js:230
+        const userId = parseInt(prompt('Enter user ID: '), 10);
+              ^
 
-EEEEnter Order ID: 
+SyntaxError: Identifier 'userId' has already been declared
+    at internalCompileFunction (node:internal/vm:128:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1280:20)
+    at Module._compile (node:internal/modules/cjs/loader:1332:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1427:10)
+    at Module.load (node:internal/modules/cjs/loader:1206:32)
+    at Module._load (node:internal/modules/cjs/loader:1022:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:135:12)
+    at node:internal/main/run_main_module:28:49
+
+Node.js v20.12.2
