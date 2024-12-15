@@ -9,25 +9,25 @@ const extractData = (filePath, type) => {
         let pattern;
         switch (type) {
             case 'ipaddress':
-                pattern = /^\d\S+/gm;
+                pattern = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g; // Valid IPv4 address
                 break;
             case 'timestamp':
-                pattern = /\[(.*?)\]/g; // Updated regex to match everything inside square brackets
+                pattern = /\[(.*?)\]/g; // Matches content inside square brackets
                 break;
             case 'httpmethod':
-                pattern = /"(?=\w)(\w+.*?\w)"/g;
+                pattern = /"(?=\w)(\w+.*?\w)"/g; // Matches HTTP methods
                 break;
             case 'statuscode':
-                pattern = /(?<=".\s)(\d+)/g;
+                pattern = /\b\d{3}\b/g; // Matches 3-digit HTTP status codes
                 break;
             case 'responsesize':
-                pattern = /\d+$/gm;
+                pattern = /\b\d+\b/gm; // Matches any number (response size) at the end of a line
                 break;
             default:
                 console.error(`Log Data '${type}' doesn't exist!!!`);
                 return [];
         }
-        return [...fileContents.matchAll(pattern)].map(match => match[1]) || [];
+        return [...fileContents.matchAll(pattern)].map(match => match[1] || match[0]) || [];
     } catch (err) {
         console.error(`An error occurred: ${err.message}`);
         return [];
