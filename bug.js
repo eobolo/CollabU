@@ -1,163 +1,143 @@
 const fs = require('fs');
 const readline = require('readline');
-const path = require('path');
-const os = require('os');
+const { DateTime } = require('luxon'); // For date manipulation
 
-const ORDERS_FILE = path.join(__dirname, 'orders.json');
+const FILE_NAME = "events.json";
 
-class Order {
-    constructor(order_id, customer_name, items, is_high_priority, status = 'pending') {
-        this.order_id = order_id;
-        this.customer_name = customer_name;
-        this.items = items;
-        this.is_high_priority = is_high_priority;
+// Event class
+class Event {
+    constructor(event_id, event_name, event_datetime, total_seats, ticket_price, available_seats = null, status = "active") {
+        this.event_id = event_id;
+        this.event_name = event_name;
+        this.event_datetime = DateTime.fromFormat(event_datetime, "yyyy-MM-dd HH:mm");
+        this.total_seats = total_seats;
+        this.available_seats = available_seats || total_seats;
+        this.ticket_price = ticket_price;
         this.status = status;
+
+        if (this.available_seats === 0) {
+            this.status = "sold out";
+        }
+        this.booked_by = [];
     }
 
-    toDict() {
+    toObject() {
         return {
-            order_id: this.order_id,
-            customer_name: this.customer_name,
-            items: this.items,
-            is_high_priority: this.is_high_priority,
+            event_id: this.event_id,
+            event_name: this.event_name,
+            event_datetime: this.event_datetime.toFormat("yyyy-MM-dd HH:mm"),
+            total_seats: this.total_seats,
+            available_seats: this.available_seats,
+            ticket_price: this.ticket_price,
             status: this.status
         };
     }
 }
 
-function loadOrders() {
-    if (fs.existsSync(ORDERS_FILE) && fs.statSync(ORDERS_FILE).size > 0) {
-        try {
-            const data = fs.readFileSync(ORDERS_FILE, 'utf-8');
-            const ordersData = JSON.parse(data);
-            if (Array.isArray(ordersData)) {
-                return ordersData.map(order => new Order(
-                    order.order_id, order.customer_name, order.items, order.is_high_priority, order.status
-                ));
-            } else {
-                console.log("Error: Invalid file format. Initializing a new file.");
-                return [];
-            }
-        } catch (err) {
-            console.log("Error: Corrupted order file. Initializing a new file.");
-            return [];
-        }
+// Load and save events from JSON
+function loadEvents() {
+    if (fs.existsSync(FILE_NAME) && fs.statSync(FILE_NAME).size > 0) {
+        const data = JSON.parse(fs.readFileSync(FILE_NAME, 'utf8'));
+        return data.map(event => new Event(event.event_id, event.event_name, event.event_datetime, event.total_seats, event.ticket_price, event.available_seats, event.status));
     }
     return [];
 }
 
-function saveOrders(orders) {
-    const fd = fs.openSync(ORDERS_FILE, 'w');
+function saveEvents(events) {
+    fs.writeFileSync(FILE_NAME, JSON.stringify(events.map(event => event.toObject()), null, 4));
+}
+
+// Helper function for async input
+function askQuestion(rl, question) {
+    return new Promise(resolve => rl.question(question, resolve));
+}
+
+// 1. Add New Event
+async function addEvent(events, rl) {
     try {
-        const data = JSON.stringify(orders.map(order => order.toDict()), null, 4);
-        fs.writeFileSync(ORDERS_FILE, data);
-    } catch (err) {
-        console.log("Error saving orders: ", err.message);
-    } finally {
-        fs.closeSync(fd);
-    }
-}
-
-function showPendingOrders(orders) {
-    console.log("\n--- Pending Orders ---");
-    const pendingOrders = orders
-        .filter(order => order.status === 'pending')
-        .sort((a, b) => (b.is_high_priority - a.is_high_priority) || a.order_id.localeCompare(b.order_id));
-
-    if (pendingOrders.length === 0) {
-        console.log("No pending orders.\n");
-    } else {
-        pendingOrders.forEach(order => {
-            console.log(`Order ID: ${order.order_id}, Customer: ${order.customer_name}, Items: ${order.items.join(', ')}, Priority: ${order.is_high_priority ? 'Yes' : 'No'}`);
-        });
-        console.log("\n");
-    }
-}
-
-function processOrder(orders, rl) {
-    showPendingOrders(orders);
-    rl.question("Enter Order ID to process or 'exit' to quit: ", (order_id) => {
-        if (order_id.toLowerCase() === 'exit') {
-            mainMenu(orders, rl);
+        const event_id = await askQuestion(rl, "Enter Event ID: ");
+        if (events.some(event => event.event_id === event_id)) {
+            console.log("Event ID already exists. Please try again.");
             return;
         }
 
-        const order = orders.find(o => o.order_id === order_id && o.status === 'pending');
-        if (order) {
-            order.status = 'completed';
-            saveOrders(orders);
-            console.log(`Order ${order_id} completed.\n`);
-        } else {
-            console.log(`Error: Order ID ${order_id} not found or already processed.\n`);
-        }
-        processOrder(orders, rl);
-    });
-}
+        const event_name = await askQuestion(rl, "Enter Event Name: ");
+        const event_datetime_str = await askQuestion(rl, "Enter Event Date and Time (YYYY-MM-DD HH:MM): ");
+        const event_datetime = DateTime.fromFormat(event_datetime_str, "yyyy-MM-dd HH:mm");
 
-function addOrder(orders, rl) {
-    rl.question("Enter Order ID: ", (order_id) => {
-        if (orders.some(o => o.order_id === order_id)) {
-            console.log(`Error: Order ID ${order_id} already exists.\n`);
-            mainMenu(orders, rl);
+        if (!event_datetime.isValid || event_datetime < DateTime.now()) {
+            console.log("Invalid date or time. Event cannot be scheduled in the past.");
             return;
         }
 
-        rl.question("Enter Customer Name: ", (customer_name) => {
-            rl.question("Enter Items (comma-separated): ", (itemsInput) => {
-                rl.question("Is this a High-Priority Order? (yes/no): ", (priorityInput) => {
-                    const items = itemsInput.split(',').map(item => item.trim());
-                    const is_high_priority = priorityInput.toLowerCase() === 'yes';
-                    const newOrder = new Order(order_id, customer_name, items, is_high_priority);
-
-                    orders.push(newOrder);
-                    saveOrders(orders);
-                    console.log(`Order ${order_id} added successfully.\n`);
-                    mainMenu(orders, rl);
-                });
-            });
-        });
-    });
-}
-
-function mainMenu(orders, rl) {
-    console.log("\n1. Add a new order");
-    console.log("2. Process orders");
-    console.log("3. View pending orders");
-    console.log("4. Exit\n");
-
-    rl.question("Enter your choice: ", (choice) => {
-        switch (choice) {
-            case '1':
-                addOrder(orders, rl);
-                break;
-            case '2':
-                processOrder(orders, rl);
-                break;
-            case '3':
-                showPendingOrders(orders);
-                mainMenu(orders, rl);
-                break;
-            case '4':
-                console.log("Exiting the system. Goodbye!");
-                rl.close();
-                break;
-            default:
-                console.log("Invalid choice. Please try again.\n");
-                mainMenu(orders, rl);
+        const total_seats_str = await askQuestion(rl, "Enter Total Seats: ");
+        const total_seats = parseInt(total_seats_str);
+        if (isNaN(total_seats) || total_seats <= 0) {
+            console.log("Total seats must be a positive number.");
+            return;
         }
-    });
+
+        const ticket_price_str = await askQuestion(rl, "Enter Ticket Price: ");
+        const ticket_price = parseFloat(ticket_price_str);
+        if (isNaN(ticket_price) || ticket_price <= 0) {
+            console.log("Ticket price must be a positive number.");
+            return;
+        }
+
+        const new_event = new Event(event_id, event_name, event_datetime_str, total_seats, ticket_price);
+        events.push(new_event);
+        saveEvents(events);
+        console.log(`Event "${event_name}" scheduled successfully.`);
+    } catch (error) {
+        console.error("An error occurred:", error.message);
+    }
 }
 
-function main() {
-    console.log("Welcome to the Order Management System!");
-    const orders = loadOrders();
-
+// Main function
+async function main() {
+    const events = loadEvents();
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
     });
 
-    mainMenu(orders, rl);
+    async function showMenu() {
+        console.log("\n1. Add New Event");
+        console.log("2. Book Ticket");
+        console.log("3. Cancel Ticket");
+        console.log("4. Cancel Event");
+        console.log("5. View Events");
+        console.log("6. Exit");
+
+        const choice = await askQuestion(rl, "Enter your choice: ");
+        switch (choice) {
+            case '1':
+                await addEvent(events, rl);
+                break;
+            case '2':
+                console.log("Book Ticket - Functionality not implemented yet.");
+                break;
+            case '3':
+                console.log("Cancel Ticket - Functionality not implemented yet.");
+                break;
+            case '4':
+                console.log("Cancel Event - Functionality not implemented yet.");
+                break;
+            case '5':
+                console.log("Viewing Events:");
+                events.forEach(event => console.log(event.toObject()));
+                break;
+            case '6':
+                console.log("Exiting...");
+                rl.close();
+                return;
+            default:
+                console.log("Invalid choice. Please try again.");
+        }
+        showMenu();
+    }
+
+    showMenu();
 }
 
 main();
