@@ -1,0 +1,24 @@
+[
+    {
+        "user_id": "001",
+        "name": "emmanuel",
+        "booked_tickets": [
+            {
+                "event_id": "001",
+                "num_tickets": 6,
+                "ticket_price": 30
+            }
+        ]
+    },
+    {
+        "user_id": "002",
+        "name": "excel",
+        "booked_tickets": [
+            {
+                "event_id": "001",
+                "num_tickets": 3,
+                "ticket_price": 33
+            }
+        ]
+    }
+]
