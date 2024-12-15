@@ -1,11 +1,11 @@
 [
     {
         "user_id": "001",
-        "name": "emmanuel",
+        "name": "emma",
         "booked_tickets": [
             {
                 "event_id": "001",
-                "num_tickets": 6,
+                "num_tickets": 5,
                 "ticket_price": 30
             }
         ]
@@ -16,8 +16,8 @@
         "booked_tickets": [
             {
                 "event_id": "001",
-                "num_tickets": 3,
-                "ticket_price": 33
+                "num_tickets": 5,
+                "ticket_price": 30
             }
         ]
     }

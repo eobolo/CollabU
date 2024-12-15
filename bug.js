@@ -84,12 +84,12 @@ class User {
         
         if (!ticket_to_cancel) {
             console.log(`No tickets booked for event ${event.event_name}.`);
-            return;
+            return false;
         }
 
         if (num_tickets > ticket_to_cancel.num_tickets) {
             console.log("Cannot cancel more tickets than booked.");
-            return;
+            return false;
         }
 
         const refund_amount = num_tickets * ticket_to_cancel.ticket_price;
@@ -151,46 +151,40 @@ function update_price(event) {
     }
 }
 
-// Add New Event
+// Function to add a new event
 function add_event(events) {
     rl.question("Enter Event ID: ", (event_id) => {
-        if (events.some(event => event.event_id === event_id)) {
+        if (events.find(event => event.event_id === event_id)) {
             console.log("Event ID already exists. Please try again.");
-            add_event(events);
+            main();
             return;
         }
 
         rl.question("Enter Event Name: ", (event_name) => {
-            rl.question("Enter Event Date and Time (YYYY-MM-DD HH:MM): ", (event_datetime_str) => {
-                const event_datetime = new Date(event_datetime_str);
-                
-                if (isNaN(event_datetime)) {
+            rl.question("Enter Event Date and Time (YYYY-MM-DD HH:MM): ", (event_datetime) => {
+                const event_datetime_obj = new Date(event_datetime);
+                if (isNaN(event_datetime_obj)) {
                     console.log("Invalid date format. Please try again.");
-                    add_event(events);
-                    return;
-                }
-
-                if (event_datetime < new Date()) {
-                    console.log("Event cannot be scheduled in the past.");
-                    add_event(events);
+                    main();
                     return;
                 }
 
                 rl.question("Enter Total Seats: ", (total_seats) => {
                     total_seats = parseInt(total_seats);
-                    if (total_seats === 0) {
-                        console.log("Total seats cannot be zero. Please enter a valid number of seats.");
-                        add_event(events);
+                    if (total_seats <= 0) {
+                        console.log("Total seats must be greater than 0.");
+                        main();
                         return;
                     }
 
                     rl.question("Enter Ticket Price: ", (ticket_price) => {
                         ticket_price = parseFloat(ticket_price);
-                        const new_event = new Event(event_id, event_name, event_datetime_str, total_seats, ticket_price);
+                        // Create an Event instance using the Event class
+                        const new_event = new Event(event_id, event_name, event_datetime_obj, total_seats, ticket_price);
                         events.push(new_event);
                         save_events(events);
-                        console.log(`Event ${event_name} scheduled successfully.\n`);
-                        main();  // Go back to the main menu
+                        console.log(`Event ${event_name} scheduled successfully.`);
+                        main();
                     });
                 });
             });
@@ -198,23 +192,20 @@ function add_event(events) {
     });
 }
 
-// Book Ticket
+// Function to book tickets
 function book_ticket(events, users) {
     rl.question("Enter User ID: ", (user_id) => {
         let user = users.find(user => user.user_id === user_id);
         if (!user) {
             rl.question("Enter your name: ", (name) => {
-                user = new User(user_id, name);
+                user = { user_id, name, booked_tickets: [] };
                 users.push(user);
                 save_users(users);
-                proceed_with_booking(user, events);
+                book_ticket(events, users); // Re-run booking for the newly created user
             });
-        } else {
-            proceed_with_booking(user, events);
+            return;
         }
-    });
 
-    function proceed_with_booking(user, events) {
         rl.question("Enter Event ID to book tickets: ", (event_id) => {
             const event = events.find(event => event.event_id === event_id);
             if (!event) {
@@ -231,16 +222,41 @@ function book_ticket(events, users) {
 
             rl.question(`How many tickets for ${event.event_name}: `, (num_tickets) => {
                 num_tickets = parseInt(num_tickets);
-                if (user.book_ticket(event, num_tickets)) {
-                    update_price(event);
-                    save_events(events);
-                    save_users(users);
-                    console.log(`Booked ${num_tickets} tickets for ${event.event_name}.\n`);
+                if (num_tickets > event.available_seats) {
+                    console.log(`Not enough available seats. Only ${event.available_seats} seats left.`);
+                    main();
+                    return;
                 }
+
+                // Check if user already has tickets for this event
+                const existingTicket = user.booked_tickets.find(ticket => ticket.event_id === event.event_id);
+
+                if (existingTicket) {
+                    // Update the number of tickets if already booked
+                    existingTicket.num_tickets += num_tickets;
+                } else {
+                    // Create a new ticket entry
+                    const ticket_info = { event_id: event.event_id, num_tickets, ticket_price: event.ticket_price };
+                    user.booked_tickets.push(ticket_info);
+                }
+
+                // Update the event's booked users and available seats
+                event.available_seats -= num_tickets;
+                if (event.available_seats === 0) {
+                    event.status = "sold out";
+                }
+
+                event.booked_by.push(user.user_id);
+                update_price(event);  // Update price dynamically based on remaining seats
+
+                save_events(events);
+                save_users(users);
+
+                console.log(`Booked ${num_tickets} tickets for ${event.event_name}.`);
                 main();
             });
         });
-    }
+    });
 }
 
 // Cancel Ticket
@@ -308,7 +324,7 @@ function main() {
             book_ticket(events, users);
         } else if (choice === '3') {
             cancel_ticket(events, users);
-        }else if (choice === '4') {
+        } else if (choice === '4') {
             view_events(events);
         } else if (choice === '5') {
             console.log("Exiting...");
