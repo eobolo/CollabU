@@ -1,226 +1,117 @@
-const fs = require('fs');
-const readline = require('readline');
-const path = require('path');
-const os = require('os');
+import unittest
+import json
+import os
+from tempfile import TemporaryDirectory
+from shutil import copyfile
 
-const ORDERS_FILE = path.join(__dirname, 'orders.json');
+# Path to the original code file
+original_orders_path = 'orders.json'
 
-class Order {
-    constructor(order_id, customer_name, items, is_high_priority, status = 'pending') {
-        this.order_id = order_id;
-        this.customer_name = customer_name;
-        this.items = items;
-        this.is_high_priority = is_high_priority;
-        this.status = status;
-    }
+class TestOrderManagementSystem(unittest.TestCase):
 
-    toDict() {
-        return {
-            order_id: this.order_id,
-            customer_name: this.customer_name,
-            items: this.items,
-            is_high_priority: this.is_high_priority,
-            status: this.status
-        };
-    }
-}
+    def setUp(self):
+        # Create a temporary directory to run tests without affecting real files
+        self.temp_dir = TemporaryDirectory()
+        self.temp_orders_path = os.path.join(self.temp_dir.name, 'orders.json')
+        
+        # Copy the original orders file to the temp directory to start with valid data
+        copyfile(original_orders_path, self.temp_orders_path)
 
-function loadOrders() {
-    if (fs.existsSync(ORDERS_FILE) && fs.statSync(ORDERS_FILE).size > 0) {
-        try {
-            const data = fs.readFileSync(ORDERS_FILE, 'utf-8');
-            const ordersData = JSON.parse(data);
-            if (Array.isArray(ordersData)) {
-                return ordersData.map(order => new Order(
-                    order.order_id, order.customer_name, order.items, order.is_high_priority, order.status
-                ));
-            } else {
-                console.log("Error: Invalid file format. Initializing a new file.");
-                return [];
-            }
-        } catch (err) {
-            console.log("Error: Corrupted order file. Initializing a new file.");
-            return [];
-        }
-    }
-    return [];
-}
+    def tearDown(self):
+        # Clean up the temporary directory
+        self.temp_dir.cleanup()
 
-function saveOrders(orders) {
-    const fd = fs.openSync(ORDERS_FILE, 'w');
-    try {
-        const data = JSON.stringify(orders.map(order => order.toDict()), null, 4);
-        fs.writeFileSync(ORDERS_FILE, data);
-    } catch (err) {
-        console.log("Error saving orders: ", err.message);
-    } finally {
-        fs.closeSync(fd);
-    }
-}
+    def test_order_init(self):
+        order = Order(1, "John Doe", ["item1", "item2"], True)
+        self.assertEqual(order.order_id, 1)
+        self.assertEqual(order.customer_name, "John Doe")
+        self.assertEqual(order.items, ["item1", "item2"])
+        self.assertTrue(order.is_high_priority)
+        self.assertEqual(order.status, 'pending')
 
-function showPendingOrders(orders) {
-    console.log("\n--- Pending Orders ---");
-    const pendingOrders = orders
-        .filter(order => order.status === 'pending')
-        .sort((a, b) => (b.is_high_priority - a.is_high_priority) || a.order_id.localeCompare(b.order_id));
+    def test_load_orders(self):
+        orders = load_orders(self.temp_orders_path)
+        self.assertIsInstance(orders, list)
+        self.assertGreater(len(orders), 0)
 
-    if (pendingOrders.length === 0) {
-        console.log("No pending orders.\n");
-    } else {
-        pendingOrders.forEach(order => {
-            console.log(`Order ID: ${order.order_id}, Customer: ${order.customer_name}, Items: ${order.items.join(', ')}, Priority: ${order.is_high_priority ? 'Yes' : 'No'}`);
-        });
-        console.log("\n");
-    }
-}
+    def test_load_orders_empty_file(self):
+        with open(self.temp_orders_path, 'w') as file:
+            file.write('')
+        
+        orders = load_orders(self.temp_orders_path)
+        self.assertEqual(orders, [])
 
-function processOrder(orders, rl) {
-    const highPriorityOrders = orders.filter(order => order.status === 'pending' && order.is_high_priority);
-    const nonPriorityOrders = orders.filter(order => order.status === 'pending' && !order.is_high_priority);
+    def test_load_orders_corrupted_file(self):
+        with open(self.temp_orders_path, 'w') as file:
+            file.write('invalid json')
+        
+        orders = load_orders(self.temp_orders_path)
+        self.assertEqual(orders, [])
 
-    let processedOrders = [];
+    def test_save_orders(self):
+        orders = load_orders(self.temp_orders_path)
+        new_order = Order(100, "New Customer", ["new item"], False)
+        orders.append(new_order)
+        save_orders(orders, self.temp_orders_path)
 
-    if (highPriorityOrders.length > 0) {
-        // Process high-priority orders first
-        for (const order of highPriorityOrders) {
-            showPendingOrders(orders);
-            rl.question("Enter Order ID to process or 'exit' to quit: ", (order_id) => {
-                if (order_id.toLowerCase() === 'exit') {
-                    mainMenu(orders, rl);
-                    return;
-                }
+        with open(self.temp_orders_path, 'r') as file:
+            saved_orders = json.load(file)
+        
+        self.assertEqual(len(saved_orders), len(orders))
+        self.assertIn(new_order.to_dict(), saved_orders)
 
-                if (order.order_id === order_id) {
-                    order.status = 'completed';
-                    processedOrders.push(order);
-                    saveOrders(orders);
-                    console.log(`Order ${order_id} completed.\n`);
+    def test_add_order(self):
+        orders = load_orders(self.temp_orders_path)
+        original_length = len(orders)
+        
+        add_order(orders, self.temp_orders_path, 101, "New Customer", ["new item"], False)
+        
+        self.assertEqual(len(orders), original_length + 1)
+        self.assertIn(Order(101, "New Customer", ["new item"], False).to_dict(), [order.to_dict() for order in orders])
 
-                    // Check if there are more high-priority orders to process
-                    if (highPriorityOrders.some(o => o.status === 'pending')) {
-                        processOrder(orders, rl);
-                    } else {
-                        // If no more high-priority, process non-priority orders
-                        if (nonPriorityOrders.length > 0) {
-                            processOrder(orders, rl);
-                        } else {
-                            mainMenu(orders, rl);
-                        }
-                    }
-                } else {
-                    console.log(`Error: Order ID ${order_id} not found or already processed.\n`);
-                    if (highPriorityOrders.some(o => o.status === 'pending')) {
-                        processOrder(orders, rl);
-                    } else {
-                        // If no more high-priority, process non-priority orders
-                        if (nonPriorityOrders.length > 0) {
-                            processOrder(orders, rl);
-                        } else {
-                            mainMenu(orders, rl);
-                        }
-                    }
-                }
-            });
-        }
-    } else {
-        // If there are no high-priority orders, proceed to non-priority orders
-        for (const order of nonPriorityOrders) {
-            showPendingOrders(orders);
-            rl.question("Enter Order ID to process or 'exit' to quit: ", (order_id) => {
-                if (order_id.toLowerCase() === 'exit') {
-                    mainMenu(orders, rl);
-                    return;
-                }
+    def test_add_order_duplicate_id(self):
+        orders = load_orders(self.temp_orders_path)
+        original_length = len(orders)
+        
+        first_order = orders[0]
+        
+        add_order(orders, self.temp_orders_path, first_order.order_id, "New Customer", ["new item"], False)
+        
+        self.assertEqual(len(orders), original_length)
 
-                if (order.order_id === order_id) {
-                    order.status = 'completed';
-                    processedOrders.push(order);
-                    saveOrders(orders);
-                    console.log(`Order ${order_id} completed.\n`);
+    def test_show_pending_orders(self):
+        orders = load_orders(self.temp_orders_path)
+        pending_orders = [order for order in orders if order.status == 'pending']
+        show_pending_orders(pending_orders)
 
-                    // Check if there are more non-priority orders to process
-                    if (nonPriorityOrders.some(o => o.status === 'pending')) {
-                        processOrder(orders, rl);
-                    } else {
-                        mainMenu(orders, rl);
-                    }
-                } else {
-                    console.log(`Error: Order ID ${order_id} not found or already processed.\n`);
-                    if (nonPriorityOrders.some(o => o.status === 'pending')) {
-                        processOrder(orders, rl);
-                    } else {
-                        mainMenu(orders, rl);
-                    }
-                }
-            });
-        }
-    }
-}
+    def test_process_order(self):
+        # Simulate input for testing
+        def mock_input(prompt):
+            if "Order ID" in prompt:
+                return "1"
+            return None
+        
+        with unittest.mock.patch('builtins.input', side_effect=mock_input):
+            orders = load_orders(self.temp_orders_path)
+            first_order = orders[0]
+            
+            process_order(orders, self.temp_orders_path)
+            
+            self.assertEqual(orders[0].status, 'completed')
 
-function addOrder(orders, rl) {
-    rl.question("Enter Order ID: ", (order_id) => {
-        if (orders.some(o => o.order_id === order_id)) {
-            console.log(`Error: Order ID ${order_id} already exists.\n`);
-            mainMenu(orders, rl);
-            return;
-        }
+    def test_process_order_invalid_input(self):
+        # Simulate invalid input for testing
+        def mock_input(prompt):
+            if "Order ID" in prompt:
+                return "1000"  # Invalid order ID
+            return None
+        
+        with unittest.mock.patch('builtins.input', side_effect=mock_input):
+            orders = load_orders(self.temp_orders_path)
+            
+            process_order(orders, self.temp_orders_path)
+            
+            self.assertEqual(orders[0].status, 'pending')
 
-        rl.question("Enter Customer Name: ", (customer_name) => {
-            rl.question("Enter Items (comma-separated): ", (itemsInput) => {
-                rl.question("Is this a High-Priority Order? (yes/no): ", (priorityInput) => {
-                    const items = itemsInput.split(',').map(item => item.trim());
-                    const is_high_priority = priorityInput.toLowerCase() === 'yes';
-                    const newOrder = new Order(order_id, customer_name, items, is_high_priority);
-
-                    orders.push(newOrder);
-                    saveOrders(orders);
-                    console.log(`Order ${order_id} added successfully.\n`);
-                    mainMenu(orders, rl);
-                });
-            });
-        });
-    });
-}
-
-function mainMenu(orders, rl) {
-    console.log("\n1. Add a new order");
-    console.log("2. Process orders");
-    console.log("3. View pending orders");
-    console.log("4. Exit\n");
-
-    rl.question("Enter your choice: ", (choice) => {
-        switch (choice) {
-            case '1':
-                addOrder(orders, rl);
-                break;
-            case '2':
-                processOrder(orders, rl);
-                break;
-            case '3':
-                showPendingOrders(orders);
-                mainMenu(orders, rl);
-                break;
-            case '4':
-                console.log("Exiting the system. Goodbye!");
-                rl.close();
-                break;
-            default:
-                console.log("Invalid choice. Please try again.\n");
-                mainMenu(orders, rl);
-        }
-    });
-}
-
-function main() {
-    console.log("Welcome to the Order Management System!");
-    const orders = loadOrders();
-
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-
-    mainMenu(orders, rl);
-}
-
-main();
+if __name__ == "__main__":
+    unittest.main(argv=[''], exit=False)
