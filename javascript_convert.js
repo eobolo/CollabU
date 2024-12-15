@@ -9,24 +9,19 @@ const extractData = (filePath, type) => {
         let pattern;
         switch (type) {
             case 'ipaddress':
-                // Original Python regex: r'(?P<ipaddresses>^\d\S+)'
                 pattern = /^\d\S+/gm; 
                 break;
             case 'timestamp':
-                // Original Python regex: r'(?P<timestamp>.{26})(?<=\d)\]'
-                pattern = /.{26}(?<=\d)\]/g; 
+                pattern = /\[(.*?)\]/g; 
                 break;
             case 'httpmethod':
-                // Original Python regex: r'"(?=\w)(?P<httpmethod>\w+.*?\w)"'
                 pattern = /"(?=\w)(\w+.*?\w)"/g;
                 break;
             case 'statuscode':
-                // Original Python regex: r'(?<=".\s)(?P<statuscode>\d+)'
                 pattern = /(?<=".\s)(\d+)/g;
                 break;
             case 'responsesize':
-                // Original Python regex: r'(?P<response_size>\d+$)'
-                pattern = /\d+$/gm; 
+                pattern = /\d+$/gm;
                 break;
             default:
                 console.error(`Log Data '${type}' doesn't exist!!!`);
