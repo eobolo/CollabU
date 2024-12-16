@@ -1,17 +1,1 @@
-node bug.js
-
-1. Add New Event
-2. Book Ticket
-3. Cancel Ticket
-4. View Events
-5. Exit
-Enter your choice: 3
-Enter User ID to cancel tickets: 001
-User not found.
-
-1. Add New Event
-2. Book Ticket
-3. Cancel Ticket
-4. View Events
-5. Exit
-Enter your choice:
+npm install --save-dev mocha chai
