@@ -1,100 +1,126 @@
-// customReplace function
-customReplace = function (actualString, subString, repString) {
-    let newString = "";
-    let newStringLength = actualString.length - subString.length + repString.length;
-    let upCount = 0; 
-    let indexCount = 0;
-    let j = 0;
-    for (let i = 0; i < actualString.length; i++) {
-        if (subString[j] === actualString[i]) {
-            upCount++;
-            j++;
-            if (upCount === subString.length) {
-                indexCount = i;
-                break;
-            }
-            continue;
-        }
-        upCount = 0;
-        j = 0;
+// Expense Tracker Code
+
+// Data store for the expenses (synthetic data)
+let expenses = [
+    { id: 1, date: '2024-12-01', category: 'Food', amount: 20.5, description: 'Lunch' },
+    { id: 2, date: '2024-12-03', category: 'Transport', amount: 15, description: 'Bus fare' },
+    { id: 3, date: '2024-12-10', category: 'Shopping', amount: 150, description: 'Clothes' },
+    { id: 4, date: '2024-12-15', category: 'Food', amount: 30, description: 'Dinner' },
+];
+
+// Helper to generate unique IDs
+const generateId = () => Math.max(0, ...expenses.map((expense) => expense.id)) + 1;
+
+/**
+ * Adds a new expense to the tracker.
+ * @param {string} date - Date of the expense (YYYY-MM-DD).
+ * @param {string} category - Category of the expense (e.g., Food, Transport).
+ * @param {number} amount - Amount spent.
+ * @param {string} description - Short description of the expense.
+ */
+function addExpense(date, category, amount, description) {
+    const id = generateId();
+    expenses.push({ id, date, category, amount, description });
+    console.log(`Expense added: ${description} - $${amount}`);
+}
+
+/**
+ * Edits an existing expense.
+ * @param {number} id - ID of the expense to edit.
+ * @param {object} updates - Object containing updated fields (e.g., { amount: 25 }).
+ */
+function editExpense(id, updates) {
+    const expense = expenses.find((expense) => expense.id === id);
+    if (!expense) {
+        console.error('Expense not found!');
+        return;
     }
-    if (upCount === 0) {
-        return actualString;
+    Object.assign(expense, updates);
+    console.log(`Expense ID ${id} updated.`);
+}
+
+/**
+ * Deletes an expense by its ID.
+ * @param {number} id - ID of the expense to delete.
+ */
+function deleteExpense(id) {
+    const index = expenses.findIndex((expense) => expense.id === id);
+    if (index === -1) {
+        console.error('Expense not found!');
+        return;
     }
-    let startIndex = indexCount + 1 - subString.length;
-    let endIndex = indexCount + 1;
-    let checkDiff = 1 * (repString.length - subString.length);
-    let checkRange = endIndex + checkDiff;
-    let i = 0;
-    let i$;
-    while (i <= newStringLength) {
-        if (i >= startIndex && i < checkRange) {
-            newString += repString[i - startIndex];
-            if (i === checkRange - 1) {
-                i$ = i;
-                i = i + (-1 * checkDiff) + 1;
-            }
-        }
-        if (i$ >= checkRange - 1) {
-            i$++;
-            checkRange = -10;
-            if (actualString[i] === undefined) {
-                i++
-                continue
-            }
-            newString += actualString[i];
-            i++
-            continue;
-        }
-        if (!(i >= startIndex && i < checkRange)) {
-            newString += actualString[i]
-        }
-        i++;
+    expenses.splice(index, 1);
+    console.log(`Expense ID ${id} deleted.`);
+}
+
+/**
+ * Generates a summary report of total spending by category.
+ */
+function generateCategorySummary() {
+    const summary = {};
+    expenses.forEach((expense) => {
+        if (!summary[expense.category]) summary[expense.category] = 0;
+        summary[expense.category] += expense.amount;
+    });
+    console.log('Spending by Category:', summary);
+    return summary;
+}
+
+/**
+ * Generates a monthly spending report.
+ * @param {string} month - Month to filter by (format: YYYY-MM).
+ */
+function generateMonthlyReport(month) {
+    const monthlyExpenses = expenses.filter((expense) => expense.date.startsWith(month));
+    const total = monthlyExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    console.log(`Total spending for ${month}: $${total}`);
+    return total;
+}
+
+/**
+ * Finds the most expensive expense in the tracker.
+ */
+function findMostExpensiveExpense() {
+    if (expenses.length === 0) {
+        console.log('No expenses recorded.');
+        return null;
     }
-    return customReplace(newString, subString, repString);
-};
+    const maxExpense = expenses.reduce((max, expense) => (expense.amount > max.amount ? expense : max));
+    console.log('Most Expensive Expense:', maxExpense);
+    return maxExpense;
+}
 
-// Jest tests
-describe("customReplace", () => {
-    test("should replace a single occurrence of a substring", () => {
-        expect(customReplace("Hello world", "world", "earth")).toBe("Hello earth");
-    });
+/**
+ * Prints a detailed list of all expenses.
+ */
+function printAllExpenses() {
+    console.log('All Expenses:');
+    expenses.forEach(({ id, date, category, amount, description }) =>
+        console.log(`#${id} | ${date} | ${category} | $${amount} | ${description}`)
+    );
+}
 
-    test("should handle multiple occurrences of a substring", () => {
-        expect(customReplace("Hello world, welcome to the world", "world", "earth")).toBe("Hello earth, welcome to the earth");
-    });
+// Testing the Expense Tracker with synthetic data
+console.log('--- Initial Data ---');
+printAllExpenses();
 
-    test("should handle substrings at the start of a string", () => {
-        expect(customReplace("World is amazing", "World", "Planet")).toBe("Planet is amazing");
-    });
+console.log('\n--- Adding a New Expense ---');
+addExpense('2024-12-18', 'Entertainment', 50, 'Movie night');
+printAllExpenses();
 
-    test("should handle substrings at the end of a string", () => {
-        expect(customReplace("The sky is blue", "blue", "green")).toBe("The sky is green");
-    });
+console.log('\n--- Editing an Existing Expense ---');
+editExpense(2, { amount: 20, description: 'Taxi fare' });
+printAllExpenses();
 
-    test("should handle no occurrences of a substring", () => {
-        expect(customReplace("Hello world", "universe", "earth")).toBe("Hello world");
-    });
+console.log('\n--- Deleting an Expense ---');
+deleteExpense(3);
+printAllExpenses();
 
-    test("should replace with an empty replacement string", () => {
-        expect(customReplace("Hello world", "world", "")).toBe("Hello ");
-    });
+console.log('\n--- Generating Category Summary ---');
+generateCategorySummary();
 
-    test("should handle edge case with a substring of length 1", () => {
-        expect(customReplace("abcdef", "c", "X")).toBe("abXdef");
-    });
+console.log('\n--- Generating Monthly Report ---');
+generateMonthlyReport('2024-12');
 
-    test("should handle special characters", () => {
-        expect(customReplace("This is an example!", "example", "sample")).toBe("This is an sample!");
-    });
-
-    test("should throw an error for replacing an empty substring", () => {
-        expect(() => customReplace("Hello", "", "world")).toThrowError("Cannot replace an empty substring");
-    });
-
-    test("should throw an error for undefined parameters", () => {
-        expect(() => customReplace(undefined, "sub", "rep")).toThrowError("Undefined parameter detected");
-        expect(() => customReplace("actual", undefined, "rep")).toThrowError("Undefined parameter detected");
-        expect(() => customReplace("actual", "sub", undefined)).toThrowError("Undefined parameter detected");
-    });
-});
+console.log('\n--- Finding Most Expensive Expense ---');
+findMostExpensiveExpense();
