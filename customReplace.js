@@ -1,7 +1,4 @@
-/*
-    recreating the string replace function
-    :) :), with my custom function
-*/
+// customReplace function
 customReplace = function (actualString, subString, repString) {
     let newString = "";
     let newStringLength = actualString.length - subString.length + repString.length;
@@ -40,10 +37,6 @@ customReplace = function (actualString, subString, repString) {
         }
         if (i$ >= checkRange - 1) {
             i$++;
-            // make your checkRange negative here since i$ would always be greater than
-            // or equal to check range but imagine
-            // if your i is reduce to a very samll value the fist condition might be triggered
-            // if is is greater than start index and i is less than check range
             checkRange = -10;
             if (actualString[i] === undefined) {
                 i++
@@ -61,6 +54,102 @@ customReplace = function (actualString, subString, repString) {
     return customReplace(newString, subString, repString);
 };
 
-console.log(customReplace('hello world', 'hello', 'hi'));
-console.log(customReplace('hello world', 'world', ''));
-console.log(customReplace('hello world', 'world', 'world'));
+// Jest tests
+test('Replace single occurrence', () => {
+    const input = "Hello, John!";
+    const substring = "John";
+    const replacement = "Jane";
+    const expectedOutput = "Hello, Jane!";
+    
+    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
+
+test('Replace multiple occurrences', () => {
+    const input = "I like apples and apples are my favorite.";
+    const substring = "apples";
+    const replacement = "bananas";
+    const expectedOutput = "I like bananas and bananas are my favorite.";
+    
+    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
+
+test('Replace at the start of the string', () => {
+    const input = "Hello, world!";
+    const substring = "Hello";
+    const replacement = "Hi";
+    const expectedOutput = "Hi, world!";
+    
+    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
+
+test('Replace at the end of the string', () => {
+    const input = "Goodbye, world!";
+    const substring = "world!";
+    const replacement = "everyone!";
+    const expectedOutput = "Goodbye, everyone!";
+    
+    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
+
+test('Replace with an empty substring', () => {
+    const input = "Hello, world!";
+    const substring = "";
+    const replacement = "Hi";
+    const expectedOutput = "HiHello, world!";
+    
+    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
+
+test('Replace with an empty replacement string', () => {
+    const input = "Hello, John!";
+    const substring = "John";
+    const replacement = "";
+    const expectedOutput = "Hello, !";
+    
+    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
+
+test('Handle strings with special characters', () => {
+    const input = "Hello, @user!";
+    const substring = "@user";
+    const replacement = "#user";
+    const expectedOutput = "Hello, #user!";
+    
+    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
+
+test('Handle undefined substring', () => {
+    const input = "Hello, world!";
+    const substring = undefined;
+    const replacement = "everyone";
+    const expectedOutput = "Hello, world!"; // since substring is undefined
+    
+    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
+
+test('Handle undefined replacement', () => {
+    const input = "Hello, John!";
+    const substring = "John";
+    const replacement = undefined;
+    const expectedOutput = "Hello, John!"; // since replacement is undefined
+    
+    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
+
+test('Handle empty string input', () => {
+    const input = "";
+    const substring = "Hello";
+    const replacement = "Hi";
+    const expectedOutput = ""; // no replacement can happen
+    
+    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
+
+test('Performance with large strings', () => {
+    const input = "a".repeat(10000) + "b" + "a".repeat(10000);
+    const substring = "b";
+    const replacement = "c";
+    const expectedOutput = "a".repeat(10000) + "c" + "a".repeat(10000);
+    
+    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
