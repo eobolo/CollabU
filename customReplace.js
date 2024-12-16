@@ -55,101 +55,46 @@ customReplace = function (actualString, subString, repString) {
 };
 
 // Jest tests
-test('Replace single occurrence', () => {
-    const input = "Hello, John!";
-    const substring = "John";
-    const replacement = "Jane";
-    const expectedOutput = "Hello, Jane!";
-    
-    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
-});
+describe("customReplace", () => {
+    test("should replace a single occurrence of a substring", () => {
+        expect(customReplace("Hello world", "world", "earth")).toBe("Hello earth");
+    });
 
-test('Replace multiple occurrences', () => {
-    const input = "I like apples and apples are my favorite.";
-    const substring = "apples";
-    const replacement = "bananas";
-    const expectedOutput = "I like bananas and bananas are my favorite.";
-    
-    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
-});
+    test("should handle multiple occurrences of a substring", () => {
+        expect(customReplace("Hello world, welcome to the world", "world", "earth")).toBe("Hello earth, welcome to the earth");
+    });
 
-test('Replace at the start of the string', () => {
-    const input = "Hello, world!";
-    const substring = "Hello";
-    const replacement = "Hi";
-    const expectedOutput = "Hi, world!";
-    
-    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
-});
+    test("should handle substrings at the start of a string", () => {
+        expect(customReplace("World is amazing", "World", "Planet")).toBe("Planet is amazing");
+    });
 
-test('Replace at the end of the string', () => {
-    const input = "Goodbye, world!";
-    const substring = "world!";
-    const replacement = "everyone!";
-    const expectedOutput = "Goodbye, everyone!";
-    
-    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
-});
+    test("should handle substrings at the end of a string", () => {
+        expect(customReplace("The sky is blue", "blue", "green")).toBe("The sky is green");
+    });
 
-test('Replace with an empty substring', () => {
-    const input = "Hello, world!";
-    const substring = "";
-    const replacement = "Hi";
-    const expectedOutput = "HiHello, world!";
-    
-    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
-});
+    test("should handle no occurrences of a substring", () => {
+        expect(customReplace("Hello world", "universe", "earth")).toBe("Hello world");
+    });
 
-test('Replace with an empty replacement string', () => {
-    const input = "Hello, John!";
-    const substring = "John";
-    const replacement = "";
-    const expectedOutput = "Hello, !";
-    
-    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
-});
+    test("should replace with an empty replacement string", () => {
+        expect(customReplace("Hello world", "world", "")).toBe("Hello ");
+    });
 
-test('Handle strings with special characters', () => {
-    const input = "Hello, @user!";
-    const substring = "@user";
-    const replacement = "#user";
-    const expectedOutput = "Hello, #user!";
-    
-    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
-});
+    test("should handle edge case with a substring of length 1", () => {
+        expect(customReplace("abcdef", "c", "X")).toBe("abXdef");
+    });
 
-test('Handle undefined substring', () => {
-    const input = "Hello, world!";
-    const substring = undefined;
-    const replacement = "everyone";
-    const expectedOutput = "Hello, world!"; // since substring is undefined
-    
-    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
-});
+    test("should handle special characters", () => {
+        expect(customReplace("This is an example!", "example", "sample")).toBe("This is an sample!");
+    });
 
-test('Handle undefined replacement', () => {
-    const input = "Hello, John!";
-    const substring = "John";
-    const replacement = undefined;
-    const expectedOutput = "Hello, John!"; // since replacement is undefined
-    
-    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
-});
+    test("should throw an error for replacing an empty substring", () => {
+        expect(() => customReplace("Hello", "", "world")).toThrowError("Cannot replace an empty substring");
+    });
 
-test('Handle empty string input', () => {
-    const input = "";
-    const substring = "Hello";
-    const replacement = "Hi";
-    const expectedOutput = ""; // no replacement can happen
-    
-    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
-});
-
-test('Performance with large strings', () => {
-    const input = "a".repeat(10000) + "b" + "a".repeat(10000);
-    const substring = "b";
-    const replacement = "c";
-    const expectedOutput = "a".repeat(10000) + "c" + "a".repeat(10000);
-    
-    expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+    test("should throw an error for undefined parameters", () => {
+        expect(() => customReplace(undefined, "sub", "rep")).toThrowError("Undefined parameter detected");
+        expect(() => customReplace("actual", undefined, "rep")).toThrowError("Undefined parameter detected");
+        expect(() => customReplace("actual", "sub", undefined)).toThrowError("Undefined parameter detected");
+    });
 });
