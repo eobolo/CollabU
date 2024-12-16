@@ -1,1 +1,19 @@
-npm install --save-dev mocha chai
+npx jest
+ PASS  ./customReplace.test.js
+  Expense Management System
+    √ should add a new expense (4 ms)
+    √ should throw an error for invalid inputs when adding an expense (21 ms)
+    √ should edit an existing expense (1 ms)
+    √ should delete an existing expense
+    √ should not delete a non-existing expense
+    √ should generate category summary correctly
+    √ should generate monthly report correctly for December
+    √ should return null for most expensive expense on an empty list
+    √ should find the most expensive expense correctly (1 ms)
+    √ should print all expenses in the correct format (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       10 passed, 10 total
+Snapshots:   0 total
+Time:        0.857 s, estimated 1 s
+Ran all test suites.
