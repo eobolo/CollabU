@@ -252,26 +252,6 @@ def cancel_ticket(events, users):
     save_users(users)
     print(f"Tickets for {event.event_name} have been cancelled.\n")
 
-# 4. Cancel Entire Event
-def cancel_event(events, users):
-    event_id = input("Enter Event ID to cancel: ")
-    event = next((event for event in events if event.event_id == event_id), None)
-    
-    if not event:
-        print("Event not found.")
-        return
-    
-    # Refund all users who booked tickets for the event
-    for user_id in event.booked_by:
-        user = next((user for user in users if user.user_id == user_id), None)
-        if user:
-            user.cancel_ticket(event, user.booked_tickets[0]["num_tickets"])
-    
-    events.remove(event)
-    save_events(events)
-    save_users(users)
-    print(f"Event {event.event_name} has been canceled. All users have been refunded.\n")
-
 # 5. View Events
 def view_events(events, sort_by="date"):
     if sort_by == "date":
@@ -291,9 +271,8 @@ def main():
         print("\n1. Add New Event")
         print("2. Book Ticket")
         print("3. Cancel Ticket")
-        print("4. Cancel Event")
-        print("5. View Events")
-        print("6. Exit")
+        print("4. View Events")
+        print("5. Exit")
         choice = input("Enter your choice: ")
 
         if choice == '1':
@@ -303,11 +282,9 @@ def main():
         elif choice == '3':
             cancel_ticket(events, users)
         elif choice == '4':
-            cancel_event(events, users)
-        elif choice == '5':
             sort_choice = input("Sort events by 'date' or 'price'? ").strip().lower()
             view_events(events, sort_by=sort_choice)
-        elif choice == '6':
+        elif choice == '5':
             print("Exiting...")
             break
         else:
