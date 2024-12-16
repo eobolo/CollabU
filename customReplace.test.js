@@ -1,100 +1,141 @@
-// customReplace function
-customReplace = function (actualString, subString, repString) {
-  let newString = "";
-  let newStringLength = actualString.length - subString.length + repString.length;
-  let upCount = 0; 
-  let indexCount = 0;
-  let j = 0;
-  for (let i = 0; i < actualString.length; i++) {
-      if (subString[j] === actualString[i]) {
-          upCount++;
-          j++;
-          if (upCount === subString.length) {
-              indexCount = i;
-              break;
-          }
-          continue;
-      }
-      upCount = 0;
-      j = 0;
-  }
-  if (upCount === 0) {
-      return actualString;
-  }
-  let startIndex = indexCount + 1 - subString.length;
-  let endIndex = indexCount + 1;
-  let checkDiff = 1 * (repString.length - subString.length);
-  let checkRange = endIndex + checkDiff;
-  let i = 0;
-  let i$;
-  while (i <= newStringLength) {
-      if (i >= startIndex && i < checkRange) {
-          newString += repString[i - startIndex];
-          if (i === checkRange - 1) {
-              i$ = i;
-              i = i + (-1 * checkDiff) + 1;
-          }
-      }
-      if (i$ >= checkRange - 1) {
-          i$++;
-          checkRange = -10;
-          if (actualString[i] === undefined) {
-              i++
-              continue
-          }
-          newString += actualString[i];
-          i++
-          continue;
-      }
-      if (!(i >= startIndex && i < checkRange)) {
-          newString += actualString[i]
-      }
-      i++;
-  }
-  return customReplace(newString, subString, repString);
-};
+let expenses = [
+    { id: 1, date: '2024-12-01', category: 'Food', amount: 20.5, description: 'Lunch' },
+    { id: 2, date: '2024-12-03', category: 'Transport', amount: 15, description: 'Bus fare' },
+    { id: 3, date: '2024-12-10', category: 'Shopping', amount: 150, description: 'Clothes' },
+    { id: 4, date: '2024-12-15', category: 'Food', amount: 30, description: 'Dinner' },
+];
+
+const generateId = () => Math.max(0, ...expenses.map((expense) => expense.id)) + 1;
+
+function addExpense(date, category, amount, description) {
+    if (amount < 0 || !date || !category || !description) {
+        throw new Error('Invalid input');
+    }
+    const id = generateId();
+    expenses.push({ id, date, category, amount, description });
+}
+
+function editExpense(id, updates) {
+    const expense = expenses.find((expense) => expense.id === id);
+    if (!expense) return;
+    Object.assign(expense, updates);
+}
+
+function deleteExpense(id) {
+    const index = expenses.findIndex((expense) => expense.id === id);
+    if (index === -1) return;
+    expenses.splice(index, 1);
+}
+
+function generateCategorySummary() {
+    const summary = {};
+    expenses.forEach((expense) => {
+        if (!summary[expense.category]) summary[expense.category] = 0;
+        summary[expense.category] += expense.amount;
+    });
+    return summary;
+}
+
+function generateMonthlyReport(month) {
+    const monthlyExpenses = expenses.filter((expense) => expense.date.startsWith(month));
+    const total = monthlyExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    return total;
+}
+
+function findMostExpensiveExpense() {
+    if (expenses.length === 0) return null;
+    const maxExpense = expenses.reduce((max, expense) => (expense.amount > max.amount ? expense : max));
+    return maxExpense;
+}
+
+function printAllExpenses() {
+    return expenses.map(({ id, date, category, amount, description }) =>
+        `#${id} | ${date} | ${category} | $${amount} | ${description}`
+    );
+}
 
 // Jest tests
-describe("customReplace", () => {
-  test("should replace a single occurrence of a substring", () => {
-      expect(customReplace("Hello world", "world", "earth")).toBe("Hello earth");
-  });
+describe('Expense Management System', () => {
+    beforeEach(() => {
+        expenses = [
+            { id: 1, date: '2024-12-01', category: 'Food', amount: 20.5, description: 'Lunch' },
+            { id: 2, date: '2024-12-03', category: 'Transport', amount: 15, description: 'Bus fare' },
+            { id: 3, date: '2024-12-10', category: 'Shopping', amount: 150, description: 'Clothes' },
+            { id: 4, date: '2024-12-15', category: 'Food', amount: 30, description: 'Dinner' },
+        ];
+    });
 
-  test("should handle multiple occurrences of a substring", () => {
-      expect(customReplace("Hello world, welcome to the world", "world", "earth")).toBe("Hello earth, welcome to the earth");
-  });
+    test('should add a new expense', () => {
+        addExpense('2024-12-20', 'Food', 25, 'Snacks');
+        expect(expenses.length).toBe(5);
+        expect(expenses[4]).toEqual({
+            id: 5,
+            date: '2024-12-20',
+            category: 'Food',
+            amount: 25,
+            description: 'Snacks'
+        });
+    });
 
-  test("should handle substrings at the start of a string", () => {
-      expect(customReplace("World is amazing", "World", "Planet")).toBe("Planet is amazing");
-  });
+    test('should throw an error for invalid inputs when adding an expense', () => {
+        expect(() => addExpense('', 'Food', 25, 'Snacks')).toThrow('Invalid input');
+        expect(() => addExpense('2024-12-20', '', 25, 'Snacks')).toThrow('Invalid input');
+        expect(() => addExpense('2024-12-20', 'Food', -25, 'Snacks')).toThrow('Invalid input');
+        expect(() => addExpense('2024-12-20', 'Food', 25, '')).toThrow('Invalid input');
+    });
 
-  test("should handle substrings at the end of a string", () => {
-      expect(customReplace("The sky is blue", "blue", "green")).toBe("The sky is green");
-  });
+    test('should edit an existing expense', () => {
+        editExpense(1, { amount: 22, description: 'Brunch' });
+        expect(expenses[0].amount).toBe(22);
+        expect(expenses[0].description).toBe('Brunch');
+    });
 
-  test("should handle no occurrences of a substring", () => {
-      expect(customReplace("Hello world", "universe", "earth")).toBe("Hello world");
-  });
+    test('should delete an existing expense', () => {
+        deleteExpense(2);
+        expect(expenses.length).toBe(3);
+        expect(expenses.find(e => e.id === 2)).toBeUndefined();
+    });
 
-  test("should replace with an empty replacement string", () => {
-      expect(customReplace("Hello world", "world", "")).toBe("Hello ");
-  });
+    test('should not delete a non-existing expense', () => {
+        const initialLength = expenses.length;
+        deleteExpense(100);
+        expect(expenses.length).toBe(initialLength);
+    });
 
-  test("should handle edge case with a substring of length 1", () => {
-      expect(customReplace("abcdef", "c", "X")).toBe("abXdef");
-  });
+    test('should generate category summary correctly', () => {
+        expect(generateCategorySummary()).toEqual({
+            Food: 50.5,
+            Transport: 15,
+            Shopping: 150,
+        });
+    });
 
-  test("should handle special characters", () => {
-      expect(customReplace("This is an example!", "example", "sample")).toBe("This is an sample!");
-  });
+    test('should generate monthly report correctly for December', () => {
+        expect(generateMonthlyReport('2024-12')).toBe(185.5);
+    });
 
-  test("should throw an error for replacing an empty substring", () => {
-      expect(() => customReplace("Hello", "", "world")).toThrowError("Cannot replace an empty substring");
-  });
+    test('should return null for most expensive expense on an empty list', () => {
+        expenses = [];
+        expect(findMostExpensiveExpense()).toBeNull();
+    });
 
-  test("should throw an error for undefined parameters", () => {
-      expect(() => customReplace(undefined, "sub", "rep")).toThrowError("Undefined parameter detected");
-      expect(() => customReplace("actual", undefined, "rep")).toThrowError("Undefined parameter detected");
-      expect(() => customReplace("actual", "sub", undefined)).toThrowError("Undefined parameter detected");
-  });
+    test('should find the most expensive expense correctly', () => {
+        expect(findMostExpensiveExpense()).toEqual({
+            id: 3,
+            date: '2024-12-10',
+            category: 'Shopping',
+            amount: 150,
+            description: 'Clothes',
+        });
+    });
+
+    test('should print all expenses in the correct format', () => {
+        const expectedOutput = [
+            '#1 | 2024-12-01 | Food | $20.5 | Lunch',
+            '#2 | 2024-12-03 | Transport | $15 | Bus fare',
+            '#3 | 2024-12-10 | Shopping | $150 | Clothes',
+            '#4 | 2024-12-15 | Food | $30 | Dinner',
+        ];
+        expect(printAllExpenses()).toEqual(expectedOutput);
+    });
 });
