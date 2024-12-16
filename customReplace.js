@@ -61,4 +61,6 @@ customReplace = function (actualString, subString, repString) {
     return customReplace(newString, subString, repString);
 };
 
-export default customReplace;
+console.log(customReplace('hello world', 'hello', 'hi'));
+console.log(customReplace('hello world', 'world', ''));
+console.log(customReplace('hello world', 'world', 'world'));
