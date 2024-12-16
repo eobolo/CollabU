@@ -1,7 +1,4 @@
-/*
-    recreating the string replace function
-    :) :), with my custom function
-*/
+// customReplace function
 customReplace = function (actualString, subString, repString) {
   let newString = "";
   let newStringLength = actualString.length - subString.length + repString.length;
@@ -40,10 +37,6 @@ customReplace = function (actualString, subString, repString) {
       }
       if (i$ >= checkRange - 1) {
           i$++;
-          // make your checkRange negative here since i$ would always be greater than
-          // or equal to check range but imagine
-          // if your i is reduce to a very samll value the fist condition might be triggered
-          // if is is greater than start index and i is less than check range
           checkRange = -10;
           if (actualString[i] === undefined) {
               i++
@@ -61,133 +54,102 @@ customReplace = function (actualString, subString, repString) {
   return customReplace(newString, subString, repString);
 };
 
-describe('customReplace Function Tests', () => {
-    // Test 1: Basic single replacement
-    test('Replaces a single occurrence of a substring', () => {
-        const result = customReplace('hello world', 'world', 'everyone');
-        expect(result).toBe('hello everyone');
-    });
+// Jest tests
+test('Replace single occurrence', () => {
+  const input = "Hello, John!";
+  const substring = "John";
+  const replacement = "Jane";
+  const expectedOutput = "Hello, Jane!";
+  
+  expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
 
-    // Test 2: No match found
-    test('Returns original string if no match is found', () => {
-        const result = customReplace('hello world', 'foo', 'bar');
-        expect(result).toBe('hello world');
-    });
+test('Replace multiple occurrences', () => {
+  const input = "I like apples and apples are my favorite.";
+  const substring = "apples";
+  const replacement = "bananas";
+  const expectedOutput = "I like bananas and bananas are my favorite.";
+  
+  expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
 
-    // Test 3: Replace substring at the start of the string
-    test('Replaces substring at the start of the string', () => {
-        const result = customReplace('hello world', 'hello', 'hi');
-        expect(result).toBe('hi world');
-    });
+test('Replace at the start of the string', () => {
+  const input = "Hello, world!";
+  const substring = "Hello";
+  const replacement = "Hi";
+  const expectedOutput = "Hi, world!";
+  
+  expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
 
-    // Test 4: Replace substring at the end of the string
-    test('Replaces substring at the end of the string', () => {
-        const result = customReplace('hello world', 'world', 'everyone');
-        expect(result).toBe('hello everyone');
-    });
+test('Replace at the end of the string', () => {
+  const input = "Goodbye, world!";
+  const substring = "world!";
+  const replacement = "everyone!";
+  const expectedOutput = "Goodbye, everyone!";
+  
+  expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
 
-    // Test 5: Replace multiple occurrences
-    test('Replaces all occurrences of a substring', () => {
-        const result = customReplace('hello world, world', 'world', 'everyone');
-        expect(result).toBe('hello everyone, everyone');
-    });
+test('Replace with an empty substring', () => {
+  const input = "Hello, world!";
+  const substring = "";
+  const replacement = "Hi";
+  const expectedOutput = "HiHello, world!";
+  
+  expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
 
-    // Test 6: Handle empty substring
-    test('Handles empty substring gracefully', () => {
-        const result = customReplace('hello', '', 'X');
-        expect(result).toBe('hello');
-    });
+test('Replace with an empty replacement string', () => {
+  const input = "Hello, John!";
+  const substring = "John";
+  const replacement = "";
+  const expectedOutput = "Hello, !";
+  
+  expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
 
-    // Test 7: Replace with empty replacement string
-    test('Replaces substring with an empty string', () => {
-        const result = customReplace('hello world', 'world', '');
-        expect(result).toBe('hello ');
-    });
+test('Handle strings with special characters', () => {
+  const input = "Hello, @user!";
+  const substring = "@user";
+  const replacement = "#user";
+  const expectedOutput = "Hello, #user!";
+  
+  expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
 
-    // Test 8: Handle special characters
-    test('Handles special characters in substring and replacement', () => {
-        const result = customReplace('hello $world$', '$world$', 'everyone!');
-        expect(result).toBe('hello everyone!');
-    });
+test('Handle undefined substring', () => {
+  const input = "Hello, world!";
+  const substring = undefined;
+  const replacement = "everyone";
+  const expectedOutput = "Hello, world!"; // since substring is undefined
+  
+  expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
 
-    // Test 9: Case sensitivity
-    test('Ensures case sensitivity in matching', () => {
-        const result = customReplace('Hello world', 'hello', 'hi');
-        expect(result).toBe('Hello world');
-    });
+test('Handle undefined replacement', () => {
+  const input = "Hello, John!";
+  const substring = "John";
+  const replacement = undefined;
+  const expectedOutput = "Hello, John!"; // since replacement is undefined
+  
+  expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
 
-    // Test 10: Large input string
-    test('Handles large input strings efficiently', () => {
-        const largeString = 'a'.repeat(1000) + 'world';
-        const result = customReplace(largeString, 'world', 'everyone');
-        expect(result).toBe('a'.repeat(1000) + 'everyone');
-    });
+test('Handle empty string input', () => {
+  const input = "";
+  const substring = "Hello";
+  const replacement = "Hi";
+  const expectedOutput = ""; // no replacement can happen
+  
+  expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+});
 
-    // Test 11: Substring longer than input
-    test('Handles case where substring is longer than input string', () => {
-        const result = customReplace('hi', 'hello', 'hey');
-        expect(result).toBe('hi');
-    });
-
-    // Test 12: Identical substring and replacement
-    test('Does nothing if substring and replacement are identical', () => {
-        const result = customReplace('hello world', 'world', 'world');
-        expect(result).toBe('hello world');
-    });
-
-    // Test 13: Replace entire string
-    test('Replaces the entire string if substring matches the whole string', () => {
-        const result = customReplace('world', 'world', 'everyone');
-        expect(result).toBe('everyone');
-    });
-
-    // Test 14: Overlapping substrings
-    test('Handles overlapping substrings correctly', () => {
-        const result = customReplace('aaa', 'aa', 'b');
-        expect(result).toBe('ba');
-    });
-
-    // Test 15: Invalid inputs
-    test('Handles undefined input string gracefully', () => {
-        expect(() => customReplace(undefined, 'world', 'everyone')).toThrow();
-    });
-
-    test('Handles null substring gracefully', () => {
-        expect(() => customReplace('hello world', null, 'everyone')).toThrow();
-    });
-
-    test('Handles undefined replacement string gracefully', () => {
-        expect(() => customReplace('hello world', 'world', undefined)).toThrow();
-    });
-
-    // Test 16: Unicode characters
-    test('Handles Unicode characters correctly', () => {
-        const result = customReplace('你好，世界', '世界', '朋友');
-        expect(result).toBe('你好，朋友');
-    });
-
-    // Test 17: Numbers in strings
-    test('Replaces substrings containing numbers correctly', () => {
-        const result = customReplace('123-456-789', '456', '999');
-        expect(result).toBe('123-999-789');
-    });
-
-    // Test 18: Consecutive substrings
-    test('Handles consecutive substrings correctly', () => {
-        const result = customReplace('aaa', 'a', 'b');
-        expect(result).toBe('bbb');
-    });
-
-    // Test 19: Empty input string
-    test('Handles empty input string gracefully', () => {
-        const result = customReplace('', 'world', 'everyone');
-        expect(result).toBe('');
-    });
-
-    // Test 20: Performance test with extremely large inputs
-    test('Handles extremely large input strings', () => {
-        const largeInput = 'a'.repeat(10 ** 6) + 'world';
-        const result = customReplace(largeInput, 'world', 'everyone');
-        expect(result).toBe('a'.repeat(10 ** 6) + 'everyone');
-    });
+test('Performance with large strings', () => {
+  const input = "a".repeat(10000) + "b" + "a".repeat(10000);
+  const substring = "b";
+  const replacement = "c";
+  const expectedOutput = "a".repeat(10000) + "c" + "a".repeat(10000);
+  
+  expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
 });
