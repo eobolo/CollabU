@@ -1,85 +1,98 @@
 npx jest
  FAIL  ./customReplace.test.js
-  customReplace
-    √ should replace a single occurrence of a substring (2 ms)
-    √ should handle multiple occurrences of a substring
-    √ should handle substrings at the start of a string (1 ms)
-    √ should handle substrings at the end of a string
-    √ should handle no occurrences of a substring
-    × should replace with an empty replacement string (3 ms)
-    √ should handle edge case with a substring of length 1
-    √ should handle special characters
-    × should throw an error for replacing an empty substring
-    × should throw an error for undefined parameters (17 ms)
+  Expense Management System
+    addExpense
+      √ should add a valid expense (1 ms)
+      √ should not add an expense with a negative amount
+      √ should not add an expense with an empty category
+    editExpense
+      × should edit a valid expense (3 ms)
+      √ should not edit an expense with a non-existent ID
+      √ should not edit an expense with a negative amount
+    deleteExpense
+      √ should delete an expense
+      √ should not delete an expense with a non-existent ID
+    generateCategorySummary
+      × should summarize expenses by category (1 ms)
+    generateMonthlyReport
+      × should generate a monthly report                                                                                                                           
+      √ should generate a report for an empty month                                                                                                                
+    findMostExpensiveExpense                                                                                                                                       
+      √ should find the most expensive expense (2 ms)                                                                                                              
+      √ should return null for an empty expense list (1 ms)                                                                                                        
+    printAllExpenses                                                                                                                                               
+      × should print all expenses                                                                                                                                  
+                                                                                                                                                                   
+  ● Expense Management System › editExpense › should edit a valid expense                                                                                          
+                                                                                                                                                                   
+    expect(received).toBe(expected) // Object.is equality
 
-  ● customReplace › should replace with an empty replacement string
+    Expected: "Winter clothes"
+    Received: "Clothes"
+
+      90 |         test('should edit a valid expense', () => {
+      91 |             editExpense(3, { description: 'Winter clothes' });
+    > 92 |             expect(expenses[2].description).toBe('Winter clothes');
+         |                                             ^
+      93 |         });
+      94 |
+      95 |         test('should not edit an expense with a non-existent ID', () => {
+
+      at Object.<anonymous> (customReplace.test.js:92:45)
+
+  ● Expense Management System › generateCategorySummary › should summarize expenses by category
 
     expect(received).toBe(expected) // Object.is equality
 
-    Expected: "Hello "
-    Received: "Hel"
+    Expected: 50.5
+    Received: 75.5
 
-      78 |
-      79 |   test("should replace with an empty replacement string", () => {
-    > 80 |       expect(customReplace("Hello world", "world", "")).toBe("Hello ");
-         |                                                         ^
-      81 |   });
-      82 |
-      83 |   test("should handle edge case with a substring of length 1", () => {
+      119 |         test('should summarize expenses by category', () => {
+      120 |             const summary = generateCategorySummary();
+    > 121 |             expect(summary.Food).toBe(50.5);
+          |                                  ^
+      122 |             expect(summary.Shopping).toBe(150);
+      123 |         });
+      124 |     });
 
-      at Object.<anonymous> (customReplace.test.js:80:57)
+      at Object.<anonymous> (customReplace.test.js:121:34)
 
-  ● customReplace › should throw an error for replacing an empty substring
+  ● Expense Management System › generateMonthlyReport › should generate a monthly report
 
-    expect(received).toThrowError(expected)
+    expect(received).toBe(expected) // Object.is equality
 
-    Expected substring: "Cannot replace an empty substring"
+    Expected: 215.5
+    Received: 225.5
 
-    Received function did not throw
+      127 |         test('should generate a monthly report', () => {
+      128 |             const report = generateMonthlyReport('2024-12');
+    > 129 |             expect(report).toBe(215.5);
+          |                            ^
+      130 |         });
+      131 |
+      132 |         test('should generate a report for an empty month', () => {
 
-      90 |
-      91 |   test("should throw an error for replacing an empty substring", () => {
-    > 92 |       expect(() => customReplace("Hello", "", "world")).toThrowError("Cannot replace an empty substring");
-         |                                                         ^
-      93 |   });
-      94 |
-      95 |   test("should throw an error for undefined parameters", () => {
+      at Object.<anonymous> (customReplace.test.js:129:28)
 
-      at Object.<anonymous> (customReplace.test.js:92:57)
+  ● Expense Management System › printAllExpenses › should print all expenses
 
-  ● customReplace › should throw an error for undefined parameters
+    expect(received).toBe(expected) // Object.is equality
 
-    expect(received).toThrowError(expected)
+    Expected: 4
+    Received: 0
 
-    Expected substring: "Undefined parameter detected"
-    Received message:   "Cannot read properties of undefined (reading 'length')"
+      153 |         test('should print all expenses', () => {
+      154 |             const allExpenses = printAllExpenses();
+    > 155 |             expect(allExpenses.length).toBe(4);
+          |                                        ^
+      156 |             expect(allExpenses[0]).toBe('#1 | 2024-12-01 | Food | $20.5 | Lunch');
+      157 |         });
+      158 |     });
 
-          2 | customReplace = function (actualString, subString, repString) {
-          3 |   let newString = "";
-        > 4 |   let newStringLength = actualString.length - subString.length + repString.length;
-            |                                      ^
-          5 |   let upCount = 0;
-          6 |   let indexCount = 0;
-          7 |   let j = 0;
+      at Object.<anonymous> (customReplace.test.js:155:40)
 
-          at customReplace (customReplace.test.js:4:38)
-          at customReplace.test.js:96:20
-          at customReplace (customReplace.test.js:4:38)
-          at customReplace.test.js:96:20
-          at Object.<anonymous> (customReplace.test.js:96:60)
-
-      94 |
-      95 |   test("should throw an error for undefined parameters", () => {
-    > 96 |       expect(() => customReplace(undefined, "sub", "rep")).toThrowError("Undefined parameter detected");
-         |                                                            ^
-      97 |       expect(() => customReplace("actual", undefined, "rep")).toThrowError("Undefined parameter detected");
-      98 |       expect(() => customReplace("actual", "sub", undefined)).toThrowError("Undefined parameter detected");
-      99 |   });
-
-      at Object.<anonymous> (customReplace.test.js:96:60)
-
-Test Suites: 1 failed, 1 total
-Tests:       3 failed, 7 passed, 10 total
+Test Suites: 1 failed, 1 total                                                                                                                                     
+Tests:       4 failed, 10 passed, 14 total                                                                                                                         
 Snapshots:   0 total
-Time:        0.555 s, estimated 1 s
+Time:        0.462 s, estimated 1 s
 Ran all test suites.
