@@ -1,0 +1,100 @@
+npx jest
+ FAIL  ./customReplace.test.js
+  √ Replace single occurrence (1 ms)
+  √ Replace multiple occurrences
+  × Replace at the start of the string (3 ms)
+  √ Replace at the end of the string (1 ms)
+  × Replace with an empty substring (1 ms)
+  × Replace with an empty replacement string
+  √ Handle strings with special characters
+  × Handle undefined substring
+  × Handle undefined replacement
+  √ Handle empty string input (1 ms)
+  √ Performance with large strings (3 ms)
+
+  ● Replace at the start of the string
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Hi, world!"
+    Received: "Hi, worl"
+
+      80 |   const expectedOutput = "Hi, world!";
+      81 |   
+    > 82 |   expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+         |                                                        ^
+      83 | });
+      84 |
+      85 | test('Replace at the end of the string', () => {
+
+      at Object.<anonymous> (customReplace.test.js:82:56)
+
+  ● Replace with an empty substring
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "HiHello, world!"
+    Received: "Hello, world!"
+
+       98 |   const expectedOutput = "HiHello, world!";
+       99 |   
+    > 100 |   expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+          |                                                        ^
+      101 | });
+      102 |
+      103 | test('Replace with an empty replacement string', () => {
+
+      at Object.<anonymous> (customReplace.test.js:100:56)
+
+  ● Replace with an empty replacement string
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Hello, !"
+    Received: "Hello,"
+
+      107 |   const expectedOutput = "Hello, !";
+      108 |   
+    > 109 |   expect(customReplace(input, substring, replacement)).toBe(expectedOutput);
+          |                                                        ^
+      110 | });
+      111 |
+      112 | test('Handle strings with special characters', () => {
+
+      at Object.<anonymous> (customReplace.test.js:109:56)
+
+  ● Handle undefined substring
+
+    TypeError: Cannot read properties of undefined (reading 'length')
+
+      2 | customReplace = function (actualString, subString, repString) {
+      3 |   let newString = "";
+    > 4 |   let newStringLength = actualString.length - subString.length + repString.length;
+        |                                                         ^
+      5 |   let upCount = 0; 
+      6 |   let indexCount = 0;
+      7 |   let j = 0;
+
+      at customReplace (customReplace.test.js:4:57)
+      at Object.<anonymous> (customReplace.test.js:127:10)
+
+  ● Handle undefined replacement
+
+    TypeError: Cannot read properties of undefined (reading 'length')
+
+      2 | customReplace = function (actualString, subString, repString) {
+      3 |   let newString = "";
+    > 4 |   let newStringLength = actualString.length - subString.length + repString.length;
+        |                                                                            ^
+      5 |   let upCount = 0; 
+      6 |   let indexCount = 0;
+      7 |   let j = 0;
+
+      at customReplace (customReplace.test.js:4:76)
+      at Object.<anonymous> (customReplace.test.js:136:10)
+
+Test Suites: 1 failed, 1 total                                                                                                                                                    
+Tests:       5 failed, 6 passed, 11 total                                                                                                                                         
+Snapshots:   0 total
+Time:        0.471 s, estimated 1 s
+Ran all test suites.

@@ -1,0 +1,85 @@
+npx jest
+ FAIL  ./customReplace.test.js
+  customReplace
+    √ should replace a single occurrence of a substring (2 ms)
+    √ should handle multiple occurrences of a substring
+    √ should handle substrings at the start of a string (1 ms)
+    √ should handle substrings at the end of a string
+    √ should handle no occurrences of a substring
+    × should replace with an empty replacement string (3 ms)
+    √ should handle edge case with a substring of length 1
+    √ should handle special characters
+    × should throw an error for replacing an empty substring
+    × should throw an error for undefined parameters (17 ms)
+
+  ● customReplace › should replace with an empty replacement string
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Hello "
+    Received: "Hel"
+
+      78 |
+      79 |   test("should replace with an empty replacement string", () => {
+    > 80 |       expect(customReplace("Hello world", "world", "")).toBe("Hello ");
+         |                                                         ^
+      81 |   });
+      82 |
+      83 |   test("should handle edge case with a substring of length 1", () => {
+
+      at Object.<anonymous> (customReplace.test.js:80:57)
+
+  ● customReplace › should throw an error for replacing an empty substring
+
+    expect(received).toThrowError(expected)
+
+    Expected substring: "Cannot replace an empty substring"
+
+    Received function did not throw
+
+      90 |
+      91 |   test("should throw an error for replacing an empty substring", () => {
+    > 92 |       expect(() => customReplace("Hello", "", "world")).toThrowError("Cannot replace an empty substring");
+         |                                                         ^
+      93 |   });
+      94 |
+      95 |   test("should throw an error for undefined parameters", () => {
+
+      at Object.<anonymous> (customReplace.test.js:92:57)
+
+  ● customReplace › should throw an error for undefined parameters
+
+    expect(received).toThrowError(expected)
+
+    Expected substring: "Undefined parameter detected"
+    Received message:   "Cannot read properties of undefined (reading 'length')"
+
+          2 | customReplace = function (actualString, subString, repString) {
+          3 |   let newString = "";
+        > 4 |   let newStringLength = actualString.length - subString.length + repString.length;
+            |                                      ^
+          5 |   let upCount = 0;
+          6 |   let indexCount = 0;
+          7 |   let j = 0;
+
+          at customReplace (customReplace.test.js:4:38)
+          at customReplace.test.js:96:20
+          at customReplace (customReplace.test.js:4:38)
+          at customReplace.test.js:96:20
+          at Object.<anonymous> (customReplace.test.js:96:60)
+
+      94 |
+      95 |   test("should throw an error for undefined parameters", () => {
+    > 96 |       expect(() => customReplace(undefined, "sub", "rep")).toThrowError("Undefined parameter detected");
+         |                                                            ^
+      97 |       expect(() => customReplace("actual", undefined, "rep")).toThrowError("Undefined parameter detected");
+      98 |       expect(() => customReplace("actual", "sub", undefined)).toThrowError("Undefined parameter detected");
+      99 |   });
+
+      at Object.<anonymous> (customReplace.test.js:96:60)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 7 passed, 10 total
+Snapshots:   0 total
+Time:        0.555 s, estimated 1 s
+Ran all test suites.
