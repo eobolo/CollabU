@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import customReplace from "./customReplace.js"; // Update the path to your function file
+import customReplace from "./customReplace.js";
 
 describe("customReplace Function Tests", () => {
   
