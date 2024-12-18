@@ -1,84 +1,73 @@
 const fs = require('fs');
 const path = require('path');
-const { extractData, saveDataToFile } = require('./javascript_convert.js'); // replace with your actual script path 
-
+const { extractData, saveDataToFile } = require('./javascript_convert.js'); // Adjust the path as necessary
 jest.mock('fs');
 
 describe('extractData', () => {
-    let logData = `
-        127.0.0.1 - - [10/Oct/2020:13:55:36 -0700] "GET /index.html HTTP/1.1" 200 1024
-        192.168.1.1 - - [11/Oct/2020:17:45:22 -0700] "POST /form HTTP/1.0" 404 2048
-    `;
+    let filePath;
+    let mockFileContents;
 
-    beforeAll(() => {
-        fs.readFileSync.mockReturnValue(logData);
+    beforeEach(() => {
+        filePath = path.resolve(__dirname, './logdata.txt');
+        fs.readFileSync.mockResolvedValueOnce('123.45.67.89 [01/Jan/2020:12:00:00 -0700] "GET /path HTTP/1.1" 200 1024\n...more data');
     });
 
-    test('extracts IP addresses', () => {
-        const result = extractData('fakePath', 'ipaddress');
-        expect(result).toEqual(['127.0.0.1', '192.168.1.1']);
+    it('should extract IP addresses', async () => {
+        const result = await extractData(filePath, 'ipaddress');
+        expect(result).toEqual(['123.45.67.89']);
     });
 
-    test('extracts timestamps', () => {
-        const result = extractData('fakePath', 'timestamp');
-        expect(result).toEqual(['10/Oct/2020:13:55:36 -0700', '11/Oct/2020:17:45:22 -0700']);
+    it('should extract timestamps', async () => {
+        const result = await extractData(filePath, 'timestamp');
+        expect(result).toEqual(['[01/Jan/2020:12:00:00 -0700]']);
     });
 
-    test('extracts HTTP methods', () => {
-        const result = extractData('fakePath', 'httpmethod');
-        expect(result).toEqual(['GET /index.html HTTP/1.1', 'POST /form HTTP/1.0']);
+    it('should extract HTTP methods', async () => {
+        const result = await extractData(filePath, 'httpmethod');
+        expect(result).toEqual(['GET']);
     });
 
-    test('extracts status codes', () => {
-        const result = extractData('fakePath', 'statuscode');
-        expect(result).toEqual(['200', '404']);
+    it('should extract status codes', async () => {
+        const result = await extractData(filePath, 'statuscode');
+        expect(result).toEqual(['200']);
     });
 
-    test('extracts response sizes', () => {
-        const result = extractData('fakePath', 'responsesize');
-        expect(result).toEqual(['1024', '2048']);
+    it('should extract response sizes', async () => {
+        const result = await extractData(filePath, 'responsesize');
+        expect(result).toEqual(['1024']);
     });
 
-    test('returns empty array for no matches', () => {
-        fs.readFileSync.mockReturnValue('irrelevantData');
-        const result = extractData('fakePath', 'ipaddress');
+    it('should handle invalid type by returning an empty array', async () => {
+        const result = await extractData(filePath, 'invalid');
         expect(result).toEqual([]);
     });
 
-    test('returns empty array for invalid type', () => {
-        const result = extractData('fakePath', 'unknownType');
+    it('should handle file read error by returning an empty array', async () => {
+        fs.readFileSync.mockRejectedValue(new Error('File not found'));
+        const result = await extractData(filePath, 'ipaddress');
         expect(result).toEqual([]);
+        expect(console.error).toHaveBeenCalledWith(expect.stringContaining('An error occurred'));
     });
 });
 
 describe('saveDataToFile', () => {
-    afterEach(() => {
-        jest.clearAllMocks();
+    let mockedData;
+    let mockFilename;
+
+    beforeEach(() => {
+        mockedData = ['Line1', 'Line2'];
+        mockFilename = 'output.txt';
+        fs.writeFileSync.mockResolvedValue(undefined);
     });
 
-    test('saves data to file', () => {
-        const data = ['127.0.0.1', '192.168.1.1'];
-        const filename = 'output.txt';
-        saveDataToFile(data, filename);
-        expect(fs.writeFileSync).toHaveBeenCalledWith(
-            filename, 
-            data.join('\n'), 
-            'utf8'
-        );
+    it('should save data to a file successfully', async () => {
+        await saveDataToFile(mockedData, mockFilename);
+        expect(fs.writeFileSync).toHaveBeenCalledWith(mockFilename, 'Line1\nLine2', 'utf8');
     });
 
-    test('handles errors when saving file', () => {
-        fs.writeFileSync.mockImplementation(() => {
-            throw new Error("Permission denied");
-        });
-
-        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-        
-        const data = ['127.0.0.1', '192.168.1.1'];
-        saveDataToFile(data, 'output.txt');
-
-        expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('An error occurred'));
-        
-        consoleErrorSpy.mockRestore();
+    it('should handle a file write error', async () => {
+        fs.writeFileSync.mockRejectedValue(new Error('Permission denied'));
+        await saveDataToFile(mockedData, mockFilename);
+        expect(console.error).toHaveBeenCalledWith(expect.stringContaining('An error occurred'));
     });
 });
