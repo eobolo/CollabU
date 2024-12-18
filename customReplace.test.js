@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { extractData, saveDataToFile, promptUser } = require('./your_script_file'); // Adjust file import as needed
+const { extractData, saveDataToFile, promptUser } = require('./javascript_convert.js'); // Adjust file import as needed
 
 jest.mock('fs');
 jest.mock('readline');
