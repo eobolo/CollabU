@@ -1,6 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
-const { extractData, saveDataToFile, promptUser } = require('./your-file.js');
+const { extractData, saveDataToFile, promptUser } = require('./javascript_convert.js');
 jest.mock('fs');
 
 const REGEX_FILE_PATH = './regex_apache.log'; // Assume your regex test file path
