@@ -1,98 +1,156 @@
 npx jest
- FAIL  ./customReplace.test.js
-  Expense Management System
-    addExpense
-      √ should add a valid expense (1 ms)
-      √ should not add an expense with a negative amount
-      √ should not add an expense with an empty category
-    editExpense
-      × should edit a valid expense (3 ms)
-      √ should not edit an expense with a non-existent ID
-      √ should not edit an expense with a negative amount
-    deleteExpense
-      √ should delete an expense
-      √ should not delete an expense with a non-existent ID
-    generateCategorySummary
-      × should summarize expenses by category (1 ms)
-    generateMonthlyReport
-      × should generate a monthly report                                                                                                                           
-      √ should generate a report for an empty month                                                                                                                
-    findMostExpensiveExpense                                                                                                                                       
-      √ should find the most expensive expense (2 ms)                                                                                                              
-      √ should return null for an empty expense list (1 ms)                                                                                                        
-    printAllExpenses                                                                                                                                               
-      × should print all expenses                                                                                                                                  
-                                                                                                                                                                   
-  ● Expense Management System › editExpense › should edit a valid expense                                                                                          
-                                                                                                                                                                   
-    expect(received).toBe(expected) // Object.is equality
+  console.error
+    An error occurred: fileContents.matchAll is not a function or its return value is not iterable
 
-    Expected: "Winter clothes"
-    Received: "Clothes"
+      30 |         return [...fileContents.matchAll(pattern)].map(match => match[1] || match[0]) || [];
+      31 |     } catch (err) {
+    > 32 |         console.error(`An error occurred: ${err.message}`);
+         |                 ^
+      33 |         return [];
+      34 |     }
+      35 | };
 
-      90 |         test('should edit a valid expense', () => {
-      91 |             editExpense(3, { description: 'Winter clothes' });
-    > 92 |             expect(expenses[2].description).toBe('Winter clothes');
-         |                                             ^
-      93 |         });
-      94 |
-      95 |         test('should not edit an expense with a non-existent ID', () => {
+      at extractData (javascript_convert.js:32:17)
+      at Object.<anonymous> (customReplace.test.js:17:30)
+      at TestScheduler.scheduleTests (node_modules/@jest/core/build/TestScheduler.js:333:13)
+      at runJest (node_modules/@jest/core/build/runJest.js:404:19)
+      at _run10000 (node_modules/@jest/core/build/cli/index.js:320:7)
+      at runCLI (node_modules/@jest/core/build/cli/index.js:173:3)
 
-      at Object.<anonymous> (customReplace.test.js:92:45)
+  console.error                                                                                                                                                    
+    An error occurred: fileContents.matchAll is not a function or its return value is not iterable                                                                 
 
-  ● Expense Management System › generateCategorySummary › should summarize expenses by category
+      30 |         return [...fileContents.matchAll(pattern)].map(match => match[1] || match[0]) || [];
+      31 |     } catch (err) {
+    > 32 |         console.error(`An error occurred: ${err.message}`);
+         |                 ^
+      33 |         return [];
+      34 |     }
+      35 | };
 
-    expect(received).toBe(expected) // Object.is equality
+      at extractData (javascript_convert.js:32:17)
+      at Object.<anonymous> (customReplace.test.js:22:30)
+      at TestScheduler.scheduleTests (node_modules/@jest/core/build/TestScheduler.js:333:13)
+      at runJest (node_modules/@jest/core/build/runJest.js:404:19)
+      at _run10000 (node_modules/@jest/core/build/cli/index.js:320:7)
+      at runCLI (node_modules/@jest/core/build/cli/index.js:173:3)
 
-    Expected: 50.5
-    Received: 75.5
+  console.error                                                                                                                                                    
+    An error occurred: fileContents.matchAll is not a function or its return value is not iterable
 
-      119 |         test('should summarize expenses by category', () => {
-      120 |             const summary = generateCategorySummary();
-    > 121 |             expect(summary.Food).toBe(50.5);
-          |                                  ^
-      122 |             expect(summary.Shopping).toBe(150);
-      123 |         });
-      124 |     });
+      30 |         return [...fileContents.matchAll(pattern)].map(match => match[1] || match[0]) || [];
+      31 |     } catch (err) {
+    > 32 |         console.error(`An error occurred: ${err.message}`);
+         |                 ^
+      33 |         return [];
+      34 |     }
+      35 | };
 
-      at Object.<anonymous> (customReplace.test.js:121:34)
+      at extractData (javascript_convert.js:32:17)
+      at Object.<anonymous> (customReplace.test.js:27:30)
+      at TestScheduler.scheduleTests (node_modules/@jest/core/build/TestScheduler.js:333:13)
+      at runJest (node_modules/@jest/core/build/runJest.js:404:19)
+      at _run10000 (node_modules/@jest/core/build/cli/index.js:320:7)
+      at runCLI (node_modules/@jest/core/build/cli/index.js:173:3)
 
-  ● Expense Management System › generateMonthlyReport › should generate a monthly report
+  console.error                                                                                                                                                    
+    An error occurred: fileContents.matchAll is not a function or its return value is not iterable                                                                 
 
-    expect(received).toBe(expected) // Object.is equality
+      30 |         return [...fileContents.matchAll(pattern)].map(match => match[1] || match[0]) || [];
+      31 |     } catch (err) {
+    > 32 |         console.error(`An error occurred: ${err.message}`);
+         |                 ^
+      33 |         return [];
+      34 |     }
+      35 | };
 
-    Expected: 215.5
-    Received: 225.5
+      at extractData (javascript_convert.js:32:17)
+      at Object.<anonymous> (customReplace.test.js:32:30)
+      at TestScheduler.scheduleTests (node_modules/@jest/core/build/TestScheduler.js:333:13)
+      at runJest (node_modules/@jest/core/build/runJest.js:404:19)
+      at _run10000 (node_modules/@jest/core/build/cli/index.js:320:7)
+      at runCLI (node_modules/@jest/core/build/cli/index.js:173:3)
 
-      127 |         test('should generate a monthly report', () => {
-      128 |             const report = generateMonthlyReport('2024-12');
-    > 129 |             expect(report).toBe(215.5);
-          |                            ^
-      130 |         });
-      131 |
-      132 |         test('should generate a report for an empty month', () => {
+  console.error
+    An error occurred: fileContents.matchAll is not a function or its return value is not iterable
 
-      at Object.<anonymous> (customReplace.test.js:129:28)
+      30 |         return [...fileContents.matchAll(pattern)].map(match => match[1] || match[0]) || [];
+      31 |     } catch (err) {
+    > 32 |         console.error(`An error occurred: ${err.message}`);
+         |                 ^
+      33 |         return [];
+      34 |     }
+      35 | };
 
-  ● Expense Management System › printAllExpenses › should print all expenses
+      at extractData (javascript_convert.js:32:17)
+      at Object.<anonymous> (customReplace.test.js:37:30)
+      at TestScheduler.scheduleTests (node_modules/@jest/core/build/TestScheduler.js:333:13)
+      at runJest (node_modules/@jest/core/build/runJest.js:404:19)
+      at _run10000 (node_modules/@jest/core/build/cli/index.js:320:7)
+      at runCLI (node_modules/@jest/core/build/cli/index.js:173:3)
 
-    expect(received).toBe(expected) // Object.is equality
+  console.error                                                                                                                                                    
+    Log Data 'invalid' doesn't exist!!!                                                                                                                            
 
-    Expected: 4
-    Received: 0
+      25 |                 break;
+      26 |             default:
+    > 27 |                 console.error(`Log Data '${type}' doesn't exist!!!`);
+         |                         ^
+      28 |                 return [];
+      29 |         }
+      30 |         return [...fileContents.matchAll(pattern)].map(match => match[1] || match[0]) || [];
 
-      153 |         test('should print all expenses', () => {
-      154 |             const allExpenses = printAllExpenses();
-    > 155 |             expect(allExpenses.length).toBe(4);
-          |                                        ^
-      156 |             expect(allExpenses[0]).toBe('#1 | 2024-12-01 | Food | $20.5 | Lunch');
-      157 |         });
-      158 |     });
+      at extractData (javascript_convert.js:27:25)
+      at Object.<anonymous> (customReplace.test.js:42:30)
+      at TestScheduler.scheduleTests (node_modules/@jest/core/build/TestScheduler.js:333:13)
+      at runJest (node_modules/@jest/core/build/runJest.js:404:19)
+      at _run10000 (node_modules/@jest/core/build/cli/index.js:320:7)
+      at runCLI (node_modules/@jest/core/build/cli/index.js:173:3)
 
-      at Object.<anonymous> (customReplace.test.js:155:40)
+  console.error                                                                                                                                                    
+    An error occurred: fileContents.matchAll is not a function or its return value is not iterable
 
-Test Suites: 1 failed, 1 total                                                                                                                                     
-Tests:       4 failed, 10 passed, 14 total                                                                                                                         
-Snapshots:   0 total
-Time:        0.462 s, estimated 1 s
-Ran all test suites.
+      30 |         return [...fileContents.matchAll(pattern)].map(match => match[1] || match[0]) || [];
+      31 |     } catch (err) {
+    > 32 |         console.error(`An error occurred: ${err.message}`);
+         |                 ^
+      33 |         return [];
+      34 |     }
+      35 | };
+
+      at extractData (javascript_convert.js:32:17)
+      at Object.<anonymous> (customReplace.test.js:48:30)
+      at TestScheduler.scheduleTests (node_modules/@jest/core/build/TestScheduler.js:333:13)
+      at runJest (node_modules/@jest/core/build/runJest.js:404:19)
+      at _run10000 (node_modules/@jest/core/build/cli/index.js:320:7)
+      at runCLI (node_modules/@jest/core/build/cli/index.js:173:3)
+
+  console.log                                                                                                                                                      
+    Data saved to output.txt                                                                                                                                       
+
+      at saveDataToFile (javascript_convert.js:40:17)
+
+  console.log                                                                                                                                                      
+    Data saved to output.txt                                                                                                                                       
+
+      at saveDataToFile (javascript_convert.js:40:17)
+
+
+ RUNS  ./customReplace.test.js
+C:\Users\obolo\CollabU\customReplace.test.js:68
+    fs.writeFileSync.mockRejectedValue(new Error('Permission denied'));
+                                       ^
+
+Error: Permission denied
+    at Object.<anonymous> (C:\Users\obolo\CollabU\customReplace.test.js:70:44)
+    at Promise.then.completed (C:\Users\obolo\CollabU\node_modules\jest-circus\build\utils.js:391:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (C:\Users\obolo\CollabU\node_modules\jest-circus\build\utils.js:316:10)
+    at _callCircusTest (C:\Users\obolo\CollabU\node_modules\jest-circus\build\run.js:218:40)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at _runTest (C:\Users\obolo\CollabU\node_modules\jest-circus\build\run.js:155:3)
+    at _runTestsForDescribeBlock (C:\Users\obolo\CollabU\node_modules\jest-circus\build\run.js:66:9)
+    at _runTestsForDescribeBlock (C:\Users\obolo\CollabU\node_modules\jest-circus\build\run.js:60:9)
+    at run (C:\Users\obolo\CollabU\node_modules\jest-circus\build\run.js:25:3)
+
+Node.js v20.12.2

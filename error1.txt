@@ -1,36 +1,92 @@
 npx jest
+  console.error
+    Log Data 'unknownType' doesn't exist!!!
+
+      25 |                 break;
+      26 |             default:
+    > 27 |                 console.error(`Log Data '${type}' doesn't exist!!!`);
+         |                         ^
+      28 |                 return [];
+      29 |         }
+      30 |         return [...fileContents.matchAll(pattern)].map(match => match[1] || match[0]) || [];
+
+      at extractData (javascript_convert.js:27:25)
+      at Object.<anonymous> (customReplace.test.js:49:24)
+      at TestScheduler.scheduleTests (node_modules/@jest/core/build/TestScheduler.js:333:13)
+      at runJest (node_modules/@jest/core/build/runJest.js:404:19)
+      at _run10000 (node_modules/@jest/core/build/cli/index.js:320:7)
+      at runCLI (node_modules/@jest/core/build/cli/index.js:173:3)
+
+  console.log                                                                                                                                                      
+    Data saved to output.txt                                                                                                                                       
+
+      at saveDataToFile (javascript_convert.js:40:17)
+
  FAIL  ./customReplace.test.js
-  Expense Management System
-    √ should add a new expense (2 ms)                                                                                                                              
-    √ should throw an error for invalid inputs when adding an expense (12 ms)                                                                                      
-    √ should edit an existing expense                                                                                                                              
-    √ should delete an existing expense (3 ms)                                                                                                                     
-    √ should not delete a non-existing expense (1 ms)                                                                                                              
-    √ should generate category summary correctly (1 ms)                                                                                                            
-    × should generate monthly report correctly for December (2 ms)                                                                                                 
-    √ should return null for most expensive expense on an empty list                                                                                               
-    √ should find the most expensive expense correctly                                                                                                             
-    √ should print all expenses in the correct format                                                                                                              
+  extractData
+    × extracts IP addresses (6 ms)                                                                                                                                 
+    √ extracts timestamps (1 ms)                                                                                                                                   
+    √ extracts HTTP methods (1 ms)                                                                                                                                 
+    × extracts status codes (1 ms)                                                                                                                                 
+    √ extracts response sizes                                                                                                                                      
+    √ returns empty array for no matches                                                                                                                           
+    √ returns empty array for invalid type (48 ms)                                                                                                                 
+  saveDataToFile                                                                                                                                                   
+    √ saves data to file (3 ms)                                                                                                                                    
+    √ handles errors when saving file (1 ms)                                                                                                                       
                                                                                                                                                                    
-  ● Expense Management System › should generate monthly report correctly for December                                                                              
+  ● extractData › extracts IP addresses                                                                                                                            
                                                                                                                                                                    
-    expect(received).toBe(expected) // Object.is equality
+    expect(received).toEqual(expected) // deep equality
 
-    Expected: 185.5
-    Received: 215.5
+    - Expected  - 4
+    + Received  + 1
 
-      112 |
-      113 |     test('should generate monthly report correctly for December', () => {
-    > 114 |         expect(generateMonthlyReport('2024-12')).toBe(185.5);
-          |                                                  ^
-      115 |     });
-      116 |
-      117 |     test('should return null for most expensive expense on an empty list', () => {
+    - Array [
+    -   "127.0.0.1",
+    -   "192.168.1.1",
+    - ]
+    + Array []
 
-      at Object.<anonymous> (customReplace.test.js:114:50)
+      17 |     test('extracts IP addresses', () => {
+      18 |         const result = extractData('fakePath', 'ipaddress');
+    > 19 |         expect(result).toEqual(['127.0.0.1', '192.168.1.1']);
+         |                        ^
+      20 |     });
+      21 |
+      22 |     test('extracts timestamps', () => {
+
+      at Object.<anonymous> (customReplace.test.js:19:24)
+
+  ● extractData › extracts status codes
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Array [
+    -   "200",
+    -   "404",
+    +   "102",
+    +   "204",
+      ]
+
+      32 |     test('extracts status codes', () => {
+      33 |         const result = extractData('fakePath', 'statuscode');
+    > 34 |         expect(result).toEqual(['200', '404']);
+         |                        ^
+      35 |     });
+      36 |
+      37 |     test('extracts response sizes', () => {
+
+      at Object.<anonymous> (customReplace.test.js:34:24)
 
 Test Suites: 1 failed, 1 total                                                                                                                                     
-Tests:       1 failed, 9 passed, 10 total                                                                                                                          
+Tests:       2 failed, 7 passed, 9 total                                                                                                                           
 Snapshots:   0 total
-Time:        0.731 s, estimated 1 s
+Time:        0.627 s, estimated 1 s
 Ran all test suites.
+Jest did not exit one second after the test run has completed.
+
+This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue.
