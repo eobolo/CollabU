@@ -34,14 +34,16 @@ public class Ruler {
 ```
 
 ```buggy code
-public class Ruler {
-    public static void main(String[] args) {
-        int N = Integer.parseInt(args[0]);
-        String ruler = " ";
-        for (int i = 1; i < N; i--) { // Bug 1: Incorrect loop condition and decrementing i
-            ruler = i + ruler + i;    // Bug 2: Misplaced `i` and incorrect concatenation
+class Ruler {
+    static main(args) {
+        const N = parseInt(args[0], 10);
+        let ruler = " ";
+        for (let i = 1; i <= N; i++) {
+            ruler = i + ruler + i;
         }
-        System.out.println(ruler);    // Bug 3: Unreachable due to infinite loop
+        console.log(ruler);
     }
 }
-```
+
+// Example usage
+Ruler.main([5]);
