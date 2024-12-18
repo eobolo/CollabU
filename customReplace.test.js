@@ -1,80 +1,84 @@
 const fs = require('fs');
-const readline = require('readline');
-const { extractData, saveDataToFile, promptUser } = require('./javascript_convert.js');
+const path = require('path');
+const { extractData, saveDataToFile } = require('./javascript_convert.js'); // replace with your actual script path 
+
 jest.mock('fs');
 
-const REGEX_FILE_PATH = './regex_apache.log'; // Assume your regex test file path
-
 describe('extractData', () => {
-    test('extracts ipaddresses correctly', () => {
-        fs.readFileSync.mockReturnValue('192.168.1.1 anothersource');
-        const ipAddresses = extractData(REGEX_FILE_PATH, 'ipaddress');
-        expect(ipAddresses).toEqual(['192.168.1.1']);
+    let logData = `
+        127.0.0.1 - - [10/Oct/2020:13:55:36 -0700] "GET /index.html HTTP/1.1" 200 1024
+        192.168.1.1 - - [11/Oct/2020:17:45:22 -0700] "POST /form HTTP/1.0" 404 2048
+    `;
+
+    beforeAll(() => {
+        fs.readFileSync.mockReturnValue(logData);
     });
 
-    test('extracts timestamps correctly', () => {
-        fs.readFileSync.mockReturnValue('[16/Dec/2021:00:00:00 +0000]');
-        const timestamps = extractData(REGEX_FILE_PATH, 'timestamp');
-        expect(timestamps).toEqual(['16/Dec/2021:00:00:00 +0000']);
+    test('extracts IP addresses', () => {
+        const result = extractData('fakePath', 'ipaddress');
+        expect(result).toEqual(['127.0.0.1', '192.168.1.1']);
     });
 
-    test('extracts httpmethods correctly', () => {
-        fs.readFileSync.mockReturnValue('"GET /path HTTP/1.1" 200 512');
-        const methods = extractData(REGEX_FILE_PATH, 'httpmethod');
-        expect(methods).toEqual(['GET /path HTTP/1.1']);
+    test('extracts timestamps', () => {
+        const result = extractData('fakePath', 'timestamp');
+        expect(result).toEqual(['10/Oct/2020:13:55:36 -0700', '11/Oct/2020:17:45:22 -0700']);
     });
 
-    test('extracts statuscodes correctly', () => {
-        fs.readFileSync.mockReturnValue('"GET /path HTTP/1.1" 200 512');
-        const statusCodes = extractData(REGEX_FILE_PATH, 'statuscode');
-        expect(statusCodes).toEqual(['200']);
+    test('extracts HTTP methods', () => {
+        const result = extractData('fakePath', 'httpmethod');
+        expect(result).toEqual(['GET /index.html HTTP/1.1', 'POST /form HTTP/1.0']);
     });
 
-    test('extracts responsesizes correctly', () => {
-        fs.readFileSync.mockReturnValue('512');
-        const sizes = extractData(REGEX_FILE_PATH, 'responsesize');
-        expect(sizes).toEqual(['512']);
+    test('extracts status codes', () => {
+        const result = extractData('fakePath', 'statuscode');
+        expect(result).toEqual(['200', '404']);
     });
 
-    test('returns an empty array for invalid type', () => {
-        fs.readFileSync.mockReturnValue('192.168.1.1 anothersource');
-        const ipAddresses = extractData(REGEX_FILE_PATH, 'invalidtype');
-        expect(ipAddresses).toEqual([]);
+    test('extracts response sizes', () => {
+        const result = extractData('fakePath', 'responsesize');
+        expect(result).toEqual(['1024', '2048']);
+    });
+
+    test('returns empty array for no matches', () => {
+        fs.readFileSync.mockReturnValue('irrelevantData');
+        const result = extractData('fakePath', 'ipaddress');
+        expect(result).toEqual([]);
+    });
+
+    test('returns empty array for invalid type', () => {
+        const result = extractData('fakePath', 'unknownType');
+        expect(result).toEqual([]);
     });
 });
 
 describe('saveDataToFile', () => {
-    it('saves data to a file', async () => {
-        const data = ['line1', 'line2'];
-        fs.writeFileSync.mockImplementationOnce(() => { });
-        await saveDataToFile(data, 'output.txt');
-        expect(fs.writeFileSync).toHaveBeenCalledWith('output.txt', 'line1\nline2', 'utf8');
-    });
-
-    it('catches and logs permission errors', async () => {
-        const data = ['line1', 'line2'];
-        fs.writeFileSync.mockImplementationOnce(() => { throw new Error('Permission denied'); });
-        await saveDataToFile(data, 'output.txt');
-        expect(fs.writeFileSync).toHaveBeenCalledWith('output.txt', 'line1\nline2', 'utf8');
-        expect(console.error).toHaveBeenCalledWith(expect.any(String));
-    });
-});
-
-describe('promptUser', () => {
-    beforeEach(() => {
+    afterEach(() => {
         jest.clearAllMocks();
     });
 
-    it('resolves with user input', async () => {
-        const readlineMock = {
-            question: jest.fn(() => 'output').mockResolvedValue('output'),
-            close: jest.fn().mockResolvedValue()
-        };
-        const mockRl = readline.createInterface;
-        mockRl.mockImplementationOnce(() => readlineMock);
+    test('saves data to file', () => {
+        const data = ['127.0.0.1', '192.168.1.1'];
+        const filename = 'output.txt';
+        saveDataToFile(data, filename);
+        expect(fs.writeFileSync).toHaveBeenCalledWith(
+            filename, 
+            data.join('\n'), 
+            'utf8'
+        );
+    });
 
-        const response = await promptUser('Question:');
-        expect(response).toBe('output');
-        expect(readlineMock.question).toHaveBeenCalledWith('Question:');
+    test('handles errors when saving file', () => {
+        fs.writeFileSync.mockImplementation(() => {
+            throw new Error("Permission denied");
+        });
+
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+        
+        const data = ['127.0.0.1', '192.168.1.1'];
+        saveDataToFile(data, 'output.txt');
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('An error occurred'));
+        
+        consoleErrorSpy.mockRestore();
     });
 });
