@@ -99,3 +99,6 @@ const main = async () => {
 };
 
 main();
+
+
+module.exports = { extractData, saveDataToFile };
