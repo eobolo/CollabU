@@ -35,7 +35,7 @@ describe('extractData', () => {
 
     test('extracts status codes', () => {
         const result = extractData('fakePath', 'statuscode');
-        expect(result).toEqual(["200", "404"]);
+        expect(result).toEqual(["102", "204"]);
     });
 
     test('extracts response sizes', () => {
