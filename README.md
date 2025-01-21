@@ -65,8 +65,7 @@ CollabU is a novel, self-contained product designed to address the specific need
 ---
 
 ## Software Development Model
-**Model**: Agile Development  
-Agile is chosen for its:
+**Model**: Agile Development Agile is chosen for its:
 - **Flexibility**: Adapts to user feedback and changing requirements.
 - **User-Centric Approach**: Incorporates student input in every iteration.
 - **Incremental Delivery**: Ensures features are functional and thoroughly tested before the next phase.
