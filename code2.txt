@@ -1,4 +1,0 @@
-$ node fix2.js 
-Total words: 71
-Total sentences: 13
-Total paragraphs: 7
