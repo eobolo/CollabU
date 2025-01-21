@@ -1,9 +1,9 @@
-![React](https://img.shields.io/badge/React-18.3.1-brightgreen.svg) 
+![React](https://img.shields.io/badge/React-18.3.1-brightred.svg) 
 ![React DOM](https://img.shields.io/badge/React%20DOM-18.3.1-brightgreen.svg) 
 ![React Scripts](https://img.shields.io/badge/React%20Scripts-5.0.1-blue.svg) 
-![React Router DOM](https://img.shields.io/badge/React%20Router%20DOM-6.25.1-brightgreen.svg) 
-![Axios](https://img.shields.io/badge/Axios-1.7.2-brightgreen.svg) 
-![React Icons](https://img.shields.io/badge/React%20Icons-5.2.1-brightgreen.svg) 
+![React Router DOM](https://img.shields.io/badge/React%20Router%20DOM-6.25.1-brightyellow.svg) 
+![Axios](https://img.shields.io/badge/Axios-1.7.2-brown.svg) 
+![React Icons](https://img.shields.io/badge/React%20Icons-5.2.1-pink.svg) 
 
 # CollabU: Student Collaboration Platform
 
