@@ -6,6 +6,7 @@ import AuthLogin from './AuthLogin';
 import AuthSignUp from './AuthSignUp';
 import Discussion from './Discussion';
 import FileSharing from './FileSharing';
+import VersionControl from './VersionControl';
 import Teacher from './Teacher';
 import Insights from './Insights';
 import { useState, useEffect } from 'react';
@@ -231,6 +232,13 @@ function App() {
               users={users}
               appDropDown={appDropDown}
               handleAppDropDown={handleAppDropDown}
+              showDropDown={showDropDown}
+              handleShowDropDown={handleShowDropDown}
+            />} />
+            <Route path="/versioncontrol/:id/:year/:month/:group?/:members?/:project_name?" element={<VersionControl
+              users={users}
+              appDropDown={appDropDown}
+              // handleAppDropDown={handleAppDropDown}
               showDropDown={showDropDown}
               handleShowDropDown={handleShowDropDown}
             />} />

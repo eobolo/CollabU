@@ -12,7 +12,7 @@ export default function GeneralHomeHeader({ month, year, id, title, users, membe
 
     useEffect(() => {
         const getUser = users.find((user) => user.id === id);
-        console.log(getUser);
+
         if (getUser) {
             setIsUserGotten(true);
             setTriedFetch(true);
@@ -42,6 +42,7 @@ export default function GeneralHomeHeader({ month, year, id, title, users, membe
                             <ul className="menu">
                                 <li className="activated"><Link to={`/discussions/${id}/${year}/${month}/${foundUser.group}/${members}/${project_name}`}>Discussions</Link></li>
                                 <li><Link to={`/filesharing/${id}/${year}/${month}/${foundUser.group}/${members}/${project_name}`}>File Sharing</Link></li>
+                                <li><Link to={`/versioncontrol/${id}/${year}/${month}/${foundUser.group}/${members}/${project_name}`}>Version Control</Link></li>
                                 <li><Link to={`/home/${id}/${year}/${month}`}>Home</Link></li>
                             </ul>
                         ) : null : null}

@@ -89,5 +89,4 @@ CollabU is a novel, self-contained product designed to address the specific need
 ## References
 - Smith, 2018: Study on the impact of project management tools on student performance in higher education.
 - Agile Manifesto: Principles of Agile development.
-
 ---

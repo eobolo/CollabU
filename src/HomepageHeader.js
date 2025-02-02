@@ -67,6 +67,7 @@ export default function HomepageHeader({ month, year, id, users, groups, appDrop
                             <ul className="menu">
                                 <li className="activated"><Link to={`/discussions/${id}/${year}/${month}/${foundUser.group}/${membersCount}/${projectName}`}>Discussions</Link></li>
                                 <li><Link to={`/filesharing/${id}/${year}/${month}/${foundUser.group}/${membersCount}/${projectName}`}>File Sharing</Link></li>
+                                <li><Link to={`/versioncontrol/${id}/${year}/${month}/${foundUser.group}/${membersCount}/${projectName}`}>Version Control</Link></li>
                                 <li><Link to={`/home/${id}/${year}/${month}`}>Home</Link></li>
                             </ul>
                         ) : null : null}
