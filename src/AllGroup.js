@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import userAxios from './apis/userApi';
 import './styles/AllGroup.css'
 
-export default function AllGroup({ groups, setGroups, month, year, yearId, id, users, setUsers }) {
+export default function AllGroup({ groups, setGroups, month, year, yearId, id, users, setUsers, setAuthUser }) {
     const [allGroups, setAllGroups] = useState([]);
     const [loggedUser, setUser] = useState({});
     const [isAllGroupGotten, setIsAllGroupGotten] = useState(false);
@@ -104,6 +104,8 @@ export default function AllGroup({ groups, setGroups, month, year, yearId, id, u
             }
         }
 
+        loggedUser.group = group_id;
+        setAuthUser([loggedUser]);
         updateUserGroup(id);
         updateGroupYear(newgroups);
         setGroups(newgroups);

@@ -32,6 +32,10 @@ const CreateGroup = ({ groups, setGroups, month, year, yearId, id, users, setUse
     }
     const handleShowCreateGroupSubmit = (e) => {
         e.preventDefault();
+        // prevent teacher from creating group
+        if (loggedUser.isTeacher) {
+            return;
+        }
         // Getting the new group ID for that intake Year and Month
         const newgroups = { ...groups };
         const groupArray = newgroups[year][monthObj[month] - 1][month];
@@ -94,11 +98,11 @@ const CreateGroup = ({ groups, setGroups, month, year, yearId, id, users, setUse
 
     return (
         <>
-            {isLoggedUserGotten ? loggedUser.group ? null : (
+            {isLoggedUserGotten ? !loggedUser.group ? loggedUser.isTeacher ? null : (
                 <div className='mycreategroup-container'>
                     <div className='creategroup-items-fixed'>
                         <div className='creategroup-button-details'>
-                            
+
                             <div
                                 className='creategroup-button'
                                 onClick={handleShowCreateGroup}
@@ -138,7 +142,7 @@ const CreateGroup = ({ groups, setGroups, month, year, yearId, id, users, setUse
 
                     </div>
                 </div>
-            ) : (
+            ) : null : (
                 <div>
                     Fetching user...
                 </div>

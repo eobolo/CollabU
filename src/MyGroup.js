@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import userAxios from './apis/userApi';
 import './styles/MyGroup.css';
 
-export default function MyGroup({ groups, setGroups, month, year, yearId, id, users, setUsers }) {
+export default function MyGroup({ groups, setGroups, month, year, yearId, id, users, setUsers, setAuthUser }) {
     const [showMyGroup, setShowMyGroup] = useState(false);
     const [isMyGroupGotten, setIsMyGroupGotten] = useState(false);
     const [myGroup, setMyGroup] = useState({});
@@ -86,6 +86,8 @@ export default function MyGroup({ groups, setGroups, month, year, yearId, id, us
             }
         }
 
+        loggedUser.group = "";
+        setAuthUser([loggedUser]);
         updateUserGroup(id);
         updateGroupYear(newgroups);
         setIsMyGroupGotten(false);

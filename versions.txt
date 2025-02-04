@@ -1,43 +1,74 @@
-import React from 'react';
-import { diffWords } from 'diff';
+import { useParams, useNavigate } from 'react-router-dom';
+import GeneralHomeHeader from './GeneralHomeHeader';
+import { useState, useEffect } from 'react';
+import './styles/FileSharing.css';
+import PlayOnce from './PlayOnce';
 
-const VersionDiff = ({ oldVersion, newVersion, handleClose }) => {
-    const diff = diffWords(oldVersion, newVersion);
+export default function FileSharing({ users, appDropDown, handleAppDropDown, showDropDown, handleShowDropDown, versionFiles }) {
+    const { id, year, month, group, members, project_name } = useParams();
+    const title = "File Sharing";
+    const sliceLength = 10;
+    const navigate = useNavigate();
+
+    const handleDoubleClick = (file) => {
+        navigate(`/versioncontrol/${file.userId}/${file.year}/${file.month}/${file.groupId}/${members || ''}/${file.projectName}/${file.id}`);
+    };
 
     return (
-        <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
-            <h2 style={{ textAlign: 'center' }}>Version Diff Viewer</h2>
-            <div 
-                style={{
-                    whiteSpace: 'pre-wrap',
-                    lineHeight: '1.6',
-                    maxHeight: '400px',      // Fixed height for scrollable area
-                    overflowY: 'auto',       // Enables scrolling when content exceeds maxHeight
-                    paddingRight: '10px',    // Prevents content from being hidden under scrollbar
-                    marginBottom: '20px'     // Space between diff and the close button
-                }}
-            >
-                {diff.map((part, index) => (
-                    <span
-                        key={index}
-                        style={{
-                            backgroundColor: part.added ? '#d4fcd4' : part.removed ? '#fcd4d4' : 'transparent',
-                            textDecoration: part.removed ? 'line-through' : 'none',
-                            color: part.added ? 'green' : part.removed ? 'red' : 'black',
-                        }}
-                    >
-                        {part.value}
-                    </span>
-                ))}
-            </div>
-            <button
-                onClick={handleClose}
-                style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
-            >
-                Close Diff
-            </button>
-        </div>
-    );
-};
+        <main>
+            <section>
+                <div className='fixed-homepage-header'>
+                    <GeneralHomeHeader
+                        id={id}
+                        title={title}
+                        year={year}
+                        month={month}
+                        users={users}
+                        members={members || ""}
+                        project_name={project_name || ""}
+                        appDropDown={appDropDown}
+                        showDropDown={showDropDown}
+                        handleShowDropDown={handleShowDropDown}
+                    />
+                </div>
 
-export default VersionDiff;
+                {group ? (
+                    <div className='filesharing-container' onClick={handleAppDropDown}>
+                        {versionFiles && versionFiles.length > 0 ? (
+                            <div className='fileshared-section'>
+                                {versionFiles.map((file) => {
+                                    const user = users.find((u) => u.id === file.userId);
+                                    return (
+                                        <div key={file.id} onDoubleClick={() => handleDoubleClick(file)} className='file-item'>
+                                            <div className='comment-top-names'>
+                                                <span>{user.first_name.toLowerCase()}</span>
+                                                <span>{user.last_name.toLowerCase()}</span>
+                                            </div>
+                                            <div className='fileshared-icon'>
+                                                <PlayOnce />
+                                            </div>
+                                            <div className='fileshared-name'>
+                                                <p>{file.projectName.length > sliceLength ? `${file.projectName.slice(0, sliceLength)}...` : file.projectName}</p>
+                                            </div>
+                                            <div className='fileshared-meta'>
+                                                <small>Shared on: {new Date(file.timeStamp).toLocaleString()}</small>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div className='no-fileshared-section'>
+                                No files shared yet. Share file 📂
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className='discussion-no-comment-section' onClick={handleAppDropDown}>
+                        User doesn't belong to any group. No files available.
+                    </div>
+                )}
+            </section>
+        </main>
+    );
+}

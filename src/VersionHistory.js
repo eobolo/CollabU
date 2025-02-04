@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button, List, ListItem, ListItemText, Typography, Box } from '@mui/material';
-import { CompareArrows, Timeline } from '@mui/icons-material';
+import { CompareArrows, Timeline, FolderShared } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import VersionDiff from './VersionDiff';
+import userAxios from './apis/userApi';
 
-function VersionHistory({ open, handleClose, versions, handleRevert }) {
+
+function VersionHistory({ open, handleClose, versions, handleRevert, saveFileVersion, fileVersions, persona }) {
     const { group, project_name } = useParams();
     const [selectedVersion, setSelectedVersion] = useState(null);
     const [previousVersion, setPreviousVersion] = useState(null);
@@ -24,6 +26,24 @@ function VersionHistory({ open, handleClose, versions, handleRevert }) {
         }
         setSelectedVersion(version);
     };
+
+    const saveFileShareToDb = (version) => {
+        const searchResult = fileVersions.find((eachVersion) => eachVersion.id === version.id);
+        if (searchResult) {
+            return
+        } else {
+            userAxios.post(`/files`, version).then((response) => {
+                saveFileVersion((prevSharedVersions) => [...prevSharedVersions, response.data]);
+            });
+        }
+    }
+
+    const handleFileShare = (version) => {
+        if (persona.isTeacher) {
+            return;
+        }
+        saveFileShareToDb(version);
+    }
 
     return (
         <Modal open={open} onClose={handleClose}>
@@ -55,8 +75,11 @@ function VersionHistory({ open, handleClose, versions, handleRevert }) {
                                 <Button variant="contained" onClick={() => handleRevert(version)} startIcon={<Timeline />} sx={{ backgroundColor: 'red', color: 'white', '&:hover': { backgroundColor: 'darkred' } }}>
                                     Revert
                                 </Button>
-                                <Button variant="outlined" onClick={() => handleViewDiff(version)} startIcon={<CompareArrows />} sx={{ borderColor: 'green', color: 'green', '&:hover': { backgroundColor: 'lightgreen' } }} >
+                                <Button variant="contained" onClick={() => handleViewDiff(version)} startIcon={<CompareArrows />} sx={{ backgroundColor: 'green', color: 'white', '&:hover': { backgroundColor: 'darkgreen' } }} >
                                     View Diff
+                                </Button>
+                                <Button variant="contained" onClick={() => handleFileShare(version)} startIcon={<FolderShared   />} sx={{ backgroundColor: 'blue', color: 'white', '&:hover': { backgroundColor: 'darkblue' } }} >
+                                    Share File
                                 </Button>
                             </Box>
                         </ListItem>

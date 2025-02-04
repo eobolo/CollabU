@@ -7,7 +7,9 @@ import AuthSignUp from './AuthSignUp';
 import Discussion from './Discussion';
 import FileSharing from './FileSharing';
 import VersionControl from './VersionControl';
+import Admin from './Admin';
 import Teacher from './Teacher';
+import TeacherLogin from './TeacherLogin';
 import Insights from './Insights';
 import { useState, useEffect } from 'react';
 import userAxios from './apis/userApi';
@@ -30,6 +32,9 @@ function App() {
   const [isUsersGotten, setIsUserGotten] = useState(false);
   const [appDropDown, setAppDropDown] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
+  const [shareVersions, setShareVersions] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isTeacher, setIsTeacher] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,7 +55,7 @@ function App() {
   }, []);
 
 
-  const handleSignUp = (e) => {
+  const handleSignUp = (e, teacherRegistry = false) => {
     /*
       prevent the default action of a form
       which is to submit it to a server given
@@ -101,7 +106,7 @@ function App() {
     id = parseInt(id) + 1;
     const isLoggedin = false;
     // note here the id's of endpoints must be in strings
-    const newUser = { id: `${id}`, first_name: first_name.toUpperCase(), last_name: last_name.toUpperCase(), email, password, month: intakeMonth, year: intakeYear, group: '', isLoggedin };
+    const newUser = { id: `${id}`, first_name: first_name.toUpperCase(), last_name: last_name.toUpperCase(), email, password, month: intakeMonth, year: intakeYear, group: '', isLoggedin, isTeacher: teacherRegistry };
     // first add the data to the state in case someone
     // else wants to create an account before our posted
     // new user works.
@@ -123,9 +128,14 @@ function App() {
     setVerifyPassword('');
     setIntakeMonth('');
     setIntakeYear('');
+    setIsTeacher(isTeacher);
     setSigninError(null);
     setSignupSuccess('User successfully created');
-    navigate("/");
+    if (teacherRegistry) {
+      navigate("/login")
+    } else {
+      navigate("/");
+    }
   }
 
 
@@ -156,27 +166,90 @@ function App() {
       we have to send patch request for the authenticateUser[0].id,
       to change the user isLoggedin attribute in the database and in the state
     */
+    // check if user authenticating is a facilitator
+    if (authenticateUser[0].isTeacher) {
+      setSigninError("Not allowed Login as a Teacher: use Teachers");
+      setSignupSuccess('');
+      return;
+    }
+
     authenticateUser[0].isLoggedin = true;
     let newUserData = users.filter((user) => user.id !== authenticateUser[0].id);
     newUserData = [...newUserData, authenticateUser[0]];
+
     const changeUserIsLoggedin = async (id) => {
       try {
         await userAxios.patch(`/users/${id}/`, { isLoggedin: true });
         const month = authenticateUser[0].month;
         const year = authenticateUser[0].year;
-
-        setAuthUser(authenticateUser);
         navigate(`/home/${id}/${year}/${month}`);
       } catch (error) {
         console.error(`An error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`);
       }
     }
-    changeUserIsLoggedin(authenticateUser[0].id);
     // if the user exist navigate to the second app which is the user dashboard
     setUsers(newUserData);
+    setAuthUser(authenticateUser);
     setPassword('');
     setEmail('');
     setSigninError('');
+    setSignupSuccess('');
+    changeUserIsLoggedin(authenticateUser[0].id);
+  }
+
+  const handleTeacherLogin = (e) => {
+    // prevent the default of submitting a form
+    e.preventDefault();
+    // a callback function used to filter if that account exists or not
+    const checkUserIn = (user) => {
+      if (user.email === email && password === user.password) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    // get the user if it exists or not
+    const authenticateUser = users.filter(checkUserIn);
+    // if user doesn't exist send an error to the form
+    if (authenticateUser.length === 0) {
+      setSigninError("This account doesn't exist. Sign up to create one.");
+      setSignupSuccess('');
+      return;
+    }
+    /*
+      change the isloggedin of that authenticated user to true,
+      create a new array of objects haveing the loggedin user
+      isLoggedin property changed.
+
+      we have to send patch request for the authenticateUser[0].id,
+      to change the user isLoggedin attribute in the database and in the state
+    */
+    authenticateUser[0].isLoggedin = true;
+    authenticateUser[0].month = intakeMonth;
+    authenticateUser[0].year = intakeYear;
+
+    let newUserData = users.filter((user) => user.id !== authenticateUser[0].id);
+    newUserData = [...newUserData, authenticateUser[0]];
+    const changeUserIsLoggedin = async (id) => {
+      try {
+        const month = authenticateUser[0].month;
+        const year = authenticateUser[0].year;
+        await userAxios.patch(`/users/${id}/`, { isLoggedin: true, month, year });
+        navigate(`/home/${id}/${year}/${month}`);
+      } catch (error) {
+        console.error(`An error with status ${error.response.status} and headers of ${error.response.headers} with data ${error.response.data} occured :(`);
+      }
+    }
+    // if the user exist navigate to the second app which is the user dashboard
+    setUsers(newUserData);
+    setAuthUser(authenticateUser);
+    setPassword('');
+    setEmail('');
+    setIntakeMonth('');
+    setIntakeYear('');
+    setSigninError('');
+    setSignupSuccess('');
+    changeUserIsLoggedin(authenticateUser[0].id);
   }
 
   const handleShowDropDown = () => {
@@ -198,20 +271,26 @@ function App() {
 
   return (
     <div className='App'>
-      <div>
-        <HomeHeader
-          authUser={authUser}
-          users={users}
-          setUsers={setUsers}
-        />
-      </div>
+      {isUsersGotten ? (
+        <div>
+          <HomeHeader
+            authUser={authUser}
+            users={users}
+            setUsers={setUsers}
+          />
+        </div>
+      ) : <div>
+        <p>fetching data ...</p>
+      </div>}
 
       <div className='routes-container'>
         {isUsersGotten ? (
           <Routes>
-            <Route path="/" element={<AuthLogin signupSuccess={signupSuccess} email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} signinError={signinError} />} />
+            <Route path="/" element={<AuthLogin signupSuccess={signupSuccess} email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} signinError={signinError} setSigninError={setSigninError} />} />
             <Route path="/signup" element={<AuthSignUp first_name={first_name} last_name={last_name} email={email} setIntakeMonth={setIntakeMonth} password={password} setFirstName={setFirstName} setLastName={setLastName} setEmail={setEmail} setIntakeYear={setIntakeYear} setPassword={setPassword} signupError={signupError} handleSignUp={handleSignUp} verifyPassword={verifyPassword} setVerifyPassword={setVerifyPassword} />} />
-            <Route path="/teacher" element={<Teacher />} />
+            <Route path="/admin" element={<Admin setIsAdmin={setIsAdmin} />} />
+            <Route path="/teacher" element={<Teacher first_name={first_name} last_name={last_name} email={email} password={password} setFirstName={setFirstName} setLastName={setLastName} setEmail={setEmail} setPassword={setPassword} signupError={signupError} handleSignUp={handleSignUp} verifyPassword={verifyPassword} setVerifyPassword={setVerifyPassword} isAdmin={isAdmin} />} />
+            <Route path="/login" element={<TeacherLogin signupSuccess={signupSuccess} email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleTeacherLogin} signinError={signinError} setIntakeMonth={setIntakeMonth} setIntakeYear={setIntakeYear} setSigninError={setSigninError} />} />
             <Route path="/insights" element={<Insights />} />
             <Route path="/home/:id/:year/:month" element={<Homepage
               users={users}
@@ -220,6 +299,7 @@ function App() {
               handleAppDropDown={handleAppDropDown}
               showDropDown={showDropDown}
               handleShowDropDown={handleShowDropDown}
+              setAuthUser={setAuthUser}
             />} />
             <Route path="/discussions/:id/:year/:month/:group?/:members?/:project_name?" element={<Discussion
               users={users}
@@ -234,13 +314,17 @@ function App() {
               handleAppDropDown={handleAppDropDown}
               showDropDown={showDropDown}
               handleShowDropDown={handleShowDropDown}
+              versionFiles={shareVersions}
             />} />
-            <Route path="/versioncontrol/:id/:year/:month/:group?/:members?/:project_name?" element={<VersionControl
+            <Route path="/versioncontrol/:year/:month/:group?/:members?/:project_name?/:file_id?" element={<VersionControl
               users={users}
               appDropDown={appDropDown}
-              // handleAppDropDown={handleAppDropDown}
               showDropDown={showDropDown}
               handleShowDropDown={handleShowDropDown}
+              saveFileVersion={setShareVersions}
+              fileVersions={shareVersions}
+              authUser={authUser}
+              handleAppDropDown={handleAppDropDown}
             />} />
           </Routes>
         ) : <div>

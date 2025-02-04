@@ -4,13 +4,12 @@ import draftToHtml from 'draftjs-to-html';
 import { Button, Box, IconButton, Typography, Paper, TextField } from '@mui/material';
 import { FormatBold, FormatItalic, FormatUnderlined, Undo, Redo, Save, History } from '@mui/icons-material';
 
-const TextEditor = ({ onSave, comment, onCommentChange, content, handleClose }) => {
+const TextEditor = ({ onSave, comment, onCommentChange, content, handleClose, persona }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [htmlPreview, setHtmlPreview] = useState('');
 
   useEffect(() => {
     if (content) {
-      console.log(content);
       try {
         const contentState = (typeof content === 'string')
           ? ContentState.createFromText(content)  // For backward compatibility
@@ -38,6 +37,10 @@ const TextEditor = ({ onSave, comment, onCommentChange, content, handleClose }) 
   const handleRedo = () => setEditorState(EditorState.redo(editorState));
 
   const handleSave = () => {
+    // prevent facilitator from saving version
+    if (persona.isTeacher) {
+      return;
+    }
     const rawContent = convertToRaw(editorState.getCurrentContent());
     const plainText = rawContent.blocks.map(block => block.text).join('\n');
     if (onSave) onSave(plainText, comment);

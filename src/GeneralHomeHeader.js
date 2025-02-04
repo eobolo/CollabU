@@ -2,10 +2,9 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import './styles/GeneralHomeHeader.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMessage } from '@fortawesome/free-solid-svg-icons';
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import { faMessage, faCodeBranch, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 
-export default function GeneralHomeHeader({ month, year, id, title, users, members, project_name, appDropDown, showDropDown, handleShowDropDown }) {
+export default function GeneralHomeHeader({ id, title, year, month, users, members, project_name, appDropDown, showDropDown, handleShowDropDown }) {
     const [isUserGotten, setIsUserGotten] = useState(false);
     const [triedFetch, setTriedFetch] = useState(false);
     const [foundUser, setFoundUser] = useState({});
@@ -29,8 +28,7 @@ export default function GeneralHomeHeader({ month, year, id, title, users, membe
             {triedFetch ? isUserGotten ? (
                 <div className="home-items-fixed">
                     <div className="home-logo-fixed">
-                        {title === "Discussions" ? <FontAwesomeIcon icon={faMessage} className="fa-icon-home" /> : <FontAwesomeIcon icon={faFolderOpen} className="fa-icon-home"/>}
-                        
+                        {title === "Discussions" ? <FontAwesomeIcon icon={faMessage} className="fa-icon-home" /> : title === "Version Control" ? <FontAwesomeIcon icon={faCodeBranch} className="fa-icon-home"/> : <FontAwesomeIcon icon={faFolderOpen} className="fa-icon-home"/>}
                         <h1>{title}</h1>
                     </div>
                     <div className="dropdown">
@@ -42,7 +40,7 @@ export default function GeneralHomeHeader({ month, year, id, title, users, membe
                             <ul className="menu">
                                 <li className="activated"><Link to={`/discussions/${id}/${year}/${month}/${foundUser.group}/${members}/${project_name}`}>Discussions</Link></li>
                                 <li><Link to={`/filesharing/${id}/${year}/${month}/${foundUser.group}/${members}/${project_name}`}>File Sharing</Link></li>
-                                <li><Link to={`/versioncontrol/${id}/${year}/${month}/${foundUser.group}/${members}/${project_name}`}>Version Control</Link></li>
+                                <li><Link to={`/versioncontrol/${year}/${month}/${foundUser.group}/${members}/${project_name}`}>Version Control</Link></li>
                                 <li><Link to={`/home/${id}/${year}/${month}`}>Home</Link></li>
                             </ul>
                         ) : null : null}

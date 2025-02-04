@@ -7,7 +7,8 @@ import MyGroup from './MyGroup';
 import AllGroup from './AllGroup';
 import HomepageHeader from './HomepageHeader';
 
-const Homepage = ({ users, setUsers, appDropDown, handleAppDropDown, showDropDown, handleShowDropDown }) => {
+
+const Homepage = ({ users, setUsers, appDropDown, handleAppDropDown, showDropDown, handleShowDropDown, setAuthUser }) => {
   const [groups, setGroups] = useState({});
   const [isGroupsGotten, setIsGroupGotten] = useState(false);
   const { id, year, month } = useParams();
@@ -60,6 +61,7 @@ const Homepage = ({ users, setUsers, appDropDown, handleAppDropDown, showDropDow
               id={id}
               users={users}
               setUsers={setUsers}
+              setAuthUser={setAuthUser}
             />
             <CreateGroup
               groups={groups}
@@ -80,6 +82,7 @@ const Homepage = ({ users, setUsers, appDropDown, handleAppDropDown, showDropDow
               id={id}
               users={users}
               setUsers={setUsers}
+              setAuthUser={setAuthUser}
             />
           </div>
         ) : null}

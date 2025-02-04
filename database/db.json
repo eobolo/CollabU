@@ -9,7 +9,8 @@
       "month": "January",
       "year": "2022",
       "group": "18",
-      "isLoggedin": true
+      "isLoggedin": true,
+      "isTeacher": false
     },
     {
       "id": "2",
@@ -20,7 +21,8 @@
       "month": "January",
       "year": "2022",
       "group": "1",
-      "isLoggedin": true
+      "isLoggedin": true,
+      "isTeacher": false
     },
     {
       "id": "3",
@@ -31,7 +33,8 @@
       "month": "May",
       "year": "2022",
       "group": "",
-      "isLoggedin": true
+      "isLoggedin": true,
+      "isTeacher": false
     },
     {
       "id": "4",
@@ -42,7 +45,8 @@
       "month": "September",
       "year": "2022",
       "group": "",
-      "isLoggedin": true
+      "isLoggedin": true,
+      "isTeacher": false
     },
     {
       "id": "5",
@@ -53,7 +57,8 @@
       "month": "January",
       "year": "2023",
       "group": "1",
-      "isLoggedin": true
+      "isLoggedin": true,
+      "isTeacher": false
     },
     {
       "id": "6",
@@ -64,7 +69,8 @@
       "month": "September",
       "year": "2023",
       "group": "",
-      "isLoggedin": true
+      "isLoggedin": true,
+      "isTeacher": false
     },
     {
       "id": "7",
@@ -75,7 +81,8 @@
       "month": "September",
       "year": "2023",
       "group": "",
-      "isLoggedin": true
+      "isLoggedin": true,
+      "isTeacher": false
     },
     {
       "id": "8",
@@ -86,7 +93,8 @@
       "month": "January",
       "year": "2023",
       "group": "",
-      "isLoggedin": false
+      "isLoggedin": false,
+      "isTeacher": false
     },
     {
       "id": "9",
@@ -97,7 +105,8 @@
       "month": "January",
       "year": "2022",
       "group": "8",
-      "isLoggedin": true
+      "isLoggedin": true,
+      "isTeacher": false
     },
     {
       "id": "10",
@@ -108,7 +117,20 @@
       "month": "January",
       "year": "2022",
       "group": "1",
-      "isLoggedin": true
+      "isLoggedin": true,
+      "isTeacher": false
+    },
+    {
+      "id": "11",
+      "first_name": "SAMIRATU",
+      "last_name": "NTOSHI",
+      "email": "s.ntoshi@alustudent.com",
+      "password": "12345",
+      "month": "",
+      "year": "",
+      "group": "",
+      "isLoggedin": false,
+      "isTeacher": true
     }
   ],
   "groups": [
@@ -414,120 +436,66 @@
   ],
   "files": [
     {
-      "id": "1",
+      "id": "b758",
+      "changesBy": "EXCEL ASAPH",
+      "timeStamp": "2025-02-03T12:50:04.561Z",
+      "groupId": "18",
+      "projectName": "18th  group",
       "userId": "1",
-      "filename": "first file",
-      "url": "https://docs.google.com/document/d/1J8kUpMIXOk-M27HWzTo4Z2IYq73lFGIhgNbPhIfT9JA/edit",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
+      "content": "first version file",
+      "comment": "first comment",
+      "year": "2022",
+      "month": "January"
     },
     {
-      "id": "2",
+      "id": "4e40",
+      "changesBy": "EXCEL ASAPH",
+      "timeStamp": "2025-02-03T13:21:34.908Z",
+      "groupId": "18",
+      "projectName": "18th  group",
       "userId": "1",
-      "filename": "second file",
-      "url": "https://docs.google.com/document/d/1J8kUpMIXOk-M27HWzTo4Z2IYq73lFGIhgNbPhIfT9JA/edit",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "3",
-      "userId": "2",
-      "filename": "third file",
-      "url": "https://docs.google.com/document/d/1J8kUpMIXOk-M27HWzTo4Z2IYq73lFGIhgNbPhIfT9JA/edit",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "4",
-      "userId": "1",
-      "filename": "ALX RWANDA",
-      "url": "https://google.com",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "5",
-      "userId": "1",
-      "filename": "QwikAid",
-      "url": "https://qwikaid.com",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
-    },
-    {
-      "id": "6",
-      "userId": "1",
-      "filename": "Life Prescriber",
-      "url": "https://google.com",
-      "intakeYear": "2022",
-      "intakeMonth": "January",
-      "group": "1"
+      "content": "first version file\nsecond version of this file",
+      "comment": "second comment.",
+      "year": "2022",
+      "month": "January"
     }
   ],
   "versions": [
     {
-      "id": "4485",
+      "id": "b758",
       "changesBy": "EXCEL ASAPH",
-      "timeStamp": "2025-02-02T21:00:30.807Z",
+      "timeStamp": "2025-02-03T12:50:04.561Z",
       "groupId": "18",
       "projectName": "18th  group",
       "userId": "1",
-      "content": "First version of the file.",
-      "comment": "firsr comment."
+      "content": "first version file",
+      "comment": "first comment",
+      "year": "2022",
+      "month": "January"
     },
     {
-      "id": "feda",
+      "id": "4e40",
       "changesBy": "EXCEL ASAPH",
-      "timeStamp": "2025-02-02T21:04:09.575Z",
+      "timeStamp": "2025-02-03T13:21:34.908Z",
       "groupId": "18",
       "projectName": "18th  group",
       "userId": "1",
-      "content": "First version of the file.\nthe second version of the file is right here",
-      "comment": "version2 added line 2"
+      "content": "first version file\nsecond version of this file",
+      "comment": "second comment.",
+      "year": "2022",
+      "month": "January"
     },
     {
-      "id": "767d",
+      "id": "f78a",
       "changesBy": "EXCEL ASAPH",
-      "timeStamp": "2025-02-02T21:07:41.055Z",
+      "timeStamp": "2025-02-03T19:10:03.611Z",
       "groupId": "18",
       "projectName": "18th  group",
       "userId": "1",
-      "content": "First version of the file.\nthe second version of the file is right here\nthird version",
-      "comment": "version3 added line 3"
-    },
-    {
-      "id": "bd5c",
-      "changesBy": "EXCEL ASAPH",
-      "timeStamp": "2025-02-02T21:09:53.828Z",
-      "groupId": "18",
-      "projectName": "18th  group",
-      "userId": "1",
-      "content": "First version of the file.\nthe second version of the file is right here\nthird version.\nfourth version.",
-      "comment": "version4 added line 4"
-    },
-    {
-      "id": "8148",
-      "changesBy": "EXCEL ASAPH",
-      "timeStamp": "2025-02-02T21:29:29.790Z",
-      "groupId": "18",
-      "projectName": "18th  group",
-      "userId": "1",
-      "content": "First version of the file.\nthe second version of the file is right here\nthird version.\nfourth version.\nI am just testing this file so we could\nsee the differences in scrolling\nnow looking at this code\nwe could see the scrolling action\nthis is the latest version\nand now trying this out\nasdfgsdfghjkl;\nasdfghjksdfgh\nASDFGFGHJK\nASDFGHJWERTYUI\nASDFGHGHJK",
-      "comment": "version unknown added few lines"
-    },
-    {
-      "id": "cb55",
-      "changesBy": "EXCEL ASAPH",
-      "timeStamp": "2025-02-02T21:33:08.491Z",
-      "groupId": "18",
-      "projectName": "18th  group",
-      "userId": "1",
-      "content": "UML Assignment",
-      "comment": "This is our first assignment"
+      "content": "first version file\nsecond version of this file",
+      "comment": "second comment.",
+      "year": "2022",
+      "month": "January"
     }
   ]
 }
