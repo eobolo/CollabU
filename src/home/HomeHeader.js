@@ -1,8 +1,8 @@
 import { useNavigate, Link } from 'react-router-dom';
-import userAxios from './apis/userApi';
-import './styles/HomeHeader.css';
-import Logo from './images/collabu-main-logo.png';
-import SmLogo from './images/collabu-s-logo.png';
+import userAxios from '../apis/userApi';
+import '../styles/HomeHeader.css';
+import Logo from '../images/collabu-main-logo.png';
+import SmLogo from '../images/collabu-s-logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';

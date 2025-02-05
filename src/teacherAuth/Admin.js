@@ -1,4 +1,4 @@
-import './styles/AuthLogin.css'
+import '../styles/AuthLogin.css'
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';

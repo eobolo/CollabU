@@ -1,4 +1,4 @@
-import './styles/AuthSignUp.css';
+import '../styles/AuthSignUp.css';
 
 const AuthSignUp = ({ first_name, last_name, email, setIntakeMonth, password, setFirstName, setLastName, setEmail, setIntakeYear, setPassword, signupError, handleSignUp, verifyPassword, setVerifyPassword }) => {
     return (

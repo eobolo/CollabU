@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import userAxios from './apis/userApi';
-import './styles/AllGroup.css'
+import userAxios from '../apis/userApi';
+import '../styles/AllGroup.css'
 
 export default function AllGroup({ groups, setGroups, month, year, yearId, id, users, setUsers, setAuthUser }) {
     const [allGroups, setAllGroups] = useState([]);

@@ -8,7 +8,7 @@
       "password": "12345",
       "month": "January",
       "year": "2022",
-      "group": "18",
+      "group": "",
       "isLoggedin": true,
       "isTeacher": false
     },
@@ -246,10 +246,8 @@
               "group18": {
                 "Project Name": "18th  group",
                 "Project Description": "this is a group",
-                "usersId": [
-                  1
-                ],
-                "length": 1
+                "usersId": [],
+                "length": 0
               }
             }
           ]

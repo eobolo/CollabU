@@ -1,10 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import GeneralHomeHeader from './GeneralHomeHeader';
+import GeneralHomeHeader from '../home/GeneralHomeHeader';
+import '../styles/FileSharing.css';
+import PlayOnce from '../imports/PlayOnce';
+import { useEffect } from 'react';
+import userAxios from '../apis/userApi';
 
-import './styles/FileSharing.css';
-import PlayOnce from './PlayOnce';
 
-export default function FileSharing({ users, appDropDown, handleAppDropDown, showDropDown, handleShowDropDown, versionFiles }) {
+export default function FileSharing({ users, appDropDown, handleAppDropDown, showDropDown, handleShowDropDown, versionFiles, saveFileVersion }) {
     const { id, year, month, group, members, project_name } = useParams();
     const title = "File Sharing";
     const sliceLength = 10;
@@ -13,6 +15,23 @@ export default function FileSharing({ users, appDropDown, handleAppDropDown, sho
     const handleDoubleClick = (file) => {
         navigate(`/versioncontrol/${file.year}/${file.month}/${file.groupId}/${members || ''}/${file.projectName}/${file.id}`);
     };
+
+    useEffect(() => {
+        // Fetch shared files from the server
+        userAxios.get(`/files`, {
+            params: {
+                group: group,
+                projectName: project_name,
+                year: year,
+                month: month,
+            }
+        }).then(response => {
+            saveFileVersion(response.data);
+        }).catch(error => {
+            console.error('Error fetching shared file:', error);
+        });
+
+    }, [group, project_name, year, month, saveFileVersion]);
 
     return (
         <main>

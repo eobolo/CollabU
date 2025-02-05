@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import userAxios from './apis/userApi';
-import './styles/MyGroup.css';
+import userAxios from '../apis/userApi';
+import '../styles/MyGroup.css';
 
 export default function MyGroup({ groups, setGroups, month, year, yearId, id, users, setUsers, setAuthUser }) {
     const [showMyGroup, setShowMyGroup] = useState(false);

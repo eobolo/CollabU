@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import './styles/GeneralHomeHeader.css';
+import '../styles/GeneralHomeHeader.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMessage, faCodeBranch, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 

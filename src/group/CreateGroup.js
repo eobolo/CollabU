@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import userAxios from './apis/userApi';
-import './styles/CreateGroup.css';
+import userAxios from '../apis/userApi';
+import '../styles/CreateGroup.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 

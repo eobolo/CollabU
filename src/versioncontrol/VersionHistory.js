@@ -3,7 +3,7 @@ import { Modal, Button, List, ListItem, ListItemText, Typography, Box } from '@m
 import { CompareArrows, Timeline, FolderShared } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import VersionDiff from './VersionDiff';
-import userAxios from './apis/userApi';
+import userAxios from '../apis/userApi';
 
 
 function VersionHistory({ open, handleClose, versions, handleRevert, saveFileVersion, fileVersions, persona }) {

@@ -1,9 +1,7 @@
-import './styles/AuthLogin.css'
-import './styles/AuthSignUp.css';
+import '../styles/AuthLogin.css'
 import { useEffect } from 'react';
 
-
-const TeacherLogin = ({ signupSuccess, email, password, setEmail, setPassword, handleLogin, signinError, setIntakeMonth, setIntakeYear, setSigninError }) => {
+const AuthLogin = ({ signupSuccess, email, password, setEmail, setPassword, handleLogin, signinError, setSigninError }) => {
 
     useEffect(() => {
         setTimeout(() => {
@@ -27,7 +25,7 @@ const TeacherLogin = ({ signupSuccess, email, password, setEmail, setPassword, h
                     </div>
                 ) : null}
                 <div className='login-title'>
-                    <h1>Login as Facilitator</h1>
+                    <h1>Login Here</h1>
                 </div>
                 <form onSubmit={handleLogin}>
                     <div>
@@ -49,24 +47,6 @@ const TeacherLogin = ({ signupSuccess, email, password, setEmail, setPassword, h
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <div className='form-group'>
-                            <label htmlFor="intake-year">Select Intake (Year)</label>
-                            <select name="intake-year" id="intake-year" required onChange={(e) => { setIntakeYear(e.currentTarget.value) }}>
-                                <option value="">--Please choose an option--</option>
-                                <option value="2022">2022</option>
-                                <option value="2023">2023</option>
-                                <option value="2024">2024</option>
-                            </select>
-                        </div>
-                        <div className='form-group'>
-                            <label htmlFor="intake-month">Select Intake (Month)</label>
-                            <select name="intake-month" id="intake-month" required onChange={(e) => { setIntakeMonth(e.currentTarget.value) }}>
-                                <option value="">--Please choose an option--</option>
-                                <option value="January">January</option>
-                                <option value="May">May</option>
-                                <option value="September">September</option>
-                            </select>
-                        </div>
                         <div className='login-btn'>
                             <button
                                 type="submit"
@@ -76,10 +56,11 @@ const TeacherLogin = ({ signupSuccess, email, password, setEmail, setPassword, h
                             </button>
                         </div>
                     </div>
+
                 </form>
             </div>
         </section>
     );
 }
 
-export default TeacherLogin
+export default AuthLogin

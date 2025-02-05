@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Player } from '@lordicon/react';
 
-const ICON = require('./assets/folder.json');
+const ICON = require('../assets/folder.json');
 
 export default function PlayOnce() {    
   const playerRef = useRef(null);

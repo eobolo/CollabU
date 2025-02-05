@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import GeneralHomeHeader from './GeneralHomeHeader';
-import './styles/Disscussion.css';
-import userAxios from './apis/userApi';
+import GeneralHomeHeader from '../home/GeneralHomeHeader';
+import '../styles/Disscussion.css';
+import userAxios from '../apis/userApi';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';

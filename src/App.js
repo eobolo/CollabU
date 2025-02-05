@@ -1,16 +1,16 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import './styles/App.css'
-import HomeHeader from './HomeHeader';
-import Homepage from './Homepage';
-import AuthLogin from './AuthLogin';
-import AuthSignUp from './AuthSignUp';
-import Discussion from './Discussion';
-import FileSharing from './FileSharing';
-import VersionControl from './VersionControl';
-import Admin from './Admin';
-import Teacher from './Teacher';
-import TeacherLogin from './TeacherLogin';
-import Insights from './Insights';
+import HomeHeader from './home/HomeHeader';
+import Homepage from './home/Homepage';
+import AuthLogin from './studentAuth/AuthLogin';
+import AuthSignUp from './studentAuth/AuthSignUp';
+import Discussion from './discussion/Discussion';
+import FileSharing from './filesharing/FileSharing';
+import VersionControl from './versioncontrol/VersionControl';
+import Admin from './teacherAuth/Admin';
+import Teacher from './teacherAuth/Teacher';
+import TeacherLogin from './teacherAuth/TeacherLogin';
+import Insights from './visualization/Insights';
 import { useState, useEffect } from 'react';
 import userAxios from './apis/userApi';
 
@@ -315,6 +315,7 @@ function App() {
               showDropDown={showDropDown}
               handleShowDropDown={handleShowDropDown}
               versionFiles={shareVersions}
+              saveFileVersion={setShareVersions}
             />} />
             <Route path="/versioncontrol/:year/:month/:group?/:members?/:project_name?/:file_id?" element={<VersionControl
               users={users}

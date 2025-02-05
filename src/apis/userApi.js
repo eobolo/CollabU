@@ -4,8 +4,9 @@ import axios from "axios";
     using this axios object called userAxios
     an export it out
 */
+// https://collabu.onrender.com
 const userAxios = axios.create({
-    baseURL: "http://localhost:3500/",
+    baseURL: "https://collabu.onrender.com",
 })
 
 export default userAxios;

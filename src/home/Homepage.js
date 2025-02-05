@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import './styles/Homepage.css';
-import userAxios from './apis/userApi';
-import CreateGroup from './CreateGroup';
-import MyGroup from './MyGroup';
-import AllGroup from './AllGroup';
+import '../styles/Homepage.css';
+import userAxios from '../apis/userApi';
+import CreateGroup from '../group/CreateGroup';
+import MyGroup from '../group/MyGroup';
+import AllGroup from '../group/AllGroup';
 import HomepageHeader from './HomepageHeader';
 
 

@@ -1,5 +1,5 @@
-import './styles/AuthSignUp.css';
-import './styles/FileSharing.css';
+import '../styles/AuthSignUp.css';
+import '../styles/FileSharing.css';
 
 const Teacher = ({ first_name, last_name, email, password, setFirstName, setLastName, setEmail, setPassword, signupError, handleSignUp, verifyPassword, setVerifyPassword, isAdmin }) => {
     return (

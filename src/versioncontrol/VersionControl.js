@@ -1,10 +1,10 @@
 import { useParams } from 'react-router-dom';
-import GeneralHomeHeader from './GeneralHomeHeader';
+import GeneralHomeHeader from '../home/GeneralHomeHeader';
 import React, { useState, useEffect } from 'react';
 import TextEditor from './TextEditor';
 import VersionHistory from './VersionHistory';
-import userAxios from './apis/userApi';
-import './styles/FileSharing.css';
+import userAxios from '../apis/userApi';
+import '../styles/FileSharing.css';
 
 function VersionControl({ users, appDropDown, showDropDown, handleShowDropDown, saveFileVersion, fileVersions, authUser, handleAppDropDown }) {
     const { year, month, group, members, project_name, file_id } = useParams();
