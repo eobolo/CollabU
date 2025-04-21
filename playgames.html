@@ -268,7 +268,7 @@
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom:  fjh10px;
             flex-wrap: wrap;
         }
 
@@ -304,7 +304,6 @@
             border-radius: 5px;
             width: 70px;
         }
-
 
         .main-section {
             width: 100%;
@@ -464,14 +463,8 @@
                     <div class="score" id="play-score">Total 0</div>
                 </div>
                 <div class="word-slots" id="word-slots"></div>
-                <div class="timer" id="timer">04:00</div>
+                <div class="timer" id="timer">01:00</div>
             </div>
-
-            <!-- <div class="custom-shape-divider-top-1745246323">
-        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-          <path d="M0,0V7.23C0,65.52,268.63,112.77,600,112.77S1200,65.52,1200,7.23V0Z" class="shape-fill"></path>
-        </svg>
-      </div> -->
 
             <div class="main-section">
                 <div class="custom-shape-divider-top-1745246323">
@@ -509,12 +502,13 @@
         let score = 0;
         let multiplier = 1;
         let streak = 0;
-        let timeLeft = 240; // 4 minutes in seconds
+        let timeLeft = 60; // 4 minutes in seconds
         let timerInterval = null;
         let targetWords = [];
         let letters = [];
         let completedWords = [];
         let filledSlots = []; // Track which slots are filled
+        let usedSetIndices = []; // Track used word sets
 
         // Word Sets (7 sets, each with 6 target words)
         const wordSets = [
@@ -570,22 +564,42 @@
             score = 0;
             multiplier = 1;
             streak = 0;
-            timeLeft = 240;
+            timeLeft = 60;
             currentWord = "";
-            currentSetIndex = Math.floor(Math.random() * wordSets.length);
-            targetWords = [...wordSets[currentSetIndex].targetWords];
-            letters = [...wordSets[currentSetIndex].letters];
-            completedWords = [];
-            filledSlots = new Array(targetWords.length).fill(false); // Track filled slots
+            usedSetIndices = [];
+            loadNewWordSet();
 
             // Update UI
             playScore.textContent = `Total ${score}`;
             currentWordElement.textContent = currentWord;
-            updateWordSlots();
-            renderLetterGrid();
 
             // Start timer
             timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Load a new word set
+        function loadNewWordSet() {
+            // Select a new word set that hasn't been used yet
+            let newSetIndex;
+            do {
+                newSetIndex = Math.floor(Math.random() * wordSets.length);
+            } while (usedSetIndices.includes(newSetIndex) && usedSetIndices.length < wordSets.length);
+
+            if (usedSetIndices.length >= wordSets.length) {
+                // If all sets are used, reset the used indices
+                usedSetIndices = [];
+            }
+
+            currentSetIndex = newSetIndex;
+            usedSetIndices.push(currentSetIndex);
+
+            targetWords = [...wordSets[currentSetIndex].targetWords];
+            letters = [...wordSets[currentSetIndex].letters];
+            completedWords = [];
+            filledSlots = new Array(targetWords.length).fill(false);
+
+            updateWordSlots();
+            renderLetterGrid();
         }
 
         // Update Timer
@@ -662,7 +676,7 @@
                 clearWord();
 
                 if (completedWords.length === targetWords.length) {
-                    endGame();
+                    loadNewWordSet(); // Load a new word set instead of ending the game
                 }
             } else {
                 alert("Incorrect or already used word! Try again.");
@@ -694,10 +708,9 @@
             leaderboardView.classList.remove("hidden");
             playView.classList.remove("active");
 
-            // Update Leaderboard
+            // Update Leaderboard: Add player's score and sort, but don't limit to 7 entries
             leaderboard.push({ name: "Player", score: score });
             leaderboard.sort((a, b) => b.score - a.score);
-            if (leaderboard.length > 7) leaderboard.pop();
 
             // Update Leaderboard UI
             topPlayers.innerHTML = "";
@@ -706,11 +719,11 @@
                 const playerDiv = document.createElement("div");
                 playerDiv.classList.add("player");
                 playerDiv.innerHTML = `
-          ${index >= 3 ? `<div class="rank">${index + 1}</div>` : ""}
-          <div class="avatar"></div>
-          <div class="name">${entry.name}</div>
-          <div class="score">${entry.score}</div>
-        `;
+                    ${index >= 3 ? `<div class="rank">${index + 1}</div>` : ""}
+                    <div class="avatar"></div>
+                    <div class="name">${entry.name}</div>
+                    <div class="score">${entry.score}</div>
+                `;
                 if (index < 3) {
                     topPlayers.appendChild(playerDiv);
                 } else {
