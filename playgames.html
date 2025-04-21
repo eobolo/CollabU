@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDS - Leaderboard & Play</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Leaderboard Section */
+        .leaderboard-view {
+            display: block;
+            background: linear-gradient(to bottom, #ffd700, #fff);
+        }
+
+        .leaderboard-view.hidden {
+            display: none;
+        }
+
+        .header-section {
+            width: 100%;
+            background: #ffd700;
+            padding: 20px;
+            text-align: center;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        .header-section .words-branding {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .header-section .words-branding span {
+            background-color: #40e0d0;
+            color: white;
+            padding: 5px 10px;
+            margin: 0 2px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-section .words-branding span:nth-child(2),
+        .header-section .words-branding span:nth-child(4) {
+            background-color: #ff4500;
+        }
+
+        .header-section h1 {
+            font-size: 24px;
+            color: black;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .rankings-section {
+            position: relative;
+            width: 100%;
+            background-color: #ffd700;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .rankings-section .top-players {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .rankings-section .player {
+            text-align: center;
+        }
+
+        .rankings-section .player .avatar {
+            width: 80px;
+            height: 100px;
+            background-color: #f0f0f0;
+            border-radius: 30px;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .rankings-section .top-players .player:nth-child(2) .avatar {
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 10px #ffd700;
+        }
+
+        .rankings-section .player .name {
+            font-size: 14px;
+            color: black;
+        }
+
+        .rankings-section .player .score {
+            font-size: 12px;
+            color: black;
+        }
+
+        .rankings-section .other-players {
+            width: 100%;
+            max-height: 150px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .rankings-section .other-players::-webkit-scrollbar {
+            display: none;
+        }
+
+        .rankings-section .other-players .player {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .rankings-section .other-players .player .rank {
+            width: 30px;
+            height: 30px;
+            background-color: #ffcc00;
+            color: black;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .rankings-section .other-players .player .avatar {
+            width: 50px;
+            height: 60px;
+            border-radius: 20px;
+        }
+
+        .navigation-section {
+            width: 100%;
+            background-color: white;
+            padding: 0px 0px 20px 0px;
+            display: flex;
+            flex-direction: column-reverse;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .navigation-section .nav-btn {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .navigation-section .play-btn {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+            cursor: pointer;
+        }
+
+        .nav-selection {
+            width: inherit;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        /* Shape Divider Curve */
+        .custom-shape-divider-top-1745246323 {
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            padding-bottom: 20px;
+        }
+
+        .custom-shape-divider-top-1745246323 svg {
+            width: 100%;
+            height: 82px;
+        }
+
+        .custom-shape-divider-top-1745246323 .shape-fill {
+            fill: #ffd700;
+        }
+
+        /* Play Section */
+        .play-view {
+            display: none;
+            background: linear-gradient(to bottom, #ffd700, #fff);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .play-view.active {
+            display: block;
+        }
+
+        .play-header {
+            width: 100%;
+            background: #ffd700;
+            padding: 20px;
+            position: relative;
+        }
+
+        .play-header .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .play-header .nav-bar .back-btn {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .play-header .nav-bar .score {
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .play-header .word-slots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .play-header .word-slot {
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: black;
+            min-width: 60px;
+            text-align: center;
+            min-height: 30px;
+            /* Ensure consistent height for empty slots */
+        }
+
+        .play-header .word-slot.filled {
+            background-color: #d3d3d3;
+        }
+
+        .play-header .timer {
+            position: fixed;
+            left: 46%;
+            /* right: 50%; */
+            /* margin: 0px auto; */
+            bottom: 50%;
+            background: #dfdfdf;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
+            border-radius: 5px;
+            width: 70px;
+        }
+
+
+        .main-section {
+            width: 100%;
+            background-color: white;
+            padding: 0px 0px 20px 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            background-color: white;
+        }
+
+        .current-word {
+            font-size: 48px;
+            font-weight: bold;
+            color: black;
+            margin-bottom: 20px;
+        }
+
+        .letter-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .letter-tile {
+            width: 50px;
+            height: 50px;
+            background-color: #e0e0e0;
+            border: 1px solid black;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .letter-tile.used {
+            background-color: #ff4500;
+        }
+
+        .letter-tile.used-alt {
+            background-color: #f5deb3;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        .action-btn {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Leaderboard View -->
+        <div class="leaderboard-view" id="leaderboard-view">
+            <div class="header-section">
+                <div class="words-branding">
+                    <span>W</span><span>O</span><span>R</span><span>D</span><span>S</span>
+                </div>
+                <h1>Leaderboard</h1>
+            </div>
+
+            <div class="rankings-section">
+                <div class="top-players" id="top-players">
+                    <div class="player">
+                        <div class="avatar"></div>
+                        <div class="name">Kaltisfer</div>
+                        <div class="score">3412</div>
+                    </div>
+                    <div class="player">
+                        <div class="avatar"></div>
+                        <div class="name">Romanzks</div>
+                        <div class="score">3808</div>
+                    </div>
+                    <div class="player">
+                        <div class="avatar"></div>
+                        <div class="name">St_Lvami</div>
+                        <div class="score">3407</div>
+                    </div>
+                </div>
+                <div class="other-players" id="other-players">
+                    <div class="player">
+                        <div class="rank">4</div>
+                        <div class="avatar"></div>
+                        <div class="name">Rigelkastor</div>
+                        <div class="score">3392</div>
+                    </div>
+                    <div class="player">
+                        <div class="rank">5</div>
+                        <div class="avatar"></div>
+                        <div class="name">Sigurdgreen</div>
+                        <div class="score">3280</div>
+                    </div>
+                    <div class="player">
+                        <div class="rank">6</div>
+                        <div class="avatar"></div>
+                        <div class="name">Annfromspace</div>
+                        <div class="score">3006</div>
+                    </div>
+                    <div class="player">
+                        <div class="rank">7</div>
+                        <div class="avatar"></div>
+                        <div class="name">Ishuyalkhow</div>
+                        <div class="score">2952</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="navigation-section">
+                <div class="nav-selection">
+                    <div class="nav-btn">←</div>
+                    <div class="play-btn" onclick="startGame()">PLAY</div>
+                    <div class="nav-btn">≡</div>
+                </div>
+                <div class="custom-shape-divider-top-1745246323">
+                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+                        preserveAspectRatio="none">
+                        <path d="M0,0V7.23C0,65.52,268.63,112.77,600,112.77S1200,65.52,1200,7.23V0Z" class="shape-fill">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Play View -->
+        <div class="play-view" id="play-view">
+            <div class="play-header">
+                <div class="nav-bar">
+                    <div class="back-btn" onclick="endGame()">←</div>
+                    <div class="score" id="play-score">Total 0</div>
+                </div>
+                <div class="word-slots" id="word-slots"></div>
+                <div class="timer" id="timer">04:00</div>
+            </div>
+
+            <!-- <div class="custom-shape-divider-top-1745246323">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M0,0V7.23C0,65.52,268.63,112.77,600,112.77S1200,65.52,1200,7.23V0Z" class="shape-fill"></path>
+        </svg>
+      </div> -->
+
+            <div class="main-section">
+                <div class="custom-shape-divider-top-1745246323">
+                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+                        preserveAspectRatio="none">
+                        <path d="M0,0V7.23C0,65.52,268.63,112.77,600,112.77S1200,65.52,1200,7.23V0Z" class="shape-fill">
+                        </path>
+                    </svg>
+                </div>
+                <div class="current-word" id="current-word"></div>
+                <div class="letter-grid" id="letter-grid"></div>
+                <div class="action-buttons">
+                    <div class="action-btn hint-btn" onclick="shuffleLetters()">💡</div>
+                    <div class="action-btn submit-btn" onclick="submitWord()">↑</div>
+                    <div class="action-btn clear-btn" onclick="clearWord()">✖</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Leaderboard Data
+        let leaderboard = [
+            { name: "Romanzks", score: 3808 },
+            { name: "Kaltisfer", score: 3412 },
+            { name: "St_Lvami", score: 3407 },
+            { name: "Rigelkastor", score: 3392 },
+            { name: "Sigurdgreen", score: 3280 },
+            { name: "Annfromspace", score: 3006 },
+            { name: "Ishuyalkhow", score: 2952 }
+        ];
+
+        // Game State
+        let currentWord = "";
+        let score = 0;
+        let multiplier = 1;
+        let streak = 0;
+        let timeLeft = 240; // 4 minutes in seconds
+        let timerInterval = null;
+        let targetWords = [];
+        let letters = [];
+        let completedWords = [];
+        let filledSlots = []; // Track which slots are filled
+
+        // Word Sets (7 sets, each with 6 target words)
+        const wordSets = [
+            {
+                targetWords: ["STAR", "ARTS", "RATS", "TAR", "SAT", "ART"],
+                letters: ["S", "T", "A", "R", "T", "S", "A", "R", "T", "S"]
+            },
+            {
+                targetWords: ["PLAY", "LAY", "PAY", "ALP", "LAP", "YAP"],
+                letters: ["P", "L", "A", "Y", "A", "P", "L", "A", "Y", "P"]
+            },
+            {
+                targetWords: ["CANE", "ACNE", "ACE", "CAN", "ANE", "NAE"],
+                letters: ["C", "A", "N", "E", "A", "C", "N", "E", "A", "E"]
+            },
+            {
+                targetWords: ["BIRD", "DRIB", "BID", "RID", "RIB", "DIB"],
+                letters: ["B", "I", "R", "D", "R", "I", "B", "D", "I", "R"]
+            },
+            {
+                targetWords: ["FUSE", "FEUS", "USE", "SUE", "FEU", "EFS"],
+                letters: ["F", "U", "S", "E", "F", "E", "U", "S", "E", "F"]
+            },
+            {
+                targetWords: ["MATE", "TEAM", "MEAT", "TAME", "ATE", "MET"],
+                letters: ["M", "A", "T", "E", "T", "A", "M", "E", "A", "T"]
+            },
+            {
+                targetWords: ["GLOW", "LOW", "OWL", "LOG", "WOG", "GO"],
+                letters: ["G", "L", "O", "W", "O", "G", "L", "W", "O", "G"]
+            }
+        ];
+
+        let currentSetIndex = 0;
+
+        // DOM Elements
+        const leaderboardView = document.getElementById("leaderboard-view");
+        const playView = document.getElementById("play-view");
+        const playScore = document.getElementById("play-score");
+        const currentWordElement = document.getElementById("current-word");
+        const letterGrid = document.getElementById("letter-grid");
+        const wordSlots = document.getElementById("word-slots");
+        const timerElement = document.getElementById("timer");
+        const topPlayers = document.getElementById("top-players");
+        const otherPlayers = document.getElementById("other-players");
+
+        // Start Game
+        function startGame() {
+            leaderboardView.classList.add("hidden");
+            playView.classList.add("active");
+
+            // Reset game state
+            score = 0;
+            multiplier = 1;
+            streak = 0;
+            timeLeft = 240;
+            currentWord = "";
+            currentSetIndex = Math.floor(Math.random() * wordSets.length);
+            targetWords = [...wordSets[currentSetIndex].targetWords];
+            letters = [...wordSets[currentSetIndex].letters];
+            completedWords = [];
+            filledSlots = new Array(targetWords.length).fill(false); // Track filled slots
+
+            // Update UI
+            playScore.textContent = `Total ${score}`;
+            currentWordElement.textContent = currentWord;
+            updateWordSlots();
+            renderLetterGrid();
+
+            // Start timer
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Update Timer
+        function updateTimer() {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                endGame();
+                return;
+            }
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        }
+
+        // Update Word Slots
+        function updateWordSlots() {
+            wordSlots.innerHTML = "";
+            for (let i = 0; i < targetWords.length; i++) {
+                const slot = document.createElement("div");
+                slot.classList.add("word-slot");
+                slot.setAttribute("data-index", i);
+                if (filledSlots[i]) {
+                    slot.classList.add("filled");
+                    slot.textContent = completedWords.find(word => slot.textContent === word || slot.textContent === "") || "";
+                } else {
+                    slot.textContent = ""; // Initially empty
+                }
+                wordSlots.appendChild(slot);
+            }
+        }
+
+        // Render Letter Grid
+        function renderLetterGrid() {
+            letterGrid.innerHTML = "";
+            letters.forEach((letter, index) => {
+                const tile = document.createElement("div");
+                tile.classList.add("letter-tile");
+                tile.setAttribute("data-letter", letter);
+                tile.setAttribute("data-index", index);
+                tile.textContent = letter;
+                tile.addEventListener("click", () => {
+                    currentWord += letter;
+                    currentWordElement.textContent = currentWord;
+                    tile.classList.add(index % 2 === 0 ? "used" : "used-alt");
+                });
+                letterGrid.appendChild(tile);
+            });
+        }
+
+        // Submit Word
+        function submitWord() {
+            if (targetWords.includes(currentWord) && !completedWords.includes(currentWord)) {
+                completedWords.push(currentWord);
+                streak++;
+                multiplier = 1 + Math.floor(streak / 3) * 0.5;
+                score += 10 * multiplier;
+                playScore.textContent = `Total ${score}`;
+
+                // Randomly select an empty slot to fill
+                let emptySlots = [];
+                filledSlots.forEach((filled, index) => {
+                    if (!filled) emptySlots.push(index);
+                });
+
+                if (emptySlots.length > 0) {
+                    const randomIndex = emptySlots[Math.floor(Math.random() * emptySlots.length)];
+                    filledSlots[randomIndex] = true;
+                    const slot = wordSlots.children[randomIndex];
+                    slot.textContent = currentWord;
+                    slot.classList.add("filled");
+                }
+
+                clearWord();
+
+                if (completedWords.length === targetWords.length) {
+                    endGame();
+                }
+            } else {
+                alert("Incorrect or already used word! Try again.");
+                streak = 0;
+                multiplier = 1;
+                clearWord();
+            }
+        }
+
+        // Clear Word
+        function clearWord() {
+            currentWord = "";
+            currentWordElement.textContent = currentWord;
+            const tiles = document.querySelectorAll(".letter-tile");
+            tiles.forEach(tile => {
+                tile.classList.remove("used", "used-alt");
+            });
+        }
+
+        // Shuffle Letters (Hint)
+        function shuffleLetters() {
+            letters = letters.sort(() => Math.random() - 0.5);
+            renderLetterGrid();
+        }
+
+        // End Game
+        function endGame() {
+            clearInterval(timerInterval);
+            leaderboardView.classList.remove("hidden");
+            playView.classList.remove("active");
+
+            // Update Leaderboard
+            leaderboard.push({ name: "Player", score: score });
+            leaderboard.sort((a, b) => b.score - a.score);
+            if (leaderboard.length > 7) leaderboard.pop();
+
+            // Update Leaderboard UI
+            topPlayers.innerHTML = "";
+            otherPlayers.innerHTML = "";
+            leaderboard.forEach((entry, index) => {
+                const playerDiv = document.createElement("div");
+                playerDiv.classList.add("player");
+                playerDiv.innerHTML = `
+          ${index >= 3 ? `<div class="rank">${index + 1}</div>` : ""}
+          <div class="avatar"></div>
+          <div class="name">${entry.name}</div>
+          <div class="score">${entry.score}</div>
+        `;
+                if (index < 3) {
+                    topPlayers.appendChild(playerDiv);
+                } else {
+                    otherPlayers.appendChild(playerDiv);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
