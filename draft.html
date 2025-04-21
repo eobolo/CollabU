@@ -4,20 +4,141 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Share</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Reset default margins and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 448px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 24px;
+        }
+
+        /* Snackbar */
+        .snackbar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 1000; /* Ensure it appears above other elements */
+            min-width: 200px; /* Ensure visibility on smaller screens */
+        }
+
+        .snackbar.show {
+            opacity: 1;
+        }
+
+        .snackbar-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+        }
+
+        .snackbar-close:hover {
+            color: #e5e7eb;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .navigation h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-button-upload {
+            color: #2563eb;
+            font-weight: 600;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-button {
+            color: #4b5563;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-button:hover {
+            color: #2563eb;
+        }
+
+        /* Upload Section */
+        .view {
+            display: block;
+        }
+
+        .view.hidden {
+            display: none;
+        }
+
+        .upload-section h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .upload-section p {
+            color: #4b5563;
+            margin-bottom: 16px;
+        }
+
         .image-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 10px;
             max-width: 100%;
+            margin-bottom: 16px;
         }
-        .image-grid img, .image-grid .add-button {
+
+        .image-grid img,
+        .image-grid .add-button {
             width: 100%;
             height: 150px;
             object-fit: cover;
             border-radius: 8px;
         }
+
         .add-button {
             display: flex;
             align-items: center;
@@ -27,9 +148,30 @@
             cursor: pointer;
             font-size: 16px;
         }
+
         .add-button:hover {
             background-color: #d1d5db;
         }
+
+        .tags-section {
+            margin-bottom: 16px;
+        }
+
+        .tags-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .tags-header label {
+            font-weight: 600;
+        }
+
+        .tags-header span {
+            color: #4b5563;
+        }
+
         .tag-input {
             display: flex;
             flex-wrap: wrap;
@@ -41,6 +183,7 @@
             background-color: white;
             cursor: text;
         }
+
         .tag-input .tag {
             background-color: #e5e7eb;
             border-radius: 9999px;
@@ -49,10 +192,18 @@
             display: inline-flex;
             align-items: center;
         }
+
         .tag-input .tag .remove-tag {
             margin-left: 4px;
             cursor: pointer;
         }
+
+        .default-tags {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
         .default-tag {
             cursor: pointer;
             background-color: #f3f4f6;
@@ -61,104 +212,221 @@
             margin: 2px;
             display: inline-block;
         }
+
         .default-tag:hover {
             background-color: #e5e7eb;
         }
-        .draft-box, .shared-box {
+
+        /* Actions */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .save-draft-button {
+            color: #4b5563;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .save-draft-button:hover {
+            color: #2563eb;
+        }
+
+        .action-buttons-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .draft-date {
+            color: #4b5563;
+        }
+
+        .share-button {
+            background-color: #2563eb;
+            color: white;
+            padding-left: 16px;
+            padding-right: 16px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Drafts Section */
+        .drafts-section h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .drafts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .draft-box,
+        .shared-box {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 16px;
+            padding: 8px;
+            border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        .draft-box:hover, .shared-box:hover {
+
+        .draft-box:hover,
+        .shared-box:hover {
             background-color: #f3f4f6;
         }
-        .success-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #10b981;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            opacity: 0;
-            transition: opacity 0.3s;
+
+        .draft-box .image-grid,
+        .shared-box .image-grid {
+            margin-bottom: 8px;
         }
-        .success-message.show {
-            opacity: 1;
+
+        .draft-box .draft-header,
+        .shared-box .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
         }
-        .draft-box .tag, .shared-box .tag {
-            margin: 4px; /* Even spacing for tags in Drafts and Shared sections */
+
+        .draft-box .draft-header h3,
+        .shared-box .post-header h3 {
+            font-weight: 600;
+        }
+
+        .draft-box .draft-header span,
+        .shared-box .post-header span {
+            color: #4b5563;
+            font-size: 14px;
+        }
+
+        .draft-box .tags,
+        .shared-box .tags {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .draft-box .tag,
+        .shared-box .tag {
+            margin: 4px;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            padding: 4px 8px;
+        }
+
+        .back-to-upload-button {
+            margin-top: 16px;
+            color: #2563eb;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Shared Section */
+        .shared-section h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .shared-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 500px;
+            overflow-y: auto;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex justify-center items-start p-4">
-    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
-        <!-- Success Message -->
-        <div id="success-message" class="success-message">Draft saved!</div>
+<body>
+    <div class="container">
+        <!-- Snackbar -->
+        <div id="snackbar" class="snackbar">
+            <span>Draft saved!</span>
+            <button class="snackbar-close">×</button>
+        </div>
 
         <!-- Navigation -->
-        <div class="flex justify-between mb-4">
-            <h1 class="text-2xl font-bold">Design Share</h1>
-            <div class="flex space-x-2">
-                <button id="upload-btn" class="text-blue-600 font-semibold">Upload</button>
-                <button id="drafts-btn" class="text-gray-600 hover:text-blue-600">Drafts</button>
-                <button id="shared-btn" class="text-gray-600 hover:text-blue-600">Shared</button>
+        <div class="navigation">
+            <h1>Design Share</h1>
+            <div class="nav-buttons">
+                <button id="upload-btn" class="nav-button-upload">Upload</button>
+                <button id="drafts-btn" class="nav-button">Drafts</button>
+                <button id="shared-btn" class="nav-button">Shared</button>
             </div>
         </div>
 
         <!-- Upload Section -->
         <div id="upload-view" class="view">
-            <h2 class="text-lg font-semibold mb-4">Share your work</h2>
-            <p class="text-gray-600 mb-4">What have you been working on?</p>
+            <div class="upload-section">
+                <h2>Share your work</h2>
+                <p>What have you been working on?</p>
 
-            <!-- Image Grid -->
-            <div id="image-grid" class="image-grid mb-4">
-                <div id="add-image-btn" class="add-button">+ Add another</div>
-            </div>
-            <input type="file" id="image-input" accept="image/*" class="hidden" multiple>
-
-            <!-- Tags Section -->
-            <div class="mb-4">
-                <div class="flex justify-between items-center mb-2">
-                    <label class="font-semibold">Add tags</label>
-                    <span id="tag-counter" class="text-gray-600">10 tags remaining</span>
+                <!-- Image Grid -->
+                <div id="image-grid" class="image-grid">
+                    <div id="add-image-btn" class="add-button">+ Add another</div>
                 </div>
-                <!-- Custom Tag Input Simulation -->
-                <div id="tag-input" class="tag-input" contenteditable="true"></div>
-                <!-- Default Tags -->
-                <div class="flex flex-wrap mt-2">
-                    <span class="default-tag" data-tag="Web Design">Web Design</span>
-                    <span class="default-tag" data-tag="Website Design">Website Design</span>
-                    <span class="default-tag" data-tag="Webflow">Webflow</span>
-                    <span class="default-tag" data-tag="UI">UI</span>
-                    <span class="default-tag" data-tag="UX">UX</span>
-                    <span class="default-tag" data-tag="UI Design">UI Design</span>
-                    <span class="default-tag" data-tag="UX Design">UX Design</span>
-                    <span class="default-tag" data-tag="Team Page">Team Page</span>
-                    <span class="default-tag" data-tag="About Us">About Us</span>
-                </div>
-            </div>
+                <input type="file" id="image-input" accept="image/*" class="view hidden" multiple>
 
-            <!-- Actions -->
-            <div class="flex justify-between items-center">
-                <button id="save-draft-btn" class="text-gray-600 hover:text-blue-600">Save as draft</button>
-                <div class="flex items-center space-x-2">
-                    <span id="draft-date" class="text-gray-600"></span>
-                    <button id="share-btn" class="bg-blue-600 text-white px-4 py-2 rounded">Share now</button>
+                <!-- Tags Section -->
+                <div class="tags-section">
+                    <div class="tags-header">
+                        <label>Add tags</label>
+                        <span id="tag-counter">10 tags remaining</span>
+                    </div>
+                    <!-- Custom Tag Input Simulation -->
+                    <div id="tag-input" class="tag-input" contenteditable="true"></div>
+                    <!-- Default Tags -->
+                    <div class="default-tags">
+                        <span class="default-tag" data-tag="Web Design">Web Design</span>
+                        <span class="default-tag" data-tag="Website Design">Website Design</span>
+                        <span class="default-tag" data-tag="Webflow">Webflow</span>
+                        <span class="default-tag" data-tag="UI">UI</span>
+                        <span class="default-tag" data-tag="UX">UX</span>
+                        <span class="default-tag" data-tag="UI Design">UI Design</span>
+                        <span class="default-tag" data-tag="UX Design">UX Design</span>
+                        <span class="default-tag" data-tag="Team Page">Team Page</span>
+                        <span class="default-tag" data-tag="About Us">About Us</span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="action-buttons">
+                    <button id="save-draft-btn" class="save-draft-button">Save as draft</button>
+                    <div class="action-buttons-right">
+                        <span id="draft-date" class="draft-date"></span>
+                        <button id="share-btn" class="share-button">Share now</button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Drafts Section -->
         <div id="drafts-view" class="view hidden">
-            <h2 class="text-lg font-semibold mb-4">Drafts</h2>
-            <div id="drafts-list" class="space-y-4 max-h-[500px] overflow-y-auto"></div>
-            <button id="back-to-upload-btn" class="mt-4 text-blue-600">Back to Upload</button>
+            <div class="drafts-section">
+                <h2>Drafts</h2>
+                <div id="drafts-list" class="drafts-list"></div>
+                <button id="back-to-upload-btn" class="back-to-upload-button">Back to Upload</button>
+            </div>
         </div>
 
         <!-- Shared Section -->
         <div id="shared-view" class="view hidden">
-            <h2 class="text-lg font-semibold mb-4">Shared Posts</h2>
-            <div id="shared-list" class="space-y-4 max-h-[500px] overflow-y-auto"></div>
+            <div class="shared-section">
+                <h2>Shared Posts</h2>
+                <div id="shared-list" class="shared-list"></div>
+            </div>
         </div>
     </div>
 
@@ -181,13 +449,15 @@
         const draftsList = document.getElementById('drafts-list');
         const backToUploadBtn = document.getElementById('back-to-upload-btn');
         const sharedList = document.getElementById('shared-list');
-        const successMessage = document.getElementById('success-message');
+        const snackbar = document.getElementById('snackbar');
+        const snackbarClose = document.querySelector('.snackbar-close');
 
         // State
         let uploadedImages = [];
         let tags = [];
         let drafts = JSON.parse(localStorage.getItem('drafts')) || [];
         let sharedPosts = JSON.parse(localStorage.getItem('sharedPosts')) || [];
+        let snackbarTimeout;
 
         // Navigation
         function showView(view) {
@@ -352,6 +622,29 @@
             tagCounter.textContent = `${remaining} tags remaining`;
         }
 
+        // Show Snackbar
+        function showSnackbar() {
+            // Clear any existing timeout to prevent multiple timers
+            if (snackbarTimeout) {
+                clearTimeout(snackbarTimeout);
+            }
+            snackbar.classList.add('show');
+            // Ensure the snackbar is in view
+            snackbar.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            // Auto-hide after 2 seconds
+            snackbarTimeout = setTimeout(() => {
+                snackbar.classList.remove('show');
+            }, 2000);
+        }
+
+        // Hide Snackbar when close button is clicked
+        snackbarClose.addEventListener('click', () => {
+            snackbar.classList.remove('show');
+            if (snackbarTimeout) {
+                clearTimeout(snackbarTimeout);
+            }
+        });
+
         // Save as Draft
         saveDraftBtn.addEventListener('click', () => {
             if (uploadedImages.length === 0) {
@@ -377,13 +670,10 @@
             drafts.push(newDraft);
             localStorage.setItem('drafts', JSON.stringify(drafts));
             draftDate.textContent = date;
-            // Show success message
-            successMessage.classList.add('show');
-            setTimeout(() => {
-                successMessage.classList.remove('show');
-            }, 2000);
+            // Show snackbar
+            showSnackbar();
             resetUploadSection();
-            renderDrafts(); // Update drafts display immediately
+            renderDrafts();
         });
 
         // Share Now
@@ -417,14 +707,14 @@
             draftsList.innerHTML = '';
             drafts.forEach((draft, index) => {
                 const draftElement = document.createElement('div');
-                draftElement.className = 'draft-box border-b pb-4 p-2 rounded';
+                draftElement.className = 'draft-box';
                 draftElement.innerHTML = `
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-semibold">${draft.name}</h3>
-                        <span class="text-gray-600 text-sm">${draft.date}</span>
+                    <div class="draft-header">
+                        <h3>${draft.name}</h3>
+                        <span>${draft.date}</span>
                     </div>
-                    <div class="image-grid mb-2"></div>
-                    <div class="flex flex-wrap">
+                    <div class="image-grid"></div>
+                    <div class="tags">
                         ${draft.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                     </div>
                 `;
@@ -452,14 +742,14 @@
             sharedList.innerHTML = '';
             sharedPosts.forEach((post, index) => {
                 const postElement = document.createElement('div');
-                postElement.className = 'shared-box border-b pb-4 p-2 rounded';
+                postElement.className = 'shared-box';
                 postElement.innerHTML = `
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-semibold">Shared Post ${index + 1}</h3>
-                        <span class="text-gray-600 text-sm">${post.date}</span>
+                    <div class="post-header">
+                        <h3>Shared Post ${index + 1}</h3>
+                        <span>${post.date}</span>
                     </div>
-                    <div class="image-grid mb-2"></div>
-                    <div class="flex flex-wrap">
+                    <div class="image-grid"></div>
+                    <div class="tags">
                         ${post.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                     </div>
                 `;
@@ -490,7 +780,9 @@
             tagInput.innerHTML = '';
             draftDate.textContent = '';
             updateTagCounter();
-            renderImageGrid(); // Re-add the "Add another" button
+            renderImageGrid();
+            // Scroll to the top to ensure the content starts from the beginning
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Initialize
