@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Share</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            max-width: 100%;
+        }
+        .image-grid img, .image-grid .add-button {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .add-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e5e7eb;
+            color: #2563eb;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .add-button:hover {
+            background-color: #d1d5db;
+        }
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            min-height: 40px;
+            padding: 4px 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            background-color: white;
+            cursor: text;
+        }
+        .tag-input .tag {
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            padding: 4px 8px;
+            margin: 2px;
+            display: inline-flex;
+            align-items: center;
+        }
+        .tag-input .tag .remove-tag {
+            margin-left: 4px;
+            cursor: pointer;
+        }
+        .default-tag {
+            cursor: pointer;
+            background-color: #f3f4f6;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin: 2px;
+            display: inline-block;
+        }
+        .default-tag:hover {
+            background-color: #e5e7eb;
+        }
+        .draft-box, .shared-box {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .draft-box:hover, .shared-box:hover {
+            background-color: #f3f4f6;
+        }
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .success-message.show {
+            opacity: 1;
+        }
+        .draft-box .tag, .shared-box .tag {
+            margin: 4px; /* Even spacing for tags in Drafts and Shared sections */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex justify-center items-start p-4">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
+        <!-- Success Message -->
+        <div id="success-message" class="success-message">Draft saved!</div>
+
+        <!-- Navigation -->
+        <div class="flex justify-between mb-4">
+            <h1 class="text-2xl font-bold">Design Share</h1>
+            <div class="flex space-x-2">
+                <button id="upload-btn" class="text-blue-600 font-semibold">Upload</button>
+                <button id="drafts-btn" class="text-gray-600 hover:text-blue-600">Drafts</button>
+                <button id="shared-btn" class="text-gray-600 hover:text-blue-600">Shared</button>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div id="upload-view" class="view">
+            <h2 class="text-lg font-semibold mb-4">Share your work</h2>
+            <p class="text-gray-600 mb-4">What have you been working on?</p>
+
+            <!-- Image Grid -->
+            <div id="image-grid" class="image-grid mb-4">
+                <div id="add-image-btn" class="add-button">+ Add another</div>
+            </div>
+            <input type="file" id="image-input" accept="image/*" class="hidden" multiple>
+
+            <!-- Tags Section -->
+            <div class="mb-4">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="font-semibold">Add tags</label>
+                    <span id="tag-counter" class="text-gray-600">10 tags remaining</span>
+                </div>
+                <!-- Custom Tag Input Simulation -->
+                <div id="tag-input" class="tag-input" contenteditable="true"></div>
+                <!-- Default Tags -->
+                <div class="flex flex-wrap mt-2">
+                    <span class="default-tag" data-tag="Web Design">Web Design</span>
+                    <span class="default-tag" data-tag="Website Design">Website Design</span>
+                    <span class="default-tag" data-tag="Webflow">Webflow</span>
+                    <span class="default-tag" data-tag="UI">UI</span>
+                    <span class="default-tag" data-tag="UX">UX</span>
+                    <span class="default-tag" data-tag="UI Design">UI Design</span>
+                    <span class="default-tag" data-tag="UX Design">UX Design</span>
+                    <span class="default-tag" data-tag="Team Page">Team Page</span>
+                    <span class="default-tag" data-tag="About Us">About Us</span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-between items-center">
+                <button id="save-draft-btn" class="text-gray-600 hover:text-blue-600">Save as draft</button>
+                <div class="flex items-center space-x-2">
+                    <span id="draft-date" class="text-gray-600"></span>
+                    <button id="share-btn" class="bg-blue-600 text-white px-4 py-2 rounded">Share now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drafts Section -->
+        <div id="drafts-view" class="view hidden">
+            <h2 class="text-lg font-semibold mb-4">Drafts</h2>
+            <div id="drafts-list" class="space-y-4 max-h-[500px] overflow-y-auto"></div>
+            <button id="back-to-upload-btn" class="mt-4 text-blue-600">Back to Upload</button>
+        </div>
+
+        <!-- Shared Section -->
+        <div id="shared-view" class="view hidden">
+            <h2 class="text-lg font-semibold mb-4">Shared Posts</h2>
+            <div id="shared-list" class="space-y-4 max-h-[500px] overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const uploadView = document.getElementById('upload-view');
+        const draftsView = document.getElementById('drafts-view');
+        const sharedView = document.getElementById('shared-view');
+        const uploadBtn = document.getElementById('upload-btn');
+        const draftsBtn = document.getElementById('drafts-btn');
+        const sharedBtn = document.getElementById('shared-btn');
+        const imageGrid = document.getElementById('image-grid');
+        const addImageBtn = document.getElementById('add-image-btn');
+        const imageInput = document.getElementById('image-input');
+        const tagInput = document.getElementById('tag-input');
+        const tagCounter = document.getElementById('tag-counter');
+        const saveDraftBtn = document.getElementById('save-draft-btn');
+        const draftDate = document.getElementById('draft-date');
+        const shareBtn = document.getElementById('share-btn');
+        const draftsList = document.getElementById('drafts-list');
+        const backToUploadBtn = document.getElementById('back-to-upload-btn');
+        const sharedList = document.getElementById('shared-list');
+        const successMessage = document.getElementById('success-message');
+
+        // State
+        let uploadedImages = [];
+        let tags = [];
+        let drafts = JSON.parse(localStorage.getItem('drafts')) || [];
+        let sharedPosts = JSON.parse(localStorage.getItem('sharedPosts')) || [];
+
+        // Navigation
+        function showView(view) {
+            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+            view.classList.remove('hidden');
+        }
+
+        uploadBtn.addEventListener('click', () => showView(uploadView));
+        draftsBtn.addEventListener('click', () => {
+            showView(draftsView);
+            renderDrafts();
+        });
+        sharedBtn.addEventListener('click', () => {
+            showView(sharedView);
+            renderSharedPosts();
+        });
+        backToUploadBtn.addEventListener('click', () => {
+            showView(uploadView);
+            resetUploadSection();
+        });
+
+        // Image Upload
+        addImageBtn.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    uploadedImages.push(event.target.result);
+                    renderImageGrid();
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function renderImageGrid() {
+            imageGrid.innerHTML = '';
+            uploadedImages.forEach((imgSrc, index) => {
+                const img = document.createElement('img');
+                img.src = imgSrc;
+                img.alt = `Uploaded image ${index + 1}`;
+                imageGrid.appendChild(img);
+            });
+            const addButton = document.createElement('div');
+            addButton.id = 'add-image-btn';
+            addButton.className = 'add-button';
+            addButton.textContent = '+ Add another';
+            addButton.addEventListener('click', () => imageInput.click());
+            imageGrid.appendChild(addButton);
+        }
+
+        // Tagging System
+        const defaultTags = document.querySelectorAll('.default-tag');
+        defaultTags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                const tagValue = tag.getAttribute('data-tag');
+                addTag(tagValue);
+            });
+        });
+
+        tagInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                // Extract only the last text node (the new tag being typed)
+                let newTag = '';
+                for (let node of tagInput.childNodes) {
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        const text = node.textContent.trim();
+                        if (text) {
+                            newTag = text;
+                        }
+                    }
+                }
+                if (newTag) {
+                    addTag(newTag);
+                    // Clear only the text nodes, keeping the tag spans
+                    const children = Array.from(tagInput.childNodes);
+                    children.forEach(node => {
+                        if (node.nodeType === Node.TEXT_NODE) {
+                            tagInput.removeChild(node);
+                        }
+                    });
+                    tagInput.appendChild(document.createTextNode('\u00A0')); // Add space for typing
+                    placeCaretAtEnd(tagInput);
+                }
+            }
+        });
+
+        tagInput.addEventListener('input', () => {
+            // Remove any <div> or <br> tags that contenteditable might add
+            if (tagInput.innerHTML.includes('<div>') || tagInput.innerHTML.includes('<br>')) {
+                const children = Array.from(tagInput.childNodes);
+                let newText = '';
+                children.forEach(node => {
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        const text = node.textContent.trim();
+                        if (text) {
+                            newText = text;
+                        }
+                    }
+                });
+                tagInput.innerHTML = '';
+                tags.forEach(tag => {
+                    const tagElement = document.createElement('span');
+                    tagElement.className = 'tag';
+                    tagElement.innerHTML = `${tag} <span class="remove-tag">✕</span>`;
+                    tagElement.querySelector('.remove-tag').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        removeTag(tag);
+                    });
+                    tagInput.appendChild(tagElement);
+                });
+                tagInput.appendChild(document.createTextNode(newText || '\u00A0'));
+                placeCaretAtEnd(tagInput);
+            }
+        });
+
+        tagInput.addEventListener('click', () => {
+            placeCaretAtEnd(tagInput);
+        });
+
+        function placeCaretAtEnd(el) {
+            const range = document.createRange();
+            const sel = window.getSelection();
+            range.selectNodeContents(el);
+            range.collapse(false);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+
+        function addTag(tagValue) {
+            if (tags.length >= 10 || tags.includes(tagValue)) return;
+            tags.push(tagValue);
+            updateTagCounter();
+            renderTags();
+        }
+
+        function removeTag(tagValue) {
+            tags = tags.filter(tag => tag !== tagValue);
+            updateTagCounter();
+            renderTags();
+        }
+
+        function renderTags() {
+            tagInput.innerHTML = '';
+            tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `${tag} <span class="remove-tag">✕</span>`;
+                tagElement.querySelector('.remove-tag').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    removeTag(tag);
+                });
+                tagInput.appendChild(tagElement);
+            });
+            tagInput.appendChild(document.createTextNode('\u00A0')); // Add space for typing
+            placeCaretAtEnd(tagInput);
+        }
+
+        function updateTagCounter() {
+            const remaining = 10 - tags.length;
+            tagCounter.textContent = `${remaining} tags remaining`;
+        }
+
+        // Save as Draft
+        saveDraftBtn.addEventListener('click', () => {
+            if (uploadedImages.length === 0) {
+                alert('Please upload at least one image before saving as a draft.');
+                return;
+            }
+            const draftName = prompt('Enter a name for this draft:');
+            if (!draftName) return;
+            const date = new Date().toLocaleString('en-US', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true
+            });
+            const newDraft = {
+                name: draftName,
+                images: uploadedImages,
+                tags: tags,
+                date: date
+            };
+            drafts.push(newDraft);
+            localStorage.setItem('drafts', JSON.stringify(drafts));
+            draftDate.textContent = date;
+            // Show success message
+            successMessage.classList.add('show');
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 2000);
+            resetUploadSection();
+            renderDrafts(); // Update drafts display immediately
+        });
+
+        // Share Now
+        shareBtn.addEventListener('click', () => {
+            if (uploadedImages.length === 0) {
+                alert('Please upload at least one image before sharing.');
+                return;
+            }
+            const date = new Date().toLocaleString('en-US', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true
+            });
+            const newPost = {
+                images: uploadedImages,
+                tags: tags,
+                date: date
+            };
+            sharedPosts.push(newPost);
+            localStorage.setItem('sharedPosts', JSON.stringify(sharedPosts));
+            resetUploadSection();
+            showView(sharedView);
+            renderSharedPosts();
+        });
+
+        // Render Drafts
+        function renderDrafts() {
+            draftsList.innerHTML = '';
+            drafts.forEach((draft, index) => {
+                const draftElement = document.createElement('div');
+                draftElement.className = 'draft-box border-b pb-4 p-2 rounded';
+                draftElement.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-semibold">${draft.name}</h3>
+                        <span class="text-gray-600 text-sm">${draft.date}</span>
+                    </div>
+                    <div class="image-grid mb-2"></div>
+                    <div class="flex flex-wrap">
+                        ${draft.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+                const draftImageGrid = draftElement.querySelector('.image-grid');
+                draft.images.forEach(imgSrc => {
+                    const img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.alt = 'Draft image';
+                    draftImageGrid.appendChild(img);
+                });
+                draftElement.addEventListener('click', () => {
+                    uploadedImages = draft.images;
+                    tags = draft.tags;
+                    showView(uploadView);
+                    renderImageGrid();
+                    renderTags();
+                    updateTagCounter();
+                });
+                draftsList.appendChild(draftElement);
+            });
+        }
+
+        // Render Shared Posts
+        function renderSharedPosts() {
+            sharedList.innerHTML = '';
+            sharedPosts.forEach((post, index) => {
+                const postElement = document.createElement('div');
+                postElement.className = 'shared-box border-b pb-4 p-2 rounded';
+                postElement.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-semibold">Shared Post ${index + 1}</h3>
+                        <span class="text-gray-600 text-sm">${post.date}</span>
+                    </div>
+                    <div class="image-grid mb-2"></div>
+                    <div class="flex flex-wrap">
+                        ${post.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+                const postImageGrid = postElement.querySelector('.image-grid');
+                post.images.forEach(imgSrc => {
+                    const img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.alt = 'Shared image';
+                    postImageGrid.appendChild(img);
+                });
+                postElement.addEventListener('click', () => {
+                    uploadedImages = post.images;
+                    tags = post.tags;
+                    showView(uploadView);
+                    renderImageGrid();
+                    renderTags();
+                    updateTagCounter();
+                });
+                sharedList.appendChild(postElement);
+            });
+        }
+
+        // Reset Upload Section
+        function resetUploadSection() {
+            uploadedImages = [];
+            tags = [];
+            imageGrid.innerHTML = '';
+            tagInput.innerHTML = '';
+            draftDate.textContent = '';
+            updateTagCounter();
+            renderImageGrid(); // Re-add the "Add another" button
+        }
+
+        // Initialize
+        updateTagCounter();
+        renderDrafts();
+        renderSharedPosts();
+        renderImageGrid();
+    </script>
+</body>
+</html>
