@@ -138,11 +138,12 @@
 
         .copy-btn {
             position: absolute;
-            right: 4px;
-            top: 50%;
+            right: 1%;
+            top: 52%;
             transform: translateY(-50%);
-            background: none;
-            border: none;
+            background: #333;
+            border-left: 1px solid #444;
+            border-radius: 0 4px 4px 0;
             color: #666;
             cursor: pointer;
             padding: 4px 8px;
@@ -230,9 +231,15 @@
         /* Color Values */
         .color-values {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             gap: 12px;
             margin-top: 8px;
+        }
+
+        .color-labels {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .color-preview {
@@ -325,19 +332,27 @@
         }
 
         .input-with-unit {
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 4px;
+        }
+
+        .input-with-unit .unit {
+            position: absolute;
+            right: 30%;
+            color: #666;
+            pointer-events: none;
+            font-size: 12px;
         }
 
         .number-input {
-            width: 60px;
+            width: 72px;
             background: #333;
             border: none;
             color: white;
-            padding: 6px;
+            padding: 6px 0px 6px 15px;
             border-radius: 4px;
-            text-align: center;
+            text-align: left;
         }
 
         .unit {
@@ -353,6 +368,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-top: 16px;
             margin-bottom: 12px;
         }
 
@@ -402,13 +418,11 @@
 
         .color-palette {
             height: 100px;
-            /* Give the palette a visible height */
             border-radius: 4px;
         }
 
         .gradient {
             height: 50px;
-            /* Give the gradient section a visible height */
             border-radius: 4px;
         }
 
@@ -420,8 +434,27 @@
         .example-use-box {
             flex: 1;
             height: 50px;
-            /* Give each box a visible height */
             border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column-reverse;
+                gap: 16px;
+            }
+
+            .palette-panel,
+            .color-picker-panel {
+                min-width: 100%;
+            }
+
+            .palette-sections {
+                flex-direction: column;
+            }
+
+            .palette-section {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -441,9 +474,6 @@
                     <div class="palette-section">
                         <div class="section-header">
                             <h3>Full Palette</h3>
-                            <div class="section-controls">
-                                <button class="icon-btn shuffle-btn"></button>
-                            </div>
                         </div>
                         <div class="color-palette" id="fullPalette"></div>
 
@@ -451,10 +481,6 @@
                         <div class="section">
                             <div class="section-header">
                                 <h3>Example use</h3>
-                                <div class="section-controls">
-                                    <button class="icon-btn copy-btn"></button>
-                                    <button class="icon-btn shuffle-btn"></button>
-                                </div>
                             </div>
                             <div class="example-use" id="exampleUse"></div>
                         </div>
@@ -463,10 +489,6 @@
                         <div class="section">
                             <div class="section-header">
                                 <h3>Gradient</h3>
-                                <div class="section-controls">
-                                    <button class="icon-btn copy-btn"></button>
-                                    <button class="icon-btn shuffle-btn"></button>
-                                </div>
                             </div>
                             <div class="gradient" id="gradient"></div>
                         </div>
@@ -487,7 +509,7 @@
                             <label>Darkness</label>
                             <div class="input-with-unit">
                                 <input type="number" id="shadesDarkness" value="50" min="0" max="100"
-                                    class="number-input">
+                                    class="number-input with-unit">
                                 <span class="unit">%</span>
                             </div>
                         </div>
@@ -495,8 +517,8 @@
                         <div class="control-group">
                             <label>Hue</label>
                             <div class="input-with-unit">
-                                <button class="circular-btn" id="shadesHueButton"></button>
-                                <input type="number" id="shadesHue" value="45" min="0" max="360" class="number-input">
+                                <input type="number" id="shadesHue" value="45" min="0" max="360"
+                                    class="number-input with-unit">
                                 <span class="unit">°</span>
                             </div>
                         </div>
@@ -531,7 +553,6 @@
                         <div class="control-group">
                             <label>Hue</label>
                             <div class="input-with-unit">
-                                <button class="circular-btn minus-btn" id="tintsHueButton"></button>
                                 <input type="number" id="tintsHue" value="90" min="0" max="360" class="number-input">
                                 <span class="unit">°</span>
                             </div>
@@ -563,7 +584,6 @@
             <div class="panel-header">
                 <h2>Pattern</h2>
                 <div class="panel-header-controls">
-                    <button class="icon-btn bookmark-btn"></button>
                     <button class="close-btn">×</button>
                 </div>
             </div>
@@ -588,38 +608,39 @@
                     </div>
 
                     <div class="color-values">
-                        <div class="color-preview">
-                            <button class="eyedropper-btn" id="eyedropper"></button>
-                        </div>
-
-                        <div class="color-formats">
-                            <div class="format-tabs">
-                                <button class="format-tab active" data-format="hex">HEX</button>
-                                <button class="format-tab" data-format="rgb">RGB</button>
-                                <button class="format-tab" data-format="hsl">HSL</button>
+                        <div class="color-labels">
+                            <div class="color-preview">
+                                <button class="eyedropper-btn" id="eyedropper"></button>
                             </div>
-
-                            <div class="format-content">
-                                <div class="hex-input-container">
-                                    <input type="text" id="hexInput" value="000000" class="hex-input">
-                                    <span class="hex-prefix">#</span>
-                                    <button class="copy-btn" data-value="#000000">Copy</button>
+    
+                            <div class="color-formats">
+                                <div class="format-tabs">
+                                    <button class="format-tab active" data-format="hex">HEX</button>
+                                    <button class="format-tab" data-format="rgb">RGB</button>
+                                    <button class="format-tab" data-format="hsl">HSL</button>
                                 </div>
-
-                                <div class="rgb-input-container hidden">
-                                    <input type="text" id="rgbInput" value="rgb(0,0,0)" class="format-input" readonly>
-                                    <button class="copy-btn" data-value="rgb(0,0,0)">Copy</button>
-                                </div>
-
-                                <div class="hsl-input-container hidden">
-                                    <input type="text" id="hslInput" value="hsl(0,0%,0%)" class="format-input" readonly>
-                                    <button class="copy-btn" data-value="hsl(0,0%,0%)">Copy</button>
+    
+                                <div class="format-content">
+                                    <div class="hex-input-container">
+                                        <input type="text" id="hexInput" value="000000" class="hex-input">
+                                        <span class="hex-prefix">#</span>
+                                        <div class="copy-btn" data-value="#000000">Copy</div>
+                                    </div>
+    
+                                    <div class="rgb-input-container hidden">
+                                        <input type="text" id="rgbInput" value="rgb(0,0,0)" class="format-input" readonly>
+                                        <div class="copy-btn" data-value="rgb(0,0,0)">Copy</div>
+                                    </div>
+    
+                                    <div class="hsl-input-container hidden">
+                                        <input type="text" id="hslInput" value="hsl(0,0%,0%)" class="format-input" readonly>
+                                        <div class="copy-btn" data-value="hsl(0,0%,0%)">Copy</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="opacity-container">
-                            <input type="number" id="opacityValue" value="100" min="0" max="100" class="number-input">
+                        <div class="input-with-unit">
+                            <input type="number" id="opacityValue" value="100" min="0" max="100" class="number-input with-unit">
                             <span class="unit">%</span>
                         </div>
                     </div>
