@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll Tool Onboarding - Acme Corp</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for dropdowns */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            z-index: 10;
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown-item:hover {
+            background-color: #f3f4f6;
+        }
+        /* Error highlighting */
+        .error {
+            background-color: #fee2e2;
+        }
+        .error-indicator {
+            background-color: #ef4444;
+            color: white;
+            border-radius: 9999px;
+            width: 1.25rem;
+            height: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+        /* Style for Done button (plain text) */
+        .done-text {
+            background: none;
+            border: none;
+            padding: 0;
+            color: #4b5563; /* text-gray-600 */
+            cursor: default;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Main Container -->
+    <div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-6 pb-20">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-blue-900 text-lg font-bold mr-2">✨ Acme Corp</span>
+            </div>
+            <div class="text-gray-600 text-sm">Step 3 of 3</div>
+        </div>
+        <h1 class="text-2xl font-bold mt-4">Payroll tool connected!</h1>
+        <p class="text-gray-600 mt-2">
+            Great job. We pulled in this view only 15 main fields we need to get you started. Check if there’s any field mappings you need to fix. After that, if you need to change the again, you can always do it later in <a href="#" class="text-blue-600 hover:underline">Settings → HRIS Fields</a> :)
+        </p>
+
+        <!-- Notification Bar -->
+        <div id="notification-bar" class="mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center">
+            <span class="error-indicator mr-2">1</span>
+            <span id="notification-text">1 HRIS field doesn’t match Acme fields. Please match them to one of ours to finish the Onboarding.</span>
+        </div>
+
+        <!-- Field Mapping Table -->
+        <div class="mt-6">
+            <div class="grid grid-cols-3 gap-4 border-b border-gray-200 pb-2 mb-4">
+                <div class="font-semibold text-gray-700">HRIS fields</div>
+                <div class="font-semibold text-gray-700">Acme Corp Fields</div>
+                <div class="font-semibold text-gray-700">Example</div>
+            </div>
+            <div id="field-mappings">
+                <!-- Row 1: Name (Info Dropdown, Editable) -->
+                <div class="grid grid-cols-3 gap-4 py-2 items-center">
+                    <div class="text-gray-600">Name</div>
+                    <div class="relative">
+                        <div class="flex items-center w-full px-3 py-2 border border-gray-300 rounded-md bg-white">
+                            <input type="text" class="input-field flex-grow outline-none text-gray-700" value="">
+                            <span class="dropdown-arrow text-gray-500">▼</span>
+                        </div>
+                        <div class="dropdown-menu">
+                            <div class="px-3 py-2 text-gray-600">More info: This field can be First name, Last name, Full name, or Work name (e.g., First name)</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-600">= John</span>
+                        <span class="error-indicator-container"></span>
+                    </div>
+                </div>
+                <!-- Row 2: Legal entity (Selectable Dropdown) -->
+                <div class="grid grid-cols-3 gap-4 py-2 items-center">
+                    <div class="text-gray-600">Legal entity</div>
+                    <div class="relative">
+                        <button class="dropdown flex items-center justify-between w-full px-3 py-2 border border-gray-300 rounded-md text-left bg-white text-gray-700" data-selected="Acme Asia Pte.">
+                            <span>Acme Asia Pte.</span>
+                            <span class="dropdown-arrow text-gray-500">▼</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="—">—</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Acme USA Inc.">Acme USA Inc.</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Acme Europe Ltd.">Acme Europe Ltd.</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Acme Asia Pte.">Acme Asia Pte.</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Acme Global LLC">Acme Global LLC</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-600">= Acme, Inc.</span>
+                        <span class="error-indicator-container"></span>
+                    </div>
+                </div>
+                <!-- Row 3: Department (Selectable Dropdown) -->
+                <div class="grid grid-cols-3 gap-4 py-2 items-center">
+                    <div class="text-gray-600">Department</div>
+                    <div class="relative">
+                        <button class="dropdown flex items-center justify-between w-full px-3 py-2 border border-gray-300 rounded-md text-left bg-white text-gray-700" data-selected="Marketing">
+                            <span>Marketing</span>
+                            <span class="dropdown-arrow text-gray-500">▼</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="—">—</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Engineering">Engineering</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Marketing">Marketing</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Human Resources">Human Resources</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Finance">Finance</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Operations">Operations</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-600">= Sales</span>
+                        <span class="error-indicator-container"></span>
+                    </div>
+                </div>
+                <!-- Row 4: Job role (Selectable Dropdown) -->
+                <div class="grid grid-cols-3 gap-4 py-2 items-center">
+                    <div class="text-gray-600">Job role</div>
+                    <div class="relative">
+                        <button class="dropdown flex items-center justify-between w-full px-3 py-2 border border-gray-300 rounded-md text-left bg-white text-gray-700" data-selected="Manager">
+                            <span>Manager</span>
+                            <span class="dropdown-arrow text-gray-500">▼</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="—">—</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Manager">Manager</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Developer">Developer</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Analyst">Analyst</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-600">= —</span>
+                        <span class="error-indicator-container"></span>
+                    </div>
+                </div>
+                <!-- Row 5: Base salary (Info Dropdown, Editable) -->
+                <div class="grid grid-cols-3 gap-4 py-2 items-center">
+                    <div class="text-gray-600">Base salary</div>
+                    <div class="relative">
+                        <div class="flex items-center w-full px-3 py-2 border border-gray-300 rounded-md bg-white">
+                            <input type="text" class="input-field flex-grow outline-none text-gray-700" value="">
+                            <span class="dropdown-arrow text-gray-500">▼</span>
+                        </div>
+                        <div class="dropdown-menu">
+                            <div class="px-3 py-2 text-gray-600">More info: This field represents a continuous value (e.g., Salary)</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-600">= $125k/year</span>
+                        <span class="error-indicator-container"></span>
+                    </div>
+                </div>
+                <!-- Row 6: Variable salary (Info Dropdown, Editable) -->
+                <div class="grid grid-cols-3 gap-4 py-2 items-center">
+                    <div class="text-gray-600">Variable salary</div>
+                    <div class="relative">
+                        <div class="flex items-center w-full px-3 py-2 border border-gray-300 rounded-md bg-white">
+                            <input type="text" class="input-field flex-grow outline-none text-gray-700" value="">
+                            <span class="dropdown-arrow text-gray-500">▼</span>
+                        </div>
+                        <div class="dropdown-menu">
+                            <div class="px-3 py-2 text-gray-600">More info: This field represents a continuous value (e.g., Variable salary (yearly))</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-600">= $150/year</span>
+                        <span class="error-indicator-container"></span>
+                    </div>
+                </div>
+                <!-- Row 7: Start date (Info Dropdown, Editable) -->
+                <div class="grid grid-cols-3 gap-4 py-2 items-center">
+                    <div class="text-gray-600">Start date</div>
+                    <div class="relative">
+                        <div class="flex items-center w-full px-3 py-2 border border-gray-300 rounded-md bg-white">
+                            <input type="text" class="input-field flex-grow outline-none text-gray-700" value="">
+                            <span class="dropdown-arrow text-gray-500">▼</span>
+                        </div>
+                        <div class="dropdown-menu">
+                            <div class="px-3 py-2 text-gray-600">Expected formats: DD MMM YYYY (e.g., 01 June 2023), YYYY-MM-DD (e.g., 2023-06-01), MM/DD/YYYY (e.g., 06/01/2023), or DD/MM/YYYY (e.g., 01/06/2023)</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-600">= 01 June 2023</span>
+                        <span class="error-indicator-container"></span>
+                    </div>
+                </div>
+                <!-- Row 8: End date (Info Dropdown, Editable) -->
+                <div class="grid grid-cols-3 gap-4 py-2 items-center">
+                    <div class="text-gray-600">End date</div>
+                    <div class="relative">
+                        <div class="flex items-center w-full px-3 py-2 border border-gray-300 rounded-md bg-white">
+                            <input type="text" class="input-field flex-grow outline-none text-gray-700" value="">
+                            <span class="dropdown-arrow text-gray-500">▼</span>
+                        </div>
+                        <div class="dropdown-menu">
+                            <div class="px-3 py-2 text-gray-600">Expected formats: DD MMM YYYY (e.g., 31 Dec 2023), YYYY-MM-DD (e.g., 2023-12-31), MM/DD/YYYY (e.g., 12/31/2023), or DD/MM/YYYY (e.g., 31/12/2023)</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-600">= 31 Dec 2023</span>
+                        <span class="error-indicator-container"></span>
+                    </div>
+                </div>
+                <!-- Row 9: Placeholder (Info Dropdown, Editable) -->
+                <div class="grid grid-cols-3 gap-4 py-2 items-center">
+                    <div class="text-gray-600">Placeholder</div>
+                    <div class="relative">
+                        <div class="flex items-center w-full px-3 py-2 border border-gray-300 rounded-md bg-white">
+                            <input type="text" class="input-field flex-grow outline-none text-gray-700" value="10 Mar 2026">
+                            <span class="dropdown-arrow text-gray-500">▼</span>
+                        </div>
+                        <div class="dropdown-menu">
+                            <div class="px-3 py-2 text-gray-600">Expected formats: DD MMM YYYY (e.g., 01 June 2023), YYYY-MM-DD (e.g., 2023-06-01), MM/DD/YYYY (e.g., 06/01/2023), or DD/MM/YYYY (e.g., 01/06/2023)</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-600">= 01 June 2023</span>
+                        <span class="error-indicator-container"></span>
+                    </div>
+                </div>
+                <!-- Row 10: deel_ (Selectable Dropdown) -->
+                <div class="grid grid-cols-3 gap-4 py-2 items-center">
+                    <div class="text-gray-600">deel_</div>
+                    <div class="relative">
+                        <button class="dropdown flex items-center justify-between w-full px-3 py-2 border border-gray-300 rounded-md text-left bg-white text-gray-700" data-selected="Connected">
+                            <span>Connected</span>
+                            <span class="dropdown-arrow text-gray-500">▼</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Not connected">Not connected</div>
+                            <div class="dropdown-item px-3 py-2 cursor-pointer" data-value="Connected">Connected</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-600">= Placeholder</span>
+                        <span class="error-indicator-container"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Floating Bar -->
+    <div class="fixed bottom-2 left-1/2 transform -translate-x-1/2 w-[48rem] bg-white p-4 rounded-lg shadow-lg flex justify-between items-center">
+        <div class="flex items-center">
+            <span class="text-gray-600 mr-2">deel_ Deel</span>
+            <span id="connection-status" class="text-green-600 flex items-center">
+                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Connected
+            </span>
+        </div>
+        <div class="flex items-center">
+            <span id="footer-notification" class="text-red-700 mr-4"></span>
+            <button id="finish-btn" class="px-4 py-2 bg-gray-300 text-gray-600 rounded-md" disabled>Finish onboarding</button>
+        </div>
+    </div>
+
+    <script>
+        // Predefined Acme Corp fields for selectable dropdowns
+        const acmeFields = {
+            'Legal entity': ['—', 'Acme USA Inc.', 'Acme Europe Ltd.', 'Acme Asia Pte.', 'Acme Global LLC'],
+            'Department': ['—', 'Engineering', 'Marketing', 'Human Resources', 'Finance', 'Operations'],
+            'Job role': ['—', 'Manager', 'Developer', 'Analyst'],
+            'deel_': ['Not connected', 'Connected']
+        };
+
+        // Field mappings with expected values and validation rules
+        const fieldMappings = [
+            { hris: 'Name', acme: '', example: 'John', expectedAcme: null, type: 'info', required: true },
+            { hris: 'Legal entity', acme: 'Acme Asia Pte.', example: 'Acme, Inc.', expectedAcme: 'Acme USA Inc.', type: 'select' },
+            { hris: 'Department', acme: 'Marketing', example: 'Sales', expectedAcme: 'Engineering', type: 'select' },
+            { hris: 'Job role', acme: 'Manager', example: '—', expectedAcme: null, type: 'select' },
+            { hris: 'Base salary', acme: '', example: '$125k/year', expectedAcme: null, type: 'info', validate: example => /^\$\d+k\/year$/.test(example), required: true },
+            { hris: 'Variable salary', acme: '', example: '$150/year', expectedAcme: null, type: 'info', validate: example => /^\$\d+\/year$/.test(example), required: true },
+            { hris: 'Start date', acme: '', example: '01 June 2023', expectedAcme: null, type: 'info', validate: validateDate, required: true },
+            { hris: 'End date', acme: '', example: '31 Dec 2023', expectedAcme: null, type: 'info', validate: validateDate, required: true },
+            { hris: 'Placeholder', acme: '10 Mar 2026', example: '01 June 2023', expectedAcme: null, type: 'info', validate: validateDate, required: true },
+            { hris: 'deel_', acme: 'Connected', example: 'Placeholder', expectedAcme: 'Connected', type: 'select', strictExpected: true }
+        ];
+
+        // Initialize unmatched fields count
+        let unmatchedFields = 0;
+
+        // DOM Elements
+        const notificationBar = document.getElementById('notification-bar');
+        const notificationText = document.getElementById('notification-text');
+        const footerNotification = document.getElementById('footer-notification');
+        const finishBtn = document.getElementById('finish-btn');
+        const connectionStatus = document.getElementById('connection-status');
+
+        // Function to normalize dates to YYYY-MM-DD and validate
+        function normalizeDate(dateStr) {
+            let date;
+            if (/^\d{2} \w{3,4} \d{4}$/.test(dateStr)) {
+                date = new Date(dateStr);
+                const [day, month, year] = dateStr.split(' ');
+                const parsedDay = String(date.getDate()).padStart(2, '0');
+                const parsedMonth = date.toLocaleString('default', { month: 'short' }).toLowerCase();
+                const parsedYear = String(date.getFullYear());
+                if (parsedDay !== day || !month.toLowerCase().startsWith(parsedMonth) || parsedYear !== year) {
+                    return null;
+                }
+            } else if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                const [year, month, day] = dateStr.split('-').map(Number);
+                date = new Date(year, month - 1, day);
+                if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+                const parsedYear = date.getFullYear();
+                const parsedMonth = date.getMonth() + 1;
+                const parsedDay = date.getDate();
+                if (parsedYear !== year || parsedMonth !== month || parsedDay !== day) {
+                    return null;
+                }
+            } else if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+                const [month, day, year] = dateStr.split('/').map(Number);
+                date = new Date(year, month - 1, day);
+                if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+                const parsedYear = date.getFullYear();
+                const parsedMonth = date.getMonth() + 1;
+                const parsedDay = date.getDate();
+                if (parsedYear !== year || parsedMonth !== month || parsedDay !== day) {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+
+            if (isNaN(date.getTime())) return null;
+            return date.toISOString().split('T')[0];
+        }
+
+        // Function to validate dates (format + actual date validity)
+        function validateDate(dateStr) {
+            const formatValid = /^\d{2} \w{3,4} \d{4}$|^\d{4}-\d{2}-\d{2}$|^\d{2}\/\d{2}\/\d{4}$/.test(dateStr);
+            if (!formatValid) return false;
+            const normalized = normalizeDate(dateStr);
+            return normalized !== null;
+        }
+
+        // Function to validate a field during typing and for notifications
+        function validateField(mapping, index) {
+            // Check for required fields that are empty
+            if (mapping.required && mapping.acme === '') {
+                return true;
+            }
+
+            // Check for unmatched selectable fields (e.g., '—')
+            const isUnmatched = mapping.type === 'select' && mapping.acme === '—';
+
+            // For fields with expectedAcme, only enforce if strictExpected is true
+            const isAcmeInvalid = mapping.strictExpected && mapping.expectedAcme && mapping.acme !== mapping.expectedAcme;
+
+            // For fields with a validate function, check the format and validity if non-empty
+            const isFormatInvalid = mapping.validate && mapping.acme !== '' && !mapping.validate(mapping.acme);
+
+            // Check example validation if applicable
+            const isExampleInvalid = mapping.validate && !mapping.validate(mapping.example);
+
+            return isUnmatched || isAcmeInvalid || isFormatInvalid || isExampleInvalid;
+        }
+
+        // Update notifications and button state
+        function updateNotifications() {
+            unmatchedFields = fieldMappings.reduce((count, mapping, index) => {
+                return count + (validateField(mapping, index) ? 1 : 0);
+            }, 0);
+
+            if (unmatchedFields > 0) {
+                notificationBar.style.display = 'flex';
+                notificationBar.querySelector('.error-indicator').textContent = unmatchedFields;
+                notificationText.textContent = `${unmatchedFields} HRIS field${unmatchedFields > 1 ? 's' : ''} don’t match Acme fields. Please match them to one of ours to finish the Onboarding.`;
+                footerNotification.textContent = `${unmatchedFields} HRIS field${unmatchedFields > 1 ? 's' : ''} don’t match Acme fields.`;
+                finishBtn.classList.add('bg-gray-300', 'text-gray-600');
+                finishBtn.classList.remove('bg-blue-600', 'text-white');
+                finishBtn.disabled = true;
+            } else {
+                notificationBar.style.display = 'none';
+                footerNotification.textContent = '';
+                finishBtn.classList.remove('bg-gray-300', 'text-gray-600');
+                finishBtn.classList.add('bg-blue-600', 'text-white');
+                finishBtn.disabled = false;
+            }
+
+            const deelMapping = fieldMappings.find(mapping => mapping.hris === 'deel_');
+            if (deelMapping.acme === 'Connected') {
+                connectionStatus.classList.remove('text-red-600');
+                connectionStatus.classList.add('text-green-600');
+                connectionStatus.innerHTML = `
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Connected
+                `;
+            } else {
+                connectionStatus.classList.remove('text-green-600');
+                connectionStatus.classList.add('text-red-600');
+                connectionStatus.innerHTML = `
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    Not connected
+                `;
+            }
+        }
+
+        // Validate examples for specific fields
+        function validateExamples() {
+            const fieldsToValidate = ['Base salary', 'Variable salary', 'Start date', 'End date', 'Placeholder'];
+            const invalidFields = [];
+
+            fieldMappings.forEach(mapping => {
+                if (fieldsToValidate.includes(mapping.hris) && mapping.validate && !mapping.validate(mapping.example)) {
+                    invalidFields.push(`${mapping.hris} (invalid example format)`);
+                }
+            });
+
+            return invalidFields;
+        }
+
+        // Validate Acme Corp fields on submission
+        function validateAcmeFieldsOnSubmit() {
+            const fieldsToValidate = ['Name', 'Base salary', 'Variable salary', 'Start date', 'End date', 'Placeholder'];
+            const invalidFields = [];
+
+            fieldMappings.forEach(mapping => {
+                if (fieldsToValidate.includes(mapping.hris)) {
+                    if (mapping.required && mapping.acme === '') {
+                        invalidFields.push(`${mapping.hris} (field is empty)`);
+                    }
+                    else if (mapping.validate && mapping.acme !== '' && !mapping.validate(mapping.acme)) {
+                        invalidFields.push(`${mapping.hris} (invalid format or date)`);
+                    }
+                }
+            });
+
+            return invalidFields;
+        }
+
+        // Dropdown functionality for both input fields and buttons
+        document.querySelectorAll('.dropdown, .input-field').forEach((element, index) => {
+            const isInput = element.tagName === 'INPUT';
+            const parentDiv = element.closest('.relative');
+            const menu = parentDiv.querySelector('.dropdown-menu');
+            const mapping = fieldMappings[index];
+            const row = parentDiv.parentElement;
+            const errorIndicatorContainer = row.querySelector('.error-indicator-container');
+
+            const toggleDropdown = (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+                    if (openMenu !== menu) {
+                        openMenu.classList.remove('show');
+                    }
+                });
+                menu.classList.toggle('show');
+            };
+
+            element.addEventListener('click', toggleDropdown);
+            parentDiv.querySelector('.dropdown-arrow').addEventListener('click', toggleDropdown);
+
+            if (isInput) {
+                element.addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    fieldMappings[index].acme = value;
+
+                    if (validateField(fieldMappings[index], index)) {
+                        row.classList.add('error');
+                        element.classList.remove('bg-white');
+                        if (errorIndicatorContainer.innerHTML === '') {
+                            const errorIndicator = document.createElement('span');
+                            errorIndicator.className = 'error-indicator ml-2';
+                            errorIndicator.textContent = '¡';
+                            errorIndicatorContainer.appendChild(errorIndicator);
+                        }
+                    } else {
+                        row.classList.remove('error');
+                        element.classList.add('bg-white');
+                        errorIndicatorContainer.innerHTML = '';
+                    }
+
+                    updateNotifications();
+                });
+            }
+
+            if (mapping.type === 'select') {
+                menu.querySelectorAll('.dropdown-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const value = item.getAttribute('data-value');
+                        element.querySelector('span:first-child').textContent = value;
+                        element.setAttribute('data-selected', value);
+                        menu.classList.remove('show');
+
+                        fieldMappings[index].acme = value;
+
+                        if (validateField(fieldMappings[index], index)) {
+                            row.classList.add('error');
+                            element.classList.remove('bg-white');
+                            if (errorIndicatorContainer.innerHTML === '') {
+                                const errorIndicator = document.createElement('span');
+                                errorIndicator.className = 'error-indicator ml-2';
+                                errorIndicator.textContent = '¡';
+                                errorIndicatorContainer.appendChild(errorIndicator);
+                            }
+                        } else {
+                            row.classList.remove('error');
+                            element.classList.add('bg-white');
+                            errorIndicatorContainer.innerHTML = '';
+                        }
+
+                        updateNotifications();
+                    });
+                });
+            }
+        });
+
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        });
+
+        // Finish onboarding button with confirmation, validation, and replacement
+        finishBtn.addEventListener('click', () => {
+            if (!finishBtn.disabled) {
+                const confirmFinish = window.confirm('Are you sure you want to finish onboarding?');
+                if (!confirmFinish) {
+                    return;
+                }
+
+                const invalidExamples = validateExamples();
+                const invalidAcmeFields = validateAcmeFieldsOnSubmit();
+                const allInvalidFields = [...invalidExamples, ...invalidAcmeFields];
+
+                if (allInvalidFields.length > 0) {
+                    alert(`Cannot complete onboarding. The following issues were found:\n- ${allInvalidFields.join('\n- ')}`);
+                    return;
+                }
+
+                const dateFields = ['Start date', 'End date', 'Placeholder'];
+                dateFields.forEach(fieldName => {
+                    const mapping = fieldMappings.find(m => m.hris === fieldName);
+                    if (mapping.acme) {
+                        const normalized = normalizeDate(mapping.acme);
+                        if (normalized) {
+                            mapping.acme = normalized;
+                        }
+                    }
+                });
+
+                alert('Onboarding completed! Dates have been normalized to YYYY-MM-DD format.');
+
+                const doneBtn = document.createElement('button');
+                doneBtn.id = 'finish-btn';
+                doneBtn.textContent = 'Done';
+                doneBtn.className = 'done-text';
+                doneBtn.disabled = true;
+                finishBtn.parentNode.replaceChild(doneBtn, finishBtn);
+            }
+        });
+
+        // Initial validation and update
+        fieldMappings.forEach((mapping, index) => {
+            const row = document.querySelectorAll('#field-mappings > div')[index];
+            const errorIndicatorContainer = row.querySelector('.error-indicator-container');
+            if (validateField(mapping, index)) {
+                row.classList.add('error');
+                const element = row.querySelector('.dropdown') || row.querySelector('.input-field');
+                element.classList.remove('bg-white');
+                if (errorIndicatorContainer.innerHTML === '') {
+                    const errorIndicator = document.createElement('span');
+                    errorIndicator.className = 'error-indicator ml-2';
+                    errorIndicator.textContent = '¡';
+                    errorIndicatorContainer.appendChild(errorIndicator);
+                }
+            }
+        });
+        updateNotifications();
+    </script>
+</body>
+</html>
