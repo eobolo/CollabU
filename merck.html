@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prodmaest - Manufacturing Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        body {
+            background-color: #F0F7F7;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo span {
+            margin-left: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 24px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #666;
+            font-size: 16px;
+        }
+
+        nav ul li a:hover {
+            color: #333;
+        }
+
+        nav button {
+            background-color: #0A6C74;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        nav button:hover {
+            background-color: #085b61;
+        }
+
+        /* Hero Section Styles */
+        .hero {
+            background-color: #F0F7F7;
+            padding: 80px 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .hero-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 0px;
+            position: relative;
+            top: 37px;
+        }
+
+        .hero-buttons button {
+            padding: 12px 24px;
+            border-radius: 9999px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .hero-buttons .btn-primary {
+            background-color: #0A6C74;
+            color: #fff;
+            border: none;
+        }
+
+        .hero-buttons .btn-primary:hover {
+            background-color: #085b61;
+        }
+
+        .hero-buttons .btn-secondary {
+            background-color: #fff;
+            color: #0A6C74;
+            border: 1px solid #0A6C74;
+        }
+
+        .hero-buttons .btn-secondary:hover {
+            background-color: #f0f7f7;
+        }
+
+        /* Rating Styles */
+        .rating {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 48px;
+            width: fit-content;
+            position: relative;
+            left: 43%;
+            top: 75px;
+            margin-top: 0px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 8px;
+        }
+
+        .stars svg {
+            width: 24px;
+            height: 24px;
+            fill: #FBBF24;
+        }
+
+        .rating-text {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .rating-text a {
+            color: #666;
+            text-decoration: underline;
+        }
+
+        /* Stats Section Styles */
+        .stats {
+            display: grid;
+            grid-template-columns: 230px 153px 230px 153px 230px;
+            gap: 17px;
+            width: max-content;
+            margin: 0 auto;
+        }
+
+        .image-placeholder {
+            background-color: #F97316;
+            color: #666;
+            text-align: center;
+            height: 260px;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-card-1 {
+            background-color: #0A3D62;
+            color: #fff;
+            height: 173px;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-self: end;
+        }
+
+        .stat-card-2 {
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            height: 115px;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-self: end;
+        }
+
+        .stat-card-3 {
+            background-color: #D9F99D;
+            color: #333;
+            height: 173px;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-self: end;
+        }
+
+        .stat-card-4 {
+            background-color: #0A3D62;
+            color: #fff;
+            height: 260px;
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stats h3 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .stats p {
+            font-size: 14px;
+        }
+
+        .stat-card-2 .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card-2 .stat-header svg {
+            width: 20px;
+            height: 20px;
+            fill: #0A6C74;
+        }
+
+        .stat-card-4 .stat-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card-4 .stat-header svg {
+            width: 20px;
+            height: 20px;
+            fill: #fff;
+        }
+
+
+        .decor-right {
+            position: absolute;
+            top: 80px;
+            right: 40px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .decor-circle {
+            background-color: #de1a1a;
+            border-radius: 50%;
+            padding: 8px;
+        }
+
+        .decor-circle.left-1 {
+            width: 60px;
+            height: 58px;
+            position: absolute;
+            top: 285px;
+            left: 14%;
+        }
+
+        .decor-circle.left-2 {
+            width: 40px;
+            height: 38px;
+            position: absolute;
+            top: 251px;
+            left: 23%;
+        }
+
+        .decor-circle.left-3 {
+            width: 40px;
+            height: 38px;
+            position: absolute;
+            top: 343px;
+            left: 23%;
+        }
+
+        .decor-circle.right-2 {
+            width: 60px;
+            height: 58px;
+            position: absolute;
+            top: 325px;
+            right: 18%;
+        }
+        .decor-circle.right-1 {
+            width: 40px;
+            height: 38px;
+            position: absolute;
+            top: 285px;
+            right: 14%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="https://media.licdn.com/dms/image/v2/C4E0BAQFIbThBRBK3Qg/company-logo_200_200/company-logo_200_200/0/1630605735558/join_garden_city_logo?e=2147483647&v=beta&t=E09TiwyS_ojiJL-Q2-5uy3qm31BrCzioWRZhiYOfuSM" alt="Prodmaest Logo">
+                <span>Prodmaest</span>
+            </div>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+            <button>Sign Up</button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <!-- Main Headline and Subheadline -->
+            <h1>THE FUTURE OF MANUFACTURING WITH LATEST TECHNOLOGY</h1>
+            <p>Expert tech to elevate your manufacturing. Let's take your business further.</p>
+
+            <!-- Buttons -->
+            <div class="hero-buttons">
+                <button class="btn-primary">Get Started</button>
+                <button class="btn-secondary">Try Demo</button>
+            </div>
+
+            <div class="decor-circle left-1">
+            </div>
+            <div class="decor-circle left-2">
+            </div>
+            <div class="decor-circle left-3">
+            </div>
+
+            <!-- Rating -->
+            <div class="rating">
+                <div class="stars">
+                    <svg viewBox="0 0 20 20">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg viewBox="0 0 20 20">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg viewBox="0 0 20 20">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg viewBox="0 0 20 20">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <svg viewBox="0 0 20 20">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                </div>
+                <span class="rating-text">5.0 from 80+ <a href="#">reviews</a></span>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="stats">
+                <!-- Image Placeholder -->
+                <div class="image-placeholder">
+                    <span>Image Placeholder</span>
+                </div>
+                <!-- Stat Cards -->
+                <div class="stat-card-1">
+                    <h3>100+</h3>
+                    <p>Our Esteemed Clients and Partners</p>
+                </div>
+                <div class="stat-card-2">
+                    <div class="stat-header">
+                        <svg viewBox="0 0 20 20">
+                            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" />
+                        </svg>
+                        <span style="font-size: 36px; font-weight: bold;">1951+</span>
+                        <svg viewBox="0 0 20 20">
+                            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" />
+                        </svg>
+                    </div>
+                    <p>Total Projects Over 12% Increase This Month</p>
+                </div>
+                <div class="stat-card-3">
+                    <h3>6+</h3>
+                    <p>Years of Dedicated Service</p>
+                </div>
+                <div class="stat-card-4">
+                    <div class="stat-header">
+                        <svg viewBox="0 0 20 20">
+                            <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" />
+                        </svg>
+                        <h3 style="font-size: 20px;">Achieve Optimal Efficiency and Boost Productivity</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decorative Elements -->
+        <div class="decor-circle right-1">
+        </div>
+        <div class="decor-circle right-2">
+        </div>
+    </section>
+</body>
+
+</html>
