@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monday.com Clone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo img {
+            height: 30px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Custom Dropdown */
+        .custom-dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .dropdown-toggle::after {
+            content: '▼';
+            font-size: 12px;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-menu div {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .dropdown-menu div:hover {
+            background: #f0f0f0;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-contact {
+            background: none;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+
+        .btn-contact:hover {
+            background: #0056d2;
+            color: white;
+            border-color: #0056d2;
+        }
+
+        .btn-get-started {
+            background: #0056d2;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-get-started.toggled {
+            animation: expand 1s ease forwards;
+        }
+
+        @keyframes expand {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .btn-get-started .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-get-started:hover .arrow {
+            transform: translateX(5px);
+        }
+
+        .btn-get-started:hover {
+            background: #003087;
+        }
+
+        /* Main Section */
+        main {
+            padding-top: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 30px;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 20px;
+            color: #555;
+        }
+
+        /* Checkboxes Section */
+        .checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 800px;
+        }
+
+        .checkboxes .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .checkboxes .row:nth-child(2) {
+            width: 80%;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            border-radius: 20px;
+        }
+
+        .checkbox-wrapper input {
+            display: none;
+        }
+
+        .checkbox-wrapper .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-wrapper input:checked + .custom-checkbox::after {
+            content: '✔';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+        }
+
+        /* Checkbox Colors */
+        .checkbox-wrapper:nth-child(1) .custom-checkbox { border: 2px solid #f4a261; }
+        .checkbox-wrapper:nth-child(1) input:checked + .custom-checkbox { background: #f4a261; }
+        .checkbox-wrapper:nth-child(2) .custom-checkbox { border: 2px solid #2a9d8f; }
+        .checkbox-wrapper:nth-child(2) input:checked + .custom-checkbox { background: #2a9d8f; }
+        .checkbox-wrapper:nth-child(3) .custom-checkbox { border: 2px solid #e76f51; }
+        .checkbox-wrapper:nth-child(3) input:checked + .custom-checkbox { background: #e76f51; }
+        .checkbox-wrapper:nth-child(4) .custom-checkbox { border: 2px solid #e9c46a; }
+        .checkbox-wrapper:nth-child(4) input:checked + .custom-checkbox { background: #e9c46a; }
+        .checkbox-wrapper:nth-child(5) .custom-checkbox { border: 2px solid #264653; }
+        .checkbox-wrapper:nth-child(5) input:checked + .custom-checkbox { background: #264653; }
+        .checkbox-wrapper:nth-child(6) .custom-checkbox { border: 2px solid #d4a373; }
+        .checkbox-wrapper:nth-child(6) input:checked + .custom-checkbox { background: #d4a373; }
+        .checkbox-wrapper:nth-child(7) .custom-checkbox { border: 2px solid #a8dadc; }
+        .checkbox-wrapper:nth-child(7) input:checked + .custom-checkbox { background: #a8dadc; }
+        .checkbox-wrapper:nth-child(8) .custom-checkbox { border: 2px solid #457b9d; }
+        .checkbox-wrapper:nth-child(8) input:checked + .custom-checkbox { background: #457b9d; }
+        .checkbox-wrapper:nth-child(9) .custom-checkbox { border: 2px solid #1d3557; }
+        .checkbox-wrapper:nth-child(9) input:checked + .custom-checkbox { background: #1d3557; }
+
+        /* Get Started Section with Animation */
+        .get-started-section {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 40px 0;
+        }
+
+        .floating-box {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) rotate(0deg);
+            opacity: 0;
+            transition: all 0.5s ease, opacity 0.25s ease;
+            z-index: 1;
+        }
+
+        .floating-box.animate {
+            top: calc(0% - 40px);
+            transform: translateX(-50%) rotate(60deg);
+            opacity: 1;
+        }
+
+        .floating-box.return {
+            top: 100%;
+            transform: translateX(-50%) rotate(0deg);
+            opacity: 0;
+        }
+
+        /* Companies Section */
+        .companies {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .companies img {
+            height: 30px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/monday-logo-x2.png" alt="Monday.com Logo">
+        </div>
+        <div class="header-right">
+            <div class="custom-dropdown">
+                <button class="dropdown-toggle">
+                    <span>🌐</span>
+                </button>
+                <div class="dropdown-menu">
+                    <div>English</div>
+                    <div>Español</div>
+                    <div>Français</div>
+                    <div>Deutsch</div>
+                    <div>Português</div>
+                </div>
+            </div>
+            <button class="btn btn-contact">Contact sales</button>
+            <button class="btn btn-get-started">
+                Get started <span class="arrow">➔</span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <h1>Project management MADE EASY</h1>
+        <p>Manage simple to complex projects and everything in between with monday.com</p>
+        <p>Select what you want to manage:</p>
+        <div class="checkboxes">
+            <div class="row">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="custom-checkbox"></span>
+                    Project management
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="custom-checkbox"></span>
+                    Task management
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="custom-checkbox"></span>
+                    Client projects
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="custom-checkbox"></span>
+                    Business operations
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="custom-checkbox"></span>
+                    Resource management
+                </label>
+            </div>
+            <div class="row">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="custom-checkbox"></span>
+                    Portfolio management
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="custom-checkbox"></span>
+                    Goals & strategy
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="custom-checkbox"></span>
+                    Requests & approvals
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="custom-checkbox"></span>
+                    Create your own
+                </label>
+            </div>
+        </div>
+
+        <div class="get-started-section">
+            <button class="btn btn-get-started">
+                Get started <span class="arrow">➔</span>
+            </button>
+            <div class="floating-box"></div>
+            <p>Free forever. No credit card.</p>
+        </div>
+
+        <div class="companies">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/HoltCat.png" alt="Holt Cat">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/canva.png" alt="Canva">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/coca_cola.png" alt="Coca Cola">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/oxy.png" alt="OXY">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/lionsgate.png" alt="Lionsgate">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/carrefour.png" alt="Carrefour">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/bd.png" alt="BD">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/glossier.png" alt="Glossier">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/universal.png" alt="Universal Music Group">
+        </div>
+    </main>
+
+    <script>
+        // Dropdown functionality
+        const dropdownToggle = document.querySelector('.dropdown-toggle');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+
+        dropdownToggle.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+
+        // Checkbox animation with floating box
+        const checkboxes = document.querySelectorAll('.checkboxes input');
+        const floatingBox = document.querySelector('.floating-box');
+        const getStartedBtn = document.querySelector('.get-started-section .btn-get-started');
+
+        checkboxes.forEach((checkbox, index) => {
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    const colors = ['#f4a261', '#2a9d8f', '#e76f51', '#e9c46a', '#264653', '#d4a373', '#a8dadc', '#457b9d', '#1d3557'];
+                    floatingBox.style.backgroundColor = colors[index];
+
+                    // Reset classes to ensure animation restarts
+                    floatingBox.classList.remove('animate', 'return');
+                    void floatingBox.offsetWidth; // Trigger reflow to restart animation
+
+                    // Start animation
+                    floatingBox.classList.add('animate');
+
+                    // Handle transitions
+                    floatingBox.addEventListener('transitionend', (e) => {
+                        if (e.propertyName === 'top' && floatingBox.classList.contains('animate')) {
+                            floatingBox.classList.add('return');
+                        } else if (e.propertyName === 'opacity' && floatingBox.classList.contains('return')) {
+                            // Reset animation for button toggle
+                            getStartedBtn.classList.remove('toggled');
+                            void getStartedBtn.offsetWidth; // Trigger reflow to restart animation
+                            getStartedBtn.classList.add('toggled');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
