@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <link href="https://fonts.cdnfonts.com/css/equilibrium" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font: 17px sans-serif;
+            line-height: 1.25;
+            color: rgba(0, 0, 0, 0.75);
+            overflow: hidden;
+            background-color: #9bba5a;
+            text-size-adjust: 100%;
+            font-family: 'Equilibrium', sans-serif;
+            position: relative;
+        }
+
+        a {
+            margin: 0;
+            padding: 0;
+            font-size: 100%;
+            vertical-align: baseline;
+            text-decoration: none;
+            color: rgba(0, 0, 0, 0.75);
+            background-color: transparent;
+        }
+
+        span {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            font-size: 100%;
+            vertical-align: baseline;
+            background: transparent;
+        }
+
+        .neave {
+            position: absolute;
+            display: block;
+            left: 15px;
+            left: calc(15px + env(safe-area-inset-left));
+            top: 15px;
+            top: calc(15px + env(safe-area-inset-top));
+            width: 44px;
+            height: 44px;
+            margin: 0;
+            padding: 0;
+            z-index: 100;
+        }
+
+        .mobile .neave {
+            position: fixed;
+        }
+
+        .mobile .neave .disc {
+            animation: neave-anim 8s infinite linear, fade-anim 5s infinite ease-in-out;
+        }
+
+        @keyframes neave-anim {
+            100% {
+                background-position: 0 400%;
+            }
+        }
+
+        @keyframes fade-anim {
+            0% {
+                opacity: 0;
+            }
+
+            40% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            60% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .neave:hover {
+            color: #ddd;
+        }
+
+        .neave .disc {
+            position: absolute;
+            display: block;
+            width: 44px;
+            height: 44px;
+            background-color: #9fc;
+            background-image: linear-gradient(to bottom, #9fc 0%, #9cf 25%, #f9c 50%, #fc9 75%, #9fc 100%);
+            background-size: 100% 400%;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: neave-anim 8s infinite linear;
+            opacity: 0;
+            will-change: opacity;
+            transition: opacity .2s ease-out;
+        }
+
+        .neave:hover .disc {
+            transform: scale(1.2) rotate(360deg);
+        }
+
+        .mobile .neave svg {
+            animation: fade-mid-anim 5s infinite ease-in-out;
+        }
+
+        @keyframes fade-mid-anim {
+            0% {
+                opacity: .5;
+            }
+
+            40% {
+                opacity: .5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            60% {
+                opacity: .5;
+            }
+
+            100% {
+                opacity: .5;
+            }
+        }
+
+        .neave svg {
+            border-color: rgba(0, 0, 0, 0.8) !important;
+            transition: border-color .1s linear;
+        }
+
+        .neave svg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            margin: 0;
+            padding: 0;
+            box-sizing: content-box;
+            pointer-events: none;
+            color: rgba(0, 0, 0, 0.75) !important;
+        }
+
+        .neave svg path {
+            fill: rgba(0, 0, 0, 0.8);
+        }
+
+        .neave .title {
+            display: none;
+        }
+
+        .mute {
+            position: absolute;
+            width: 38px;
+            height: 38px;
+            right: 15px;
+            right: calc(15px + env(safe-area-inset-right));
+            top: 15px;
+            top: calc(15px + env(safe-area-inset-top));
+            opacity: .5;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-transition: opacity .1s linear;
+            -moz-transition: opacity .1s linear;
+            transition: opacity .1s linear;
+        }
+
+        .mute svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .container {
+            position: relative;
+            width: 600px;
+            height: 450px;
+            background-color: #9bba5a;
+        }
+
+        #gameCanvas {
+            width: 588px;
+            height: 420px;
+            padding: 2px;
+            margin-left: -2px;
+            margin-top: -2px;
+            outline: 4px solid rgba(0, 0, 0, 0.75);
+            box-shadow: inset 0 0 60px rgba(48, 80, 0, 0.3);
+            background-color: #ac6;
+            cursor: auto;
+        }
+
+        #homeScreen,
+        #countdownScreen,
+        #gameOverScreen,
+        #bestScoreScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: transparent;
+            text-align: center;
+        }
+
+        #homeScreen h1 {
+            margin: 54px 0 6px 16px;
+            padding: 0px 15px;
+            font-size: 144px;
+            font-weight: normal;
+            line-height: 1;
+            text-transform: lowercase;
+            pointer-events: none;
+        }
+
+        .food-icon {
+            width: 20px;
+            height: 20px;
+            opacity: .75;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #homeScreen p {
+            margin: 20px 0;
+            margin-top: 0px;
+            font-size: 34px;
+        }
+
+        #levelButtons {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        #levelButtons p {
+            display: inline-block;
+            font-size: 46px;
+            padding: 30px 14px 15px 18px;
+            margin-top: 0px;
+            line-height: 1;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #food_name {
+            display: flex;
+            align-items: center;
+        }
+
+        #food_name span {
+            padding-top: 55px;
+            width: 28px;
+            height: 28px;
+        }
+
+        #food_name span img {
+            width: 100%;
+            height: 100%;
+        }
+
+        #countdownScreen h1,
+        #gameOverScreen h1,
+        #bestScoreScreen h1 {
+            display: block;
+            font-size: 184px;
+            margin-top: 150px;
+            position: absolute;
+            font-size: 120px;
+            font-weight: normal;
+            text-align: center;
+            line-height: .95;
+            width: 100%;
+            margin: 110px 0 0 0;
+            pointer-events: none;
+        }
+
+        .info.left {
+            left: 0;
+            margin-left: -7px;
+            pointer-events: none;
+            font-size: 34px;
+        }
+
+        .score-display-1 {
+            display: none;
+        }
+
+        .score-display-2 {
+            display: none;
+        }
+
+        .info {
+            position: absolute;
+            margin-top: 20px;
+        }
+
+
+
+        .info.right {
+            right: 0;
+            margin-right: -7px;
+            pointer-events: none;
+            font-size: 34px;
+        }
+
+        .info.share {
+            left: 50%;
+            width: 140px;
+            text-align: center;
+            cursor: pointer;
+            animation: appear 200ms cubic-bezier(0.5, 1, 0, 1.6);
+            border-radius: 6px;
+            padding: 10px 0 2px 5px;
+            margin: 10px 0 0 -69px;
+            font-size: 34px;
+        }
+
+        .share-display {
+            display: none;
+        }
+
+        #bestScoreScreen p {
+            margin: 20px 0;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body class="mobile">
+    <a href="https://neave.com/" target="_top" class="neave" id="neaveLink">
+        <span class="disc"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 512 512">
+            <path fill="#000" d="M361 360.95L191 290.5v57.1l-40 16.6V151.05l170 70.3v-57.2l1-.4.1-.05 38.9-15.9"></path>
+        </svg>
+        <span class="title">Neave Interactive</span>
+    </a>
+    <div class="mute">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+            <g fill="#000">
+                <polygon points="14.025,38.004 14.025,61.993 31.548,61.993 55.537,85.982 55.537,14.018 31.552,38.004">
+                </polygon>
+                <path
+                    d="M67.41,34.095l-4.243,4.239c6.43,6.432,6.43,16.896,0,23.324L67.41,65.9C76.179,57.129,76.179,42.864,67.41,34.095z">
+                </path>
+                <path
+                    d="M75.89,25.616l-4.241,4.239c11.105,11.105,11.105,29.176,0,40.284l4.241,4.241C89.337,60.934,89.337,39.06,75.89,25.616z">
+                </path>
+            </g>
+        </svg>
+    </div>
+    <div class="container">
+        <canvas id="gameCanvas" width="600" height="400"></canvas>
+        <p class="score-display-1">
+            <span id="score">0</span>
+        </p>
+        <p class="share-display">
+            <span>SHARE!</span>
+        </p>
+        <p class="score-display-2">
+            <span id="highScore">SLUG 0</span>
+        </p>
+        <div id="homeScreen">
+            <div id="food_name">
+                <span>
+                    <img src="https://playsnake.org/assets/images/food.svg" alt="*" class="food-icon">
+                </span>
+                <h1> snake </h1>
+                <span>
+                    <img src="https://playsnake.org/assets/images/food.svg" alt="*" class="food-icon">
+                </span>
+            </div>
+            <p>CHOOSE LEVEL:</p>
+            <div id="levelButtons">
+                <p onclick="startGame(10)">SLUG</p>
+                <p onclick="startGame(15)">WORM</p>
+                <p onclick="startGame(20)">PYTHON</p>
+            </div>
+        </div>
+        <div id="countdownScreen" style="display: none;">
+            <h1 id="countdown">3</h1>
+        </div>
+        <div id="gameOverScreen" style="display: none;">
+            <h1>GAME OVER!</h1>
+        </div>
+        <div id="bestScoreScreen" style="display: none;">
+            <h1>BEST SCORE!</h1>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const gridSize = 20;
+        const tileCountX = canvas.width / gridSize;
+        const tileCountY = canvas.height / gridSize;
+
+        let snake = [];
+        let food = {};
+        let dx = 1;
+        let dy = 0;
+        let score = 0;
+        let highScore = 0;
+        let speed = 10;
+        let gameLoop;
+        let countdownInterval;
+        let level = 'SLUG';
+        let isPaused = false;
+        let soundOn = true;
+        let audioContext;
+        let soundBuffers = {};
+
+        // Check if localStorage is available
+        const localStorageAvailable = (function () {
+            try {
+                const testKey = '_test';
+                localStorage.setItem(testKey, testKey);
+                localStorage.removeItem(testKey);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        })();
+
+        // Initialize AudioContext and load sounds
+        function initAudio() {
+            try {
+                if (window.AudioContext || window.webkitAudioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    // Load sound files (using data URLs for simplicity; replace with actual MP3 URLs in production)
+                    loadSound('eat', 'data:audio/mp3;base64,...'); // Replace with actual MP3 data or URL
+                    loadSound('die', 'data:audio/mp3;base64,...'); // Replace with actual MP3 data or URL
+                }
+            } catch (error) {
+                console.error('Error initializing audio:', error);
+            }
+        }
+
+        // Load sound file
+        function loadSound(name, url) {
+            try {
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.responseType = 'arraybuffer';
+                xhr.onload = function () {
+                    audioContext.decodeAudioData(xhr.response, function (buffer) {
+                        soundBuffers[name] = buffer;
+                    }, function (error) {
+                        console.error('Error decoding audio:', error);
+                    });
+                };
+                xhr.onerror = function () {
+                    console.error('Error loading sound:', name);
+                };
+                xhr.send();
+            } catch (error) {
+                console.error('Error loading sound:', error);
+            }
+        }
+
+        // Play sound
+        function playSound(name) {
+            if (!soundOn || !audioContext || !soundBuffers[name]) return;
+            try {
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                const source = audioContext.createBufferSource();
+                source.buffer = soundBuffers[name];
+                source.connect(audioContext.destination);
+                source.start(0);
+            } catch (error) {
+                console.error('Error playing sound:', error);
+            }
+        }
+
+        // Mute functionality
+        function W() {
+            soundOn = !soundOn;
+            if (localStorageAvailable) {
+                try {
+                    localStorage.setItem('muted', (!soundOn).toString());
+                } catch (e) {
+                    console.error('Error saving mute state:', beforehand);
+                }
+            }
+            F();
+        }
+
+        function F() {
+            const paths = document.querySelectorAll('.mute path');
+            for (let i = 0; i < paths.length; i++) {
+                paths[i].style.display = soundOn ? '' : 'none';
+            }
+        }
+
+        // Initialize mute state
+        function initMute() {
+            if (localStorageAvailable) {
+                try {
+                    soundOn = localStorage.getItem('muted') !== 'true';
+                } catch (e) {
+                    console.error('Error reading mute state:', e);
+                    soundOn = true;
+                }
+            }
+            F();
+        }
+
+        // Add event listeners for mute button
+        document.addEventListener('DOMContentLoaded', function () {
+            const muteButton = document.querySelector('.mute');
+            let supportsPassive = false;
+            try {
+                const opts = Object.defineProperty({}, 'passive', {
+                    get: function () {
+                        supportsPassive = true;
+                    }
+                });
+                window.addEventListener('_', null, opts);
+                window.removeEventListener('_', null, opts);
+            } catch (e) { }
+
+            muteButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                W();
+            }, supportsPassive ? { passive: false } : false);
+
+            muteButton.addEventListener('touchstart', function (e) {
+                e.preventDefault();
+                W();
+            }, supportsPassive ? { passive: false } : false);
+
+            initAudio();
+            initMute();
+        });
+
+        const foodImg = new Image();
+        foodImg.src = 'https://playsnake.org/assets/images/food.svg';
+        foodImg.onerror = () => {
+            console.error('Failed to load food image. Using fallback rendering.');
+            foodImg.src = '';
+        };
+
+        const neaveLink = document.getElementById('neaveLink');
+        neaveLink.addEventListener('click', (e) => {
+            try {
+                const url = neaveLink.href;
+                if (!url || !url.startsWith('http')) {
+                    e.preventDefault();
+                    console.error('Invalid URL for Neave link:', url);
+                    return;
+                }
+                window.open(url, '_top');
+            } catch (error) {
+                e.preventDefault();
+                console.error('Error navigating to Neave link:', error);
+            }
+        });
+
+        function startGame(selectedSpeed) {
+            try {
+                speed = selectedSpeed;
+                if (speed === 10) level = 'SLUG';
+                else if (speed === 15) level = 'WORM';
+                else level = 'PYTHON';
+                const gameScore = document.getElementsByClassName('score-display-1')[0];
+                const highScore = document.getElementsByClassName('score-display-2')[0];
+
+                gameScore.classList.remove('score-display-1');
+                highScore.classList.remove('score-display-2');
+
+                document.getElementById('homeScreen').style.display = 'none';
+                document.getElementById('countdownScreen').style.display = 'flex';
+                gameScore.classList.add('info', 'left');
+                highScore.classList.add('info', 'right');
+
+                let countdown = 3;
+                document.getElementById('countdown').textContent = countdown;
+                countdownInterval = setInterval(() => {
+                    countdown--;
+                    if (countdown > 0) {
+                        document.getElementById('countdown').textContent = countdown;
+                    } else if (countdown === 0) {
+                        document.getElementById('countdown').textContent = 'GO!';
+                    } else {
+                        clearInterval(countdownInterval);
+                        document.getElementById('countdownScreen').style.display = 'none';
+                        initGame();
+                    }
+                }, 1000);
+            } catch (error) {
+                console.error('Error starting game:', error);
+                document.getElementById('homeScreen').style.display = 'flex';
+                document.getElementById('countdownScreen').style.display = 'none';
+            }
+        }
+
+        function initGame() {
+            try {
+                snake = [{ x: 5, y: 5 }, { x: 4, y: 5 }, { x: 3, y: 5 }];
+                dx = 1;
+                dy = 0;
+                score = 0;
+                document.getElementById('score').textContent = score;
+                document.getElementById('highScore').textContent = `${level} ${highScore}`;
+                spawnFood();
+                if (gameLoop) clearInterval(gameLoop);
+                gameLoop = setInterval(updateGame, 1000 / speed);
+            } catch (error) {
+                console.error('Error initializing game:', error);
+                endGame();
+            }
+        }
+
+        function spawnFood() {
+            try {
+                food = {
+                    x: Math.floor(Math.random() * tileCountX),
+                    y: Math.floor(Math.random() * tileCountY)
+                };
+                for (let segment of snake) {
+                    if (food.x === segment.x && food.y === segment.y) {
+                        spawnFood();
+                        break;
+                    }
+                }
+            } catch (error) {
+                console.error('Error spawning food:', error);
+                food = { x: tileCountX - 1, y: tileCountY - 1 };
+            }
+        }
+
+        function updateGame() {
+            if (isPaused) return;
+
+            try {
+                const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+                if (head.x < 0 || head.x >= tileCountX || head.y < 0 || head.y >= tileCountY) {
+                    playSound('die');
+                    endGame();
+                    return;
+                }
+
+                for (let segment of snake) {
+                    if (head.x === segment.x && head.y === segment.y) {
+                        playSound('die');
+                        endGame();
+                        return;
+                    }
+                }
+
+                snake.unshift(head);
+
+                if (head.x === food.x && head.y === food.y) {
+                    score += 5;
+                    document.getElementById('score').textContent = score;
+                    playSound('eat');
+                    spawnFood();
+                } else {
+                    snake.pop();
+                }
+
+                drawGame();
+            } catch (error) {
+                console.error('Error updating game:', error);
+                endGame();
+            }
+        }
+
+        function drawGame() {
+            try {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Style for the snake
+                const segmentSize = 28; // Reduced size for the snake segments to create a gap
+                const segmentPadding = (gridSize - segmentSize) / 2; // Center the smaller rectangle within the grid cell
+
+                for (let segment of snake) {
+                    // Draw the background rectangle for the snake segment
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'; // Background color
+                    ctx.beginPath();
+                    ctx.roundRect(
+                        segment.x * gridSize + segmentPadding, // Adjusted x position
+                        segment.y * gridSize + segmentPadding, // Adjusted y position
+                        segmentSize, // Width
+                        segmentSize, // Height
+                        8 // Border radius
+                    );
+                    ctx.fill();
+
+                    // Draw the inner rectangle for the snake segment
+                    ctx.fillStyle = '#000'; // Foreground color
+                    ctx.beginPath();
+                    ctx.roundRect(
+                        segment.x * gridSize + segmentPadding + 2, // Adjusted x position with padding
+                        segment.y * gridSize + segmentPadding + 2, // Adjusted y position with padding
+                        segmentSize - 4, // Slightly smaller width
+                        segmentSize - 4, // Slightly smaller height
+                        6 // Border radius
+                    );
+                    ctx.fill();
+                }
+
+                // Style for the food (unchanged)
+                if (foodImg.src) {
+                    ctx.save();
+                    ctx.translate(food.x * gridSize + gridSize / 2, food.y * gridSize + gridSize / 2);
+                    const rotationAngle = (Date.now() % 2000) / 2000 * Math.PI * 2;
+                    ctx.rotate(rotationAngle);
+                    ctx.drawImage(foodImg, -10, -10, 20, 20);
+                    ctx.restore();
+                } else {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+                    ctx.beginPath();
+                    ctx.arc(
+                        food.x * gridSize + gridSize / 2,
+                        food.y * gridSize + gridSize / 2,
+                        10,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+
+                    ctx.fillStyle = '#000';
+                    ctx.beginPath();
+                    ctx.arc(
+                        food.x * gridSize + gridSize / 2,
+                        food.y * gridSize + gridSize / 2,
+                        8,
+                        0,
+                        Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+            } catch (error) {
+                console.error('Error drawing game:', error);
+            }
+        }
+
+        function endGame() {
+            try {
+                if (gameLoop) clearInterval(gameLoop);
+                if (score > highScore) {
+                    highScore = score;
+                    document.getElementById('bestScoreScreen').style.display = 'flex';
+                } else {
+                    document.getElementById('gameOverScreen').style.display = 'flex';
+                }
+                document.getElementById('highScore').textContent = `${level} ${highScore}`;
+                
+                const shareGame = document.getElementsByClassName('share-display')[0];
+                shareGame.classList.remove('share-display');
+                shareGame.classList.add('info', 'share');
+
+
+            } catch (error) {
+                console.error('Error ending game:', error);
+                document.getElementById('homeScreen').style.display = 'flex';
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            try {
+                if (isPaused && e.key !== ' ') return;
+                switch (e.key) {
+                    case 'ArrowUp':
+                        if (dy !== 1) { dx = 0; dy = -1; }
+                        break;
+                    case 'ArrowDown':
+                        if (dy !== -1) { dx = 0; dy = 1; }
+                        break;
+                    case 'ArrowLeft':
+                        if (dx !== 1) { dx = -1; dy = 0; }
+                        break;
+                    case 'ArrowRight':
+                        if (dx !== -1) { dx = 1; dy = 0; }
+                        break;
+                    case ' ':
+                        isPaused = !isPaused;
+                        break;
+                }
+            } catch (error) {
+                console.error('Error handling keydown event:', error);
+            }
+        });
+
+        canvas.addEventListener('click', (e) => {
+            try {
+                const gameOverScreen = document.getElementById('gameOverScreen');
+                const bestScoreScreen = document.getElementById('bestScoreScreen');
+                const homeScreen = document.getElementById('homeScreen');
+
+                // Check if the game is over or the best score screen is displayed
+                if (gameOverScreen.style.display === 'flex' || bestScoreScreen.style.display === 'flex') {
+                    // Hide the game over and best score screens
+                    gameOverScreen.style.display = 'none';
+                    bestScoreScreen.style.display = 'none';
+
+                    // Show the home screen
+                    homeScreen.style.display = 'flex';
+
+                    // Clear the canvas to remove the game from the background
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // Reset the game state
+                    snake = [];
+                    food = {};
+                    dx = 1;
+                    dy = 0;
+                    score = 0;
+                    isPaused = false;
+
+                    // Reset the score and high score displays
+                    const shareGame = document.getElementsByClassName('share')[0];
+                    const gameScore = document.getElementsByClassName('left')[0];
+                    const highScore = document.getElementsByClassName('right')[0];
+                    shareGame.classList.remove('info', 'share');
+                    shareGame.classList.add('share-display');
+                    gameScore.classList.remove('info', 'left');
+                    gameScore.classList.add('score-display-1');
+                    highScore.classList.remove('info', 'right');
+                    highScore.classList.add('score-display-2');
+                } else {
+                    // Toggle pause state if the game is running
+                    isPaused = !isPaused;
+                }
+            } catch (error) {
+                console.error('Error handling canvas click:', error);
+            }
+        });
+
+        document.getElementById('gameOverScreen').addEventListener('click', () => {
+            try {
+                const gameOverScreen = document.getElementById('gameOverScreen');
+                const homeScreen = document.getElementById('homeScreen');
+
+                // Hide the game over screen
+                gameOverScreen.style.display = 'none';
+
+                // Show the home screen
+                homeScreen.style.display = 'flex';
+
+                // Clear the canvas to remove the game from the background
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Reset the game state
+                snake = [];
+                food = {};
+                dx = 1;
+                dy = 0;
+                score = 0;
+                isPaused = false;
+
+                // Reset the score and high score displays
+                const shareGame = document.getElementsByClassName('share')[0];
+                const gameScore = document.getElementsByClassName('left')[0];
+                const highScore = document.getElementsByClassName('right')[0];
+                shareGame.classList.remove('info', 'share');
+                shareGame.classList.add('share-display');
+                gameScore.classList.remove('info', 'left');
+                gameScore.classList.add('score-display-1');
+                highScore.classList.remove('info', 'right');
+                highScore.classList.add('score-display-2');
+            } catch (error) {
+                console.error('Error handling game over screen click:', error);
+            }
+        });
+
+        document.getElementById('bestScoreScreen').addEventListener('click', () => {
+            try {
+                const bestScoreScreen = document.getElementById('bestScoreScreen');
+                const homeScreen = document.getElementById('homeScreen');
+
+                // Hide the best score screen
+                bestScoreScreen.style.display = 'none';
+
+                // Show the home screen
+                homeScreen.style.display = 'flex';
+
+                // Clear the canvas to remove the game from the background
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Reset the game state
+                snake = [];
+                food = {};
+                dx = 1;
+                dy = 0;
+                score = 0;
+                isPaused = false;
+
+                // Reset the score and high score displays
+                const shareGame = document.getElementsByClassName('share')[0];
+                const gameScore = document.getElementsByClassName('left')[0];
+                const highScore = document.getElementsByClassName('right')[0];
+                shareGame.classList.remove('info', 'share');
+                shareGame.classList.add('share-display');
+                gameScore.classList.remove('info', 'left');
+                gameScore.classList.add('score-display-1');
+                highScore.classList.remove('info', 'right');
+                highScore.classList.add('score-display-2');
+            } catch (error) {
+                console.error('Error handling best score screen click:', error);
+            }
+        });
+    </script>
+</body>
+</html>
