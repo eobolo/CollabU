@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monday.com Clone</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_down,keyboard_arrow_up,language" />
+    <title>Monday.com - Project Management</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: "Poppins", sans-serif;
         }
 
         body {
@@ -19,19 +25,19 @@
 
         /* Header Styles */
         header {
+            position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 40px;
-            position: fixed;
+            padding: 13px 72px;
             width: 100%;
             z-index: 100;
             background: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease-in-out;
         }
 
         .logo img {
-            height: 30px;
+            height: 42px;
         }
 
         .header-right {
@@ -43,30 +49,54 @@
         /* Custom Dropdown */
         .custom-dropdown {
             position: relative;
+            padding: 6px 16px;
+        }
+
+        .custom-dropdown:hover {
+            cursor: pointer;
+            background: #F0F3FF;
+            padding: 6px 16px;
+            border-radius: 10px;
+        }
+
+        .custom-dropdown:hover .language-icon {
+            color: #6161ff;
+            transition: 0.2s color ease;
         }
 
         .dropdown-toggle {
             display: flex;
             align-items: center;
-            gap: 5px;
             background: none;
             border: none;
             font-size: 16px;
             cursor: pointer;
         }
 
+        .dropdown-toggle .material-symbols-outlined {
+            font-size: 22px;
+            color: #333;
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 200,
+                'GRAD' 0,
+                'opsz' 24
+        }
+
         .dropdown-toggle::after {
-            content: '▼';
+            content: none;
             font-size: 12px;
         }
 
         .dropdown-menu {
             display: none;
             position: absolute;
-            top: 100%;
+            top: 160%;
             right: 0;
+            font-size: 13px;
+            font-weight: 300;
             background: white;
-            border: 1px solid #ddd;
+            /* border: 1px solid #ddd; */
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 100;
@@ -77,17 +107,21 @@
         }
 
         .dropdown-menu div {
-            padding: 10px 20px;
+            margin: 6px;
+            padding: 5px 30px 5px 10px;
+            color: #555;
             cursor: pointer;
         }
 
         .dropdown-menu div:hover {
-            background: #f0f0f0;
+            background: rgb(241, 243, 246);
+            border-radius: 5px;
+            transition: 0.4s background ease;
         }
 
         /* Buttons */
         .btn {
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 25px;
             font-size: 16px;
             cursor: pointer;
@@ -96,8 +130,10 @@
 
         .btn-contact {
             background: none;
-            border: 1px solid #ddd;
-            color: #333;
+            border: 1px solid #6161ff;
+            font-size: 13px;
+            font-weight: 300;
+            color: #6161ff;
         }
 
         .btn-contact:hover {
@@ -107,14 +143,23 @@
         }
 
         .btn-get-started {
-            background: #0056d2;
+            background: #6161ff;
             color: white;
             border: none;
             display: flex;
             align-items: center;
+            font-size: 13px;
+            font-weight: 300;
             gap: 5px;
             position: relative;
             z-index: 2;
+        }
+
+        .hero-btn {
+            font-size: 16px;
+            font-weight: 300;
+            padding: 16px 20px 16px 31px;
+            border-radius: 100px;
         }
 
         .btn-get-started.toggled {
@@ -125,9 +170,11 @@
             0% {
                 transform: scale(1);
             }
+
             50% {
                 transform: scale(1.1);
             }
+
             100% {
                 transform: scale(1);
             }
@@ -147,22 +194,23 @@
 
         /* Main Section */
         main {
-            padding-top: 120px;
+            padding-top: 80px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 30px;
+            gap: 16px;
         }
 
         h1 {
-            font-size: 48px;
-            font-weight: bold;
+            color: #333;
+            font-size: 44px;
         }
 
         p {
-            font-size: 20px;
-            color: #555;
+            font-size: 18px;
+            font-weight: 300;
+            color: #333;
         }
 
         /* Checkboxes Section */
@@ -171,27 +219,36 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 15px;
-            max-width: 800px;
+            /* max-width: 800px; */
         }
 
         .checkboxes .row {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            flex-wrap: wrap;
             gap: 15px;
+            max-width: 1029px;
         }
 
-        .checkboxes .row:nth-child(2) {
+        /* .checkboxes .row:nth-child(2) {
             width: 80%;
-        }
+        } */
 
         .checkbox-wrapper {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: white;
-            border: 1px solid #ddd;
-            padding: 10px 15px;
+            background: #f5f6f8;
+            color: #333;
+            font-size: 14px;
+            font-weight: 300;
+            padding: 8px 16px 8px 12px;
             border-radius: 20px;
+        }
+
+        .checkbox-wrapper:hover {
+            background: #E6E9EF;
+            cursor: pointer;
         }
 
         .checkbox-wrapper input {
@@ -199,14 +256,15 @@
         }
 
         .checkbox-wrapper .custom-checkbox {
-            width: 20px;
-            height: 20px;
-            border-radius: 5px;
+            width: 19px;
+            height: 19px;
+            background: #fff;
+            border-radius: 2px;
             position: relative;
             transition: all 0.3s ease;
         }
 
-        .checkbox-wrapper input:checked + .custom-checkbox::after {
+        .checkbox-wrapper input:checked+.custom-checkbox::after {
             content: '✔';
             position: absolute;
             top: 50%;
@@ -217,24 +275,77 @@
         }
 
         /* Checkbox Colors */
-        .checkbox-wrapper:nth-child(1) .custom-checkbox { border: 2px solid #f4a261; }
-        .checkbox-wrapper:nth-child(1) input:checked + .custom-checkbox { background: #f4a261; }
-        .checkbox-wrapper:nth-child(2) .custom-checkbox { border: 2px solid #2a9d8f; }
-        .checkbox-wrapper:nth-child(2) input:checked + .custom-checkbox { background: #2a9d8f; }
-        .checkbox-wrapper:nth-child(3) .custom-checkbox { border: 2px solid #e76f51; }
-        .checkbox-wrapper:nth-child(3) input:checked + .custom-checkbox { background: #e76f51; }
-        .checkbox-wrapper:nth-child(4) .custom-checkbox { border: 2px solid #e9c46a; }
-        .checkbox-wrapper:nth-child(4) input:checked + .custom-checkbox { background: #e9c46a; }
-        .checkbox-wrapper:nth-child(5) .custom-checkbox { border: 2px solid #264653; }
-        .checkbox-wrapper:nth-child(5) input:checked + .custom-checkbox { background: #264653; }
-        .checkbox-wrapper:nth-child(6) .custom-checkbox { border: 2px solid #d4a373; }
-        .checkbox-wrapper:nth-child(6) input:checked + .custom-checkbox { background: #d4a373; }
-        .checkbox-wrapper:nth-child(7) .custom-checkbox { border: 2px solid #a8dadc; }
-        .checkbox-wrapper:nth-child(7) input:checked + .custom-checkbox { background: #a8dadc; }
-        .checkbox-wrapper:nth-child(8) .custom-checkbox { border: 2px solid #457b9d; }
-        .checkbox-wrapper:nth-child(8) input:checked + .custom-checkbox { background: #457b9d; }
-        .checkbox-wrapper:nth-child(9) .custom-checkbox { border: 2px solid #1d3557; }
-        .checkbox-wrapper:nth-child(9) input:checked + .custom-checkbox { background: #1d3557; }
+        .checkbox-wrapper:nth-child(1) .custom-checkbox {
+            border: 1px solid #f4a261;
+        }
+
+        .checkbox-wrapper:nth-child(1) input:checked+.custom-checkbox {
+            background: #f4a261;
+        }
+
+        .checkbox-wrapper:nth-child(2) .custom-checkbox {
+            border: 1px solid #2a9d8f;
+        }
+
+        .checkbox-wrapper:nth-child(2) input:checked+.custom-checkbox {
+            background: #2a9d8f;
+        }
+
+        .checkbox-wrapper:nth-child(3) .custom-checkbox {
+            border: 1px solid #e76f51;
+        }
+
+        .checkbox-wrapper:nth-child(3) input:checked+.custom-checkbox {
+            background: #e76f51;
+        }
+
+        .checkbox-wrapper:nth-child(4) .custom-checkbox {
+            border: 1px solid #e9c46a;
+        }
+
+        .checkbox-wrapper:nth-child(4) input:checked+.custom-checkbox {
+            background: #e9c46a;
+        }
+
+        .checkbox-wrapper:nth-child(5) .custom-checkbox {
+            border: 1px solid #264653;
+        }
+
+        .checkbox-wrapper:nth-child(5) input:checked+.custom-checkbox {
+            background: #264653;
+        }
+
+        .checkbox-wrapper:nth-child(6) .custom-checkbox {
+            border: 1px solid #d4a373;
+        }
+
+        .checkbox-wrapper:nth-child(6) input:checked+.custom-checkbox {
+            background: #d4a373;
+        }
+
+        .checkbox-wrapper:nth-child(7) .custom-checkbox {
+            border: 1px solid #a8dadc;
+        }
+
+        .checkbox-wrapper:nth-child(7) input:checked+.custom-checkbox {
+            background: #a8dadc;
+        }
+
+        .checkbox-wrapper:nth-child(8) .custom-checkbox {
+            border: 1px solid #457b9d;
+        }
+
+        .checkbox-wrapper:nth-child(8) input:checked+.custom-checkbox {
+            background: #457b9d;
+        }
+
+        .checkbox-wrapper:nth-child(9) .custom-checkbox {
+            border: 1px solid #1d3557;
+        }
+
+        .checkbox-wrapper:nth-child(9) input:checked+.custom-checkbox {
+            background: #1d3557;
+        }
 
         /* Get Started Section with Animation */
         .get-started-section {
@@ -270,12 +381,18 @@
             opacity: 0;
         }
 
+        .no-credit-card-p {
+            font-size: 13px;
+            font-weight: 300;
+            color: #676879;
+        }
+
         /* Companies Section */
         .companies {
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 40px;
-            padding: 40px 0;
             flex-wrap: wrap;
         }
 
@@ -283,17 +400,98 @@
             height: 30px;
             object-fit: contain;
         }
+
+        .companies img:nth-child(1) {
+            width: 118px;
+            height: 29px;
+        }
+
+        .companies img:nth-child(2) {
+            width: 118px;
+            height: 28px;
+        }
+
+        .companies img:nth-child(3) {
+            width: 118px;
+            height: 65px;
+        }
+
+        .companies img:nth-child(4) {
+            width: 72px;
+            height: 69px;
+        }
+
+        .companies img:nth-child(5) {
+            width: 118px;
+            height: 30px;
+        }
+
+        .companies img:nth-child(6) {
+            width: 87px;
+            height: 69px;
+        }
+
+        .companies img:nth-child(7) {
+            width: 118px;
+            height: 55px;
+        }
+
+        .companies img:nth-child(8) {
+            width: 118px;
+            height: 24px;
+        }
+
+        .companies img:nth-child(9) {
+            width: 118px;
+            height: 44px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 13px 30px;
+            }
+
+            .header-right {
+                display: none;
+            }
+
+            .btn-get-started .hero-btn {
+                padding: 8px 16px;
+            }
+
+            main {
+                padding-left: 20px;
+                padding-right: 20px;
+                margin-bottom: 40px;
+            }
+
+            .checkboxes .row {
+                justify-content: left;
+                margin: 0 40px;
+            }
+
+            .companies img {
+                height: 24px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <header>
         <div class="logo">
-            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/monday-logo-x2.png" alt="Monday.com Logo">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/monday-logo-x2.png"
+                alt="Monday.com Logo">
         </div>
         <div class="header-right">
             <div class="custom-dropdown">
                 <button class="dropdown-toggle">
-                    <span>🌐</span>
+                    <span class="material-symbols-outlined language-icon">
+                        language
+                    </span>
+                    <span class="material-symbols-outlined arrow-icon">
+                        keyboard_arrow_down
+                    </span>
                 </button>
                 <div class="dropdown-menu">
                     <div>English</div>
@@ -303,15 +501,15 @@
                     <div>Português</div>
                 </div>
             </div>
-            <button class="btn btn-contact">Contact sales</button>
-            <button class="btn btn-get-started">
-                Get started <span class="arrow">➔</span>
-            </button>
+            <a href="https://monday.com/sales/contact-us?from=header&source=Website%20-%20Contact%20Sales" class="btn btn-contact" style="text-decoration: none;">Contact sales</a>
+            <a href="https://auth.monday.com/users/sign_up_new?origin=hp_fullbg_page_header" class="btn btn-get-started" style="text-decoration: none;">
+                Get Started <span class="arrow">➔</span>
+            </a>
         </div>
     </header>
 
     <main>
-        <h1>Project management MADE EASY</h1>
+        <h1>Project management made easy</h1>
         <p>Manage simple to complex projects and everything in between with monday.com</p>
         <p>Select what you want to manage:</p>
         <div class="checkboxes">
@@ -341,8 +539,6 @@
                     <span class="custom-checkbox"></span>
                     Resource management
                 </label>
-            </div>
-            <div class="row">
                 <label class="checkbox-wrapper">
                     <input type="checkbox">
                     <span class="custom-checkbox"></span>
@@ -367,23 +563,32 @@
         </div>
 
         <div class="get-started-section">
-            <button class="btn btn-get-started">
-                Get started <span class="arrow">➔</span>
-            </button>
+            <a href="https://auth.monday.com/users/sign_up_new?origin=hp_fullbg_page_header" class="btn btn-get-started hero-btn" style="text-decoration: none;">
+                Get Started <span class="arrow">➔</span>
+            </a>
             <div class="floating-box"></div>
-            <p>Free forever. No credit card.</p>
+            <p class="no-credit-card-p">Free forever. No credit card.</p>
         </div>
 
         <div class="companies">
-            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/HoltCat.png" alt="Holt Cat">
-            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/canva.png" alt="Canva">
-            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/coca_cola.png" alt="Coca Cola">
-            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/oxy.png" alt="OXY">
-            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/lionsgate.png" alt="Lionsgate">
-            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/carrefour.png" alt="Carrefour">
-            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/bd.png" alt="BD">
-            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/glossier.png" alt="Glossier">
-            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/universal.png" alt="Universal Music Group">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/HoltCat.png"
+                alt="Holt Cat">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/canva.png"
+                alt="Canva">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/coca_cola.png"
+                alt="Coca Cola">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/oxy.png"
+                alt="OXY">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/lionsgate.png"
+                alt="Lionsgate">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/carrefour.png"
+                alt="Carrefour">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/bd.png"
+                alt="BD">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/glossier.png"
+                alt="Glossier">
+            <img src="https://dapulse-res.cloudinary.com/image/upload/f_auto,q_auto/remote_mondaycom_static/img/customers/logos-v2/universal.png"
+                alt="Universal Music Group">
         </div>
     </main>
 
@@ -391,15 +596,168 @@
         // Dropdown functionality
         const dropdownToggle = document.querySelector('.dropdown-toggle');
         const dropdownMenu = document.querySelector('.dropdown-menu');
+        const arrowIcon = document.querySelector('.arrow-icon');
+        const languageOptions = document.querySelectorAll('.dropdown-menu div');
 
         dropdownToggle.addEventListener('click', () => {
             dropdownMenu.classList.toggle('show');
+            // Toggle the icon between "keyboard_arrow_down" and "keyboard_arrow_up"
+            arrowIcon.textContent = dropdownMenu.classList.contains('show') ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
         });
 
         document.addEventListener('click', (e) => {
             if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
                 dropdownMenu.classList.remove('show');
+                // Reset the icon to "keyboard_arrow_down" when the menu is closed
+                arrowIcon.textContent = 'keyboard_arrow_down';
             }
+        });
+
+        // Function to translate the page (mock implementation)
+        function translatePage(language) {
+            // Example translations
+            const translations = {
+                English: {
+                    header: "Project management made easy",
+                    description: "Manage simple to complex projects and everything in between with monday.com",
+                    select: "Select what you want to manage:",
+                    checkboxes: [
+                        "Project management",
+                        "Task management",
+                        "Client projects",
+                        "Business operations",
+                        "Resource management",
+                        "Portfolio management",
+                        "Goals & strategy",
+                        "Requests & approvals",
+                        "Create your own",
+                    ],
+                    getStarted: "Get Started",
+                    contactSales: "Contact sales",
+                    noCreditCard: "Free forever. No credit card.",
+                },
+                Español: {
+                    header: "Gestión de proyectos simplificada",
+                    description: "Gestiona proyectos simples a complejos y todo lo demás con monday.com",
+                    select: "Selecciona lo que quieres gestionar:",
+                    checkboxes: [
+                        "Gestión de proyectos",
+                        "Gestión de tareas",
+                        "Proyectos de clientes",
+                        "Operaciones comerciales",
+                        "Gestión de recursos",
+                        "Gestión de portafolios",
+                        "Metas y estrategias",
+                        "Solicitudes y aprobaciones",
+                        "Crea el tuyo propio",
+                    ],
+                    getStarted: "Comenzar",
+                    contactSales: "Contactar ventas",
+                    noCreditCard: "Gratis para siempre. Sin tarjeta de crédito.",
+                },
+                Français: {
+                    header: "Gestion de projet simplifiée",
+                    description: "Gérez des projets simples à complexes et tout le reste avec monday.com",
+                    select: "Sélectionnez ce que vous voulez gérer :",
+                    checkboxes: [
+                        "Gestion de projet",
+                        "Gestion des tâches",
+                        "Projets clients",
+                        "Opérations commerciales",
+                        "Gestion des ressources",
+                        "Gestion de portefeuille",
+                        "Objectifs et stratégies",
+                        "Demandes et approbations",
+                        "Créez le vôtre",
+                    ],
+                    getStarted: "Commencer",
+                    contactSales: "Contacter les ventes",
+                    noCreditCard: "Gratuit pour toujours. Pas de carte de crédit.",
+                },
+                Deutsch: {
+                    header: "Projektmanagement leicht gemacht",
+                    description: "Verwalten Sie einfache bis komplexe Projekte und alles dazwischen mit monday.com",
+                    select: "Wählen Sie aus, was Sie verwalten möchten:",
+                    checkboxes: [
+                        "Projektmanagement",
+                        "Aufgabenmanagement",
+                        "Kundenprojekte",
+                        "Geschäftsabläufe",
+                        "Ressourcenmanagement",
+                        "Portfoliomanagement",
+                        "Ziele und Strategien",
+                        "Anfragen und Genehmigungen",
+                        "Erstellen Sie Ihre eigenen",
+                    ],
+                    getStarted: "Loslegen",
+                    contactSales: "Vertrieb kontaktieren",
+                    noCreditCard: "Für immer kostenlos. Keine Kreditkarte.",
+                },
+                Português: {
+                    header: "Gerenciamento de projetos simplificado",
+                    description: "Gerencie projetos simples a complexos e tudo mais com monday.com",
+                    select: "Selecione o que você deseja gerenciar:",
+                    checkboxes: [
+                        "Gerenciamento de projetos",
+                        "Gerenciamento de tarefas",
+                        "Projetos de clientes",
+                        "Operações comerciais",
+                        "Gerenciamento de recursos",
+                        "Gerenciamento de portfólio",
+                        "Metas e estratégias",
+                        "Solicitações e aprovações",
+                        "Crie o seu próprio",
+                    ],
+                    getStarted: "Começar",
+                    contactSales: "Contatar vendas",
+                    noCreditCard: "Grátis para sempre. Sem cartão de crédito.",
+                },
+            };
+
+            // Update the page content based on the selected language
+            const translation = translations[language];
+            if (translation) {
+                // Update main section
+                document.querySelector('main h1').textContent = translation.header;
+                document.querySelector('main p:nth-of-type(1)').textContent = translation.description;
+                document.querySelector('main p:nth-of-type(2)').textContent = translation.select;
+
+                // Update checkboxes
+                const checkboxLabels = document.querySelectorAll('.checkbox-wrapper');
+                checkboxLabels.forEach((label, index) => {
+                    label.lastChild.textContent = translation.checkboxes[index];
+                });
+
+                // Update buttons
+                document.querySelector('.btn-get-started').innerHTML = translation.getStarted + ` <span class="arrow">➔</span>`;
+                document.querySelector('.btn-contact').textContent = translation.contactSales;
+                document.querySelector('.btn-get-started.hero-btn').innerHTML = translation.getStarted + ` <span class="arrow">➔</span>`;
+
+
+                // Update no-credit-card-p text
+                document.querySelector('.no-credit-card-p').textContent = translation.noCreditCard;
+            }
+        }
+
+        // Add event listeners to each language option
+        languageOptions.forEach((option) => {
+            option.addEventListener('click', () => {
+                languageOptions.forEach((opt) => {
+                    opt.style.backgroundColor = '';
+                    opt.style.color = '';
+                });
+
+                // Apply styles to the selected option
+                option.style.backgroundColor = '#f0f2ff';
+                option.style.color = '#6161ff';
+
+                // Translate the page to the selected language
+                translatePage(option.textContent.trim());
+
+                // Close the dropdown menu
+                dropdownMenu.classList.remove('show');
+                arrowIcon.textContent = 'keyboard_arrow_down';
+            });
         });
 
         // Checkbox animation with floating box
@@ -434,6 +792,25 @@
                 }
             });
         });
+
+        const header = document.querySelector('header');
+
+        // Add a scroll event listener to the window
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 0) {
+                header.style.position = 'fixed';
+                header.style.top = '0';
+                header.style.width = '100%';
+                header.style.zIndex = '1000';
+                header.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.1)'; 
+                header.style.transition = 'all 0.4s ease-in-out'; 
+            } else {
+                header.style.position = 'relative';
+                header.style.borderBottom = 'none';
+                header.style.boxShadow = 'none';
+            }
+        });
     </script>
 </body>
+
 </html>
