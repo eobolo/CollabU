@@ -1,74 +1,706 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import GeneralHomeHeader from './GeneralHomeHeader';
-import { useState, useEffect } from 'react';
-import './styles/FileSharing.css';
-import PlayOnce from './PlayOnce';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="canonical" href="https://www.goodwillsa.org/" />
+    <link rel="shortlink" href="https://www.goodwillsa.org/" />
+    <meta property="og:image" content="https://goodwillsa.org/sites/default/files/GWSA-OG-2.jpg" />
+    <meta property="og:image:url" content="https://goodwillsa.org/sites/default/files/GWSA-OG-2.jpg" />
+    <meta property="og:image:secure_url" content="https://goodwillsa.org/sites/default/files/GWSA-OG-2.jpg" />
+    <meta name="Generator" content="Drupal 10 (https://www.drupal.org)" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://goodwillsa.org/sites/default/files/favicon.ico" type="image/vnd.microsoft.icon" />
+    <title>Welcome | Goodwill San Antonio</title>    
+    <link rel="stylesheet" media="all"
+        href="https://goodwillsa.org/sites/default/files/assets/css/css_lQGPNZkVfYw43oTHNiEwNpMLB3sRNeUiMVjiCqBoEj8.css?delta=0&amp;language=en&amp;theme=txc_base&amp;include=eJxlkFuOwzAIRTfkxkuKsKEJU2wsY7dJVz9J06ij6Q_i3gPiAYhNIwhlhOoDGLkg8Fy9KCDnyUUBs_Ug7zyRGUxkp86KG1PRGnTxSFfo0jajksfaC8gAP7AcRtaaQPhJjnLjto6UAqGPUBprdrQ04Xw7-97SFagwVSizneTjDD2XHoRtJnSVrGg2vtOYKHf_Tw9pj86E4-04yTQyyAaRYdxnmf-2hjZT2mpXa5SOvrbEcU_8JBpALtZW2d91ZyQ9jhqvTIJ_Vri84FZCD_OvOCTFLvQLXW6YAw" />
+    <link rel="stylesheet" media="all" href="//addtocalendar.com/atc/1.5/atc-base.css" />
+    <link rel="stylesheet" media="all"
+        href="https://goodwillsa.org/sites/default/files/assets/css/css_v5ssqs3z94utvRXLL7GZjk_ef8VbVrS-FbOCQbZLT7M.css?delta=2&amp;language=en&amp;theme=txc_base&amp;include=eJxlkFuOwzAIRTfkxkuKsKEJU2wsY7dJVz9J06ij6Q_i3gPiAYhNIwhlhOoDGLkg8Fy9KCDnyUUBs_Ug7zyRGUxkp86KG1PRGnTxSFfo0jajksfaC8gAP7AcRtaaQPhJjnLjto6UAqGPUBprdrQ04Xw7-97SFagwVSizneTjDD2XHoRtJnSVrGg2vtOYKHf_Tw9pj86E4-04yTQyyAaRYdxnmf-2hjZT2mpXa5SOvrbEcU_8JBpALtZW2d91ZyQ9jhqvTIJ_Vri84FZCD_OvOCTFLvQLXW6YAw" />
+    <link rel="stylesheet" media="all"
+        href="https://goodwillsa.org/sites/default/files/assets/css/css_vYyT8gCg89_pZm5XrJNsmgbzZAeIH1DIiOTsMaatqgw.css?delta=3&amp;language=en&amp;theme=txc_base&amp;include=eJxlkFuOwzAIRTfkxkuKsKEJU2wsY7dJVz9J06ij6Q_i3gPiAYhNIwhlhOoDGLkg8Fy9KCDnyUUBs_Ug7zyRGUxkp86KG1PRGnTxSFfo0jajksfaC8gAP7AcRtaaQPhJjnLjto6UAqGPUBprdrQ04Xw7-97SFagwVSizneTjDD2XHoRtJnSVrGg2vtOYKHf_Tw9pj86E4-04yTQyyAaRYdxnmf-2hjZT2mpXa5SOvrbEcU_8JBpALtZW2d91ZyQ9jhqvTIJ_Vri84FZCD_OvOCTFLvQLXW6YAw" />
+    <link rel="stylesheet" media="print"
+        href="https://goodwillsa.org/sites/default/files/assets/css/css_Ai_xFiQBeHNQL8yO3R2KP4-1ehHiP05ge4mqRH0f-n8.css?delta=4&amp;language=en&amp;theme=txc_base&amp;include=eJxlkFuOwzAIRTfkxkuKsKEJU2wsY7dJVz9J06ij6Q_i3gPiAYhNIwhlhOoDGLkg8Fy9KCDnyUUBs_Ug7zyRGUxkp86KG1PRGnTxSFfo0jajksfaC8gAP7AcRtaaQPhJjnLjto6UAqGPUBprdrQ04Xw7-97SFagwVSizneTjDD2XHoRtJnSVrGg2vtOYKHf_Tw9pj86E4-04yTQyyAaRYdxnmf-2hjZT2mpXa5SOvrbEcU_8JBpALtZW2d91ZyQ9jhqvTIJ_Vri84FZCD_OvOCTFLvQLXW6YAw" />
+    <link rel="stylesheet" href="https://github.com/excel-asaph/CollabU/blob/master/goodwill.css">
+    <script type="application/json"
+        data-drupal-selector="drupal-settings-json">{"path":{"baseUrl":"\/","pathPrefix":"","currentPath":"node\/1","currentPathIsAdmin":false,"isFront":true,"currentLanguage":"en"},"pluralDelimiter":"\u0003","suppressDeprecationErrors":true,"ajaxPageState":{"libraries":"eJxtUduSwyAI_SEbPylDIjFsURwxbdOvX3Nr2u6-MOfCAB7BuSI9MEYH2XagaDqG52w7kgZ-4HHQpe64Z1Bl0rJzFnA7TMLzQMwHzRLoNTLDsKM7dsmsY-Zt544DqoJHPXgUVz1hyZ08rMMBJi4voaXIFNF-8dNfDrMf7PSUQmLcWnYnY12YAzA90WAsVOYWQ4d1BqRCEg0-St1wtS5PCbjZqfEivs4q4K2v5ZtvOX6IwUTfMvmxLA97wyZBBp8hjXpsOZVmimnqavIjOpNRk0SlG7YB42S_eNNLHMib-lH91a61Wd-p0hNw7XEE7XK-2r9SU0YMaHTWgmH7ovLo2wVYz9IBX7TMtdWbGzmULad2IOQz8X-s88jLatYWvKtd6xbTuxDETYy_ArcHig","theme":"txc_base","theme_token":null},"ajaxTrustedUrl":{"\/search\/node":true},"gtag":{"tagId":"","consentMode":false,"otherIds":[],"events":[],"additionalConfigInfo":[]},"gtm":{"tagId":null,"settings":{"data_layer":"dataLayer","include_classes":false,"allowlist_classes":"","blocklist_classes":"","include_environment":false,"environment_id":"","environment_token":""},"tagIds":["GTM-TC55XRG"]},"responsive_menu":{"position":"right","theme":"theme-dark","pagedim":"pagedim-black","modifyViewport":true,"use_bootstrap":false,"breakpoint":"(min-width: 960px)","drag":false},"colorbox":{"opacity":"0.85","current":"{current} of {total}","previous":"\u00ab Prev","next":"Next \u00bb","close":"Close","maxWidth":"98%","maxHeight":"98%","fixed":true,"mobiledetect":true,"mobiledevicewidth":"480px"},"data":{"extlink":{"extTarget":true,"extTargetAppendNewWindowLabel":"(opens in a new window)","extTargetNoOverride":false,"extNofollow":false,"extTitleNoOverride":false,"extNoreferrer":false,"extFollowNoOverride":false,"extClass":"0","extLabel":"(link is external)","extImgClass":false,"extSubdomains":true,"extExclude":"","extInclude":"","extCssExclude":"","extCssInclude":"","extCssExplicit":"","extAlert":false,"extAlertText":"This link will take you to an external web site. We are not responsible for their content.","extHideIcons":false,"mailtoClass":"0","telClass":"","mailtoLabel":"(link sends email)","telLabel":"(link is a phone number)","extUseFontAwesome":false,"extIconPlacement":"append","extPreventOrphan":false,"extFaLinkClasses":"fa fa-external-link","extFaMailtoClasses":"fa fa-envelope-o","extAdditionalLinkClasses":"","extAdditionalMailtoClasses":"","extAdditionalTelClasses":"","extFaTelClasses":"fa fa-phone","whitelistedDomains":null,"extExcludeNoreferrer":""}},"blazy":{"loadInvisible":false,"offset":100,"saveViewportOffsetDelay":50,"validateDelay":null,"container":"","loader":true,"unblazy":false,"visibleClass":false},"blazyIo":{"disconnect":false,"rootMargin":"0px","threshold":[0,0.25,0.5,0.75,1]},"slick":{"accessibility":true,"adaptiveHeight":false,"autoplay":false,"pauseOnHover":true,"pauseOnDotsHover":false,"pauseOnFocus":true,"autoplaySpeed":3000,"arrows":true,"downArrow":false,"downArrowTarget":"","downArrowOffset":0,"centerMode":false,"centerPadding":"50px","dots":false,"dotsClass":"slick-dots","draggable":true,"fade":false,"focusOnSelect":false,"infinite":true,"initialSlide":0,"lazyLoad":"ondemand","mouseWheel":false,"randomize":false,"rtl":false,"rows":1,"slidesPerRow":1,"slide":"","slidesToShow":1,"slidesToScroll":1,"speed":500,"swipe":true,"swipeToSlide":false,"edgeFriction":0.35,"touchMove":true,"touchThreshold":5,"useCSS":true,"cssEase":"ease","cssEaseBezier":"","cssEaseOverride":"","useTransform":true,"easing":"linear","variableWidth":false,"vertical":false,"verticalSwiping":false,"waitForAnimate":true},"views":{"ajax_path":"\/views\/ajax","ajaxViews":{"views_dom_id:82d225737f6313a86c1884bfecd91dbcbd96c8fe9965678cd2a6d4463a9397b0":{"view_name":"events_listing","view_display_id":"block_2","view_args":"","view_path":"\/node\/1","view_base_path":null,"view_dom_id":"82d225737f6313a86c1884bfecd91dbcbd96c8fe9965678cd2a6d4463a9397b0","pager_element":0}}},"field_group":{"html_element":{"mode":"default","context":"view","settings":{"classes":"number-and-sub-head","show_empty_fields":false,"id":"","element":"div","show_label":false,"label_element":"h3","label_element_classes":"","attributes":"","effect":"none","speed":"fast"}}},"user":{"uid":0,"permissionsHash":"53d7ecd7f7f453a2889818d611d94e1c5d1473464153acdd904a4d4926b68897"}}</script>
+    <script
+        src="https://goodwillsa.org/sites/default/files/assets/js/js_7inS47pZCKzr1oxYwwpJPHDlq_xNfWdHvvF7t6OomfY.js?scope=header&amp;delta=0&amp;language=en&amp;theme=txc_base&amp;include=eJxdkFGywyAIRTdkw5IcVOLwSsRR0yZd_TNp2kzzc4fDRQQwhKYehVLAAg4rGSf4WsGxDviHywc3PWIvWKtwbQeLYjjCrLKOLPLBohN_WxYcj-hJLhuvosXpAoFGnKV9E5aTcCK48OlvH8IPnV7lKQu9S3aHltZf3yGUOaMMB5qoGntdwwixy5Xfu_8kJ1OoZk2VH2QnSjNcePCaRo6m38bfYddhH6Et3m6nhSjqUG61rX2GaB4cSC1NjoIdmeRcqlv0rLDrPso_7WqlOw"></script>
+</head>
+<body class="front node--type-base-page role-anonymous page-node-1">
+    <div id="page">
+        <div class="dialog-off-canvas-main-canvas" data-off-canvas-main-canvas>
 
-export default function FileSharing({ users, appDropDown, handleAppDropDown, showDropDown, handleShowDropDown, versionFiles }) {
-    const { id, year, month, group, members, project_name } = useParams();
-    const title = "File Sharing";
-    const sliceLength = 10;
-    const navigate = useNavigate();
 
-    const handleDoubleClick = (file) => {
-        navigate(`/versioncontrol/${file.userId}/${file.year}/${file.month}/${file.groupId}/${members || ''}/${file.projectName}/${file.id}`);
-    };
+            <div>
 
-    return (
-        <main>
-            <section>
-                <div className='fixed-homepage-header'>
-                    <GeneralHomeHeader
-                        id={id}
-                        title={title}
-                        year={year}
-                        month={month}
-                        users={users}
-                        members={members || ""}
-                        project_name={project_name || ""}
-                        appDropDown={appDropDown}
-                        showDropDown={showDropDown}
-                        handleShowDropDown={handleShowDropDown}
-                    />
-                </div>
+                <header id="header">
+                    <div class="region-inner">
+                        <div id="block-headertop" class="block block-blockgroup block-block-groupheader-top">
 
-                {group ? (
-                    <div className='filesharing-container' onClick={handleAppDropDown}>
-                        {versionFiles && versionFiles.length > 0 ? (
-                            <div className='fileshared-section'>
-                                {versionFiles.map((file) => {
-                                    const user = users.find((u) => u.id === file.userId);
-                                    return (
-                                        <div key={file.id} onDoubleClick={() => handleDoubleClick(file)} className='file-item'>
-                                            <div className='comment-top-names'>
-                                                <span>{user.first_name.toLowerCase()}</span>
-                                                <span>{user.last_name.toLowerCase()}</span>
+
+                            <div id="block-headertopinner"
+                                class="block block-blockgroup block-block-groupheader-top-inner">
+
+
+                                <div id="block-findalocation"
+                                    class="block block-block-content block-block-contentacaa7254-4db0-44d5-95ad-aacc10488d85">
+
+
+
+                                    <div
+                                        class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
+                                        <p><a href="https://www.goodwillsa.org/locations">Find a Location</a></p>
+                                    </div>
+
+                                </div>
+                                <div class="search-block-form block block-search container-inline"
+                                    data-drupal-selector="search-block-form" id="block-searchform" role="search">
+
+
+                                    <form action="/search/node" method="get" id="search-block-form"
+                                        accept-charset="UTF-8">
+                                        <div
+                                            class="js-form-item form-item js-form-type-search form-type-search js-form-item-keys form-item-keys form-no-label">
+                                            <label for="edit-keys" class="visually-hidden">Search</label>
+                                            <input title="Enter the terms you wish to search for."
+                                                data-drupal-selector="edit-keys" type="search" id="edit-keys"
+                                                name="keys" value="" size="15" maxlength="128" class="form-search" />
+
+                                        </div>
+                                        <div data-drupal-selector="edit-actions"
+                                            class="form-actions js-form-wrapper form-wrapper" id="edit-actions"><input
+                                                data-drupal-selector="edit-submit" type="submit" id="edit-submit"
+                                                value="Search" class="button js-form-submit form-submit" />
+                                        </div>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div id="block-headerbottom" class="block block-blockgroup block-block-groupheader-bottom">
+
+
+                            <div id="block-logo"
+                                class="block block-block-content block-block-content584be1ef-d25d-4b79-b3f2-d2034e79c302">
+
+
+
+                                <div
+                                    class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
+                                    <a href="https://www.goodwillsa.org/">
+                                        <div data-entity-type="media"
+                                            data-entity-uuid="c1827abb-da60-43ac-bf59-8db75fbe0da5"
+                                            data-embed-button="add_select_image"
+                                            data-entity-embed-display="entity_reference:media_thumbnail"
+                                            data-entity-embed-display-settings="{&quot;image_style&quot;:&quot;&quot;,&quot;image_link&quot;:&quot;&quot;,&quot;image_loading&quot;:{&quot;attribute&quot;:&quot;lazy&quot;}}"
+                                            data-langcode="en" class="embedded-entity"> <img loading="lazy"
+                                                src="https://www.goodwillsa.org/sites/default/files/2025-03/gwsa-80th-logo.png"
+                                                width="1206" height="228" alt="Goodwill SA 80th">
+
+                                        </div>
+                                    </a>
+                                </div>
+
+                            </div>
+                            <nav role="navigation" aria-labelledby="block-mainnavigation-menu" id="block-mainnavigation"
+                                class="block block-menu navigation menu--main">
+
+                                <h2 class="visually-hidden" id="block-mainnavigation-menu">Main navigation</h2>
+
+
+
+                                <ul class="menu">
+                                    <li class="menu-item menu-item--expanded">
+                                        <a href="/find-job" data-drupal-link-system-path="node/2">Find a Job</a>
+                                        <ul class="menu">
+                                            <li class="menu-item">
+                                                <a href="/find-job/work-good-goodwill"
+                                                    data-drupal-link-system-path="node/6">Jobs at Goodwill</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/find-job/veterans-resources"
+                                                    data-drupal-link-system-path="node/7">Veterans Resources</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/find-job/good-careers-centers"
+                                                    data-drupal-link-system-path="node/8">Goodwill Careers Centers</a>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+                                    <li class="menu-item menu-item--expanded">
+                                        <a href="/education-training" data-drupal-link-system-path="node/3">Career
+                                            Training</a>
+                                        <ul class="menu">
+                                            <li class="menu-item">
+                                                <a href="/education-training/good-careers-academy"
+                                                    data-drupal-link-system-path="node/9">Goodwill Academy</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/education-training/youth-services"
+                                                    data-drupal-link-system-path="node/10">Youth Services</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="https://www.goodwillsa.org/digital-literacy"
+                                                    title="Digital Literacy">Digital Literacy</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="https://www.goodwillsa.org/goodwill-reentry-services">Reentry
+                                                    Services</a>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="/hire-goodwill" data-drupal-link-system-path="node/35">Business
+                                            Services</a>
+                                    </li>
+                                    <li class="menu-item menu-item--expanded">
+                                        <a href="/news-events" data-drupal-link-system-path="node/4">News &amp;
+                                            Events</a>
+                                        <ul class="menu">
+                                            <li class="menu-item">
+                                                <a href="/news-events/events"
+                                                    data-drupal-link-system-path="node/12">Events</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/news-events/goodwill-stories"
+                                                    data-drupal-link-system-path="node/882">Stories</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/news-events/pressmedia-room"
+                                                    data-drupal-link-system-path="node/14">Press/Media Room</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="https://goodwillsanantonio.smugmug.com/">Photos</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/more-than-a-store-podcast"
+                                                    data-drupal-link-system-path="node/997">More Than A Store
+                                                    Podcast</a>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+                                    <li class="menu-item menu-item--expanded">
+                                        <a href="/about-goodwill-san-antonio"
+                                            data-drupal-link-system-path="node/15">About Us</a>
+                                        <ul class="menu">
+                                            <li class="menu-item">
+                                                <a href="/about-us/faqs" data-drupal-link-system-path="node/22">FAQs</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/about-us/leadership"
+                                                    data-drupal-link-system-path="node/17">Leadership</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/about-us/partners"
+                                                    data-drupal-link-system-path="node/18">Partners</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/about-us/our-community-impact"
+                                                    data-drupal-link-system-path="node/19">Our Community Impact</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="https://www.goodwillsa.org/being-good-environment"
+                                                    title="Being Good to the Environment">Sustainability</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/success-stories"
+                                                    data-drupal-link-system-path="node/218">Success Stories</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/about-us/compliance"
+                                                    data-drupal-link-system-path="node/21">Compliance</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="/about-us/contact-us"
+                                                    data-drupal-link-system-path="node/23">Contact Us</a>
+                                            </li>
+                                            <li class="menu-item">
+                                                <a href="https://www.goodwillsa.org/community-service">Community
+                                                    Service</a>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+                                </ul>
+
+
+
+                            </nav>
+                            <div id="block-responsivemenumobileicon"
+                                class="responsive-menu-toggle-wrapper responsive-menu-toggle block block-responsive-menu block-responsive-menu-toggle">
+
+
+                                <a id="toggle-icon" class="toggle responsive-menu-toggle-icon" title="Menu"
+                                    href="#off-canvas">
+                                    <span class="icon"></span><span class="label">Menu</span>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div> <!-- end .region-inner -->
+                </header> <!-- end #header -->
+
+
+            </div>
+
+
+            <div id="preface">
+                <div class="region-inner">
+                    <div id="block-homepageherorotator"
+                        class="block block-block-content block-block-contentb274b4f9-0ca6-4613-9112-f13ae9118be7">
+
+
+                        <div class="slick blazy slick--field slick--field-rotator-slides slick--field-rotator-slides--full unslick slick--optionset--testimonials-slick slick--less"
+                            data-blazy="">
+                            <div class="slick__slide slide slide--0">
+                                <div
+                                    class="paragraph paragraph--type--slide-wrapper paragraph--id--109 paragraph--view-mode--default">
+                                    <div class="slick blazy slick--field slick--field-slides slick--field-slides--default slick--optionset--homepage-slick-options"
+                                        data-blazy="">
+                                        <div id="slick-07b1671c492"
+                                            data-slick="{&quot;count&quot;:7,&quot;total&quot;:7,&quot;autoplay&quot;:true,&quot;autoplaySpeed&quot;:5000,&quot;arrows&quot;:false,&quot;draggable&quot;:false,&quot;lazyLoad&quot;:&quot;blazy&quot;}"
+                                            class="slick__slider">
+                                            <div class="slick__slide slide slide--0">
+                                                <div
+                                                    class="paragraph paragraph--type--homepage-hero-slide paragraph--id--1406 paragraph--view-mode--default">
+
+                                                    <div
+                                                        class="field field--name-field-slide-background-image field--type-entity-reference field--label-hidden field__item">
+                                                        <img loading="lazy"
+                                                            src="https://www.goodwillsa.org/sites/default/files/styles/homepage_hero_slide/public/2024-11/11.14%20SABJ%20Impact%20Awards%202024-21%20%281%29.jpg?h=b2fdb9ce&itok=9bBRYxxq"
+                                                            width="2000" height="780" alt="sabj award"
+                                                            class="image-style-homepage-hero-slide" />
+                                                    </div>
+
+                                                    <div class="home-hero-headings">
+
+                                                        <div class="home_hero_headings_inner‎">
+
+                                                            <div class="number-and-sub-head">
+
+                                                                <div
+                                                                    class="clearfix text-formatted field field--name-field-hero-slide-sub-title field--type-text-long field--label-hidden field__item">
+                                                                    <p>Goodwill San Antonio&nbsp;<br>2024 Impact Award
+                                                                        Recipient&nbsp;<a class="button"
+                                                                            href="https://www.goodwillsa.org/news-events/pressmedia-room/goodwill-san-antonio-wins-sabj-2024-impact-award">
+                                                                            Read More</a></p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className='fileshared-icon'>
-                                                <PlayOnce />
+                                            <div class="slick__slide slide slide--1">
+                                                <div
+                                                    class="paragraph paragraph--type--homepage-hero-slide paragraph--id--108 paragraph--view-mode--default">
+
+                                                    <div
+                                                        class="field field--name-field-slide-background-image field--type-entity-reference field--label-hidden field__item">
+                                                        <img loading="lazy"
+                                                            src="https://www.goodwillsa.org/sites/default/files/styles/homepage_hero_slide/public/2019-05/HomePickup_C7A3996.jpg?h=0c34a8dc&itok=LvXOa0lN"
+                                                            width="2000" height="780" alt="Goodwill San Antonio"
+                                                            class="image-style-homepage-hero-slide" />
+
+
+                                                    </div>
+
+                                                    <div class="home-hero-headings">
+
+                                                        <div class="home_hero_headings_inner‎">
+
+                                                            <div class="number-and-sub-head">
+
+                                                                <div
+                                                                    class="clearfix text-formatted field field--name-field-hero-slide-sub-title field--type-text-long field--label-hidden field__item">
+                                                                    <p class="callout-orange">Changing Lives Through the
+                                                                        Power of Work.</p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className='fileshared-name'>
-                                                <p>{file.projectName.length > sliceLength ? `${file.projectName.slice(0, sliceLength)}...` : file.projectName}</p>
+                                            <div class="slick__slide slide slide--2">
+                                                <div
+                                                    class="paragraph paragraph--type--homepage-hero-slide paragraph--id--1396 paragraph--view-mode--default">
+
+                                                    <div
+                                                        class="field field--name-field-slide-background-image field--type-entity-reference field--label-hidden field__item">
+                                                        <img loading="lazy"
+                                                            src="https://www.goodwillsa.org/sites/default/files/styles/homepage_hero_slide/public/2024-08/webbanner_morethanastore_.png?h=9412f527&itok=rc0pbrbV"
+                                                            width="2000" height="780" alt="more than a store banner"
+                                                            class="image-style-homepage-hero-slide" />
+
+
+                                                    </div>
+
+                                                    <div class="home-hero-headings">
+
+                                                        <div class="home_hero_headings_inner‎">
+
+                                                            <div class="number-and-sub-head">
+
+                                                                <div
+                                                                    class="clearfix text-formatted field field--name-field-hero-slide-sub-title field--type-text-long field--label-hidden field__item">
+                                                                    <h2><a class="button"
+                                                                            href="https://www.goodwillsa.org/more-than-a-store-podcast">Listen
+                                                                            Now!</a></h2>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div className='fileshared-meta'>
-                                                <small>Shared on: {new Date(file.timeStamp).toLocaleString()}</small>
+                                            <div class="slick__slide slide slide--3">
+                                                <div
+                                                    class="paragraph paragraph--type--homepage-hero-slide paragraph--id--125 paragraph--view-mode--default">
+
+                                                    <div
+                                                        class="field field--name-field-slide-background-image field--type-entity-reference field--label-hidden field__item">
+                                                        <img loading="lazy"
+                                                            src="https://www.goodwillsa.org/sites/default/files/styles/homepage_hero_slide/public/2024-03/StockBusinessServices_YZB_2024_26.jpg?h=7c20ab44&itok=ovmOfqSs"
+                                                            width="2000" height="780" alt="Goodwill San Antonio"
+                                                            class="image-style-homepage-hero-slide" />
+
+
+                                                    </div>
+
+                                                    <div class="home-hero-headings">
+
+                                                        <div class="home_hero_headings_inner‎">
+
+                                                            <div class="number-and-sub-head">
+
+                                                                <div
+                                                                    class="field field--name-field-hero-slide-number field--type-string field--label-hidden field__item">
+                                                                    1,800+</div>
+
+                                                                <div
+                                                                    class="clearfix text-formatted field field--name-field-hero-slide-sub-title field--type-text-long field--label-hidden field__item">
+                                                                    <p class="callout-orange"><span
+                                                                            class="homecaps">People Employed by</span>
+                                                                        Goodwill San Antonio</p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slick__slide slide slide--4">
+                                                <div
+                                                    class="paragraph paragraph--type--homepage-hero-slide paragraph--id--112 paragraph--view-mode--default">
+
+                                                    <div
+                                                        class="field field--name-field-slide-background-image field--type-entity-reference field--label-hidden field__item">
+                                                        <img loading="lazy"
+                                                            src="https://www.goodwillsa.org/sites/default/files/styles/homepage_hero_slide/public/2024-03/3.4%20KaylaPharmTechGraduate_YZB_2024.jpg?h=a22cc58c&itok=lAI1VvCh"
+                                                            width="2000" height="780" alt="Goodwill San Antonio"
+                                                            class="image-style-homepage-hero-slide" />
+
+
+                                                    </div>
+
+                                                    <div class="home-hero-headings">
+
+                                                        <div class="home_hero_headings_inner‎">
+
+                                                            <div class="number-and-sub-head">
+
+                                                                <div
+                                                                    class="field field--name-field-hero-slide-number field--type-string field--label-hidden field__item">
+                                                                    170+</div>
+
+                                                                <div
+                                                                    class="clearfix text-formatted field field--name-field-hero-slide-sub-title field--type-text-long field--label-hidden field__item">
+                                                                    <p class="callout-orange"><span
+                                                                            class="homecaps">Students Trained in High
+                                                                            Demand Careers</span></p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slick__slide slide slide--5">
+                                                <div
+                                                    class="paragraph paragraph--type--homepage-hero-slide paragraph--id--1381 paragraph--view-mode--default">
+
+                                                    <div
+                                                        class="field field--name-field-slide-background-image field--type-entity-reference field--label-hidden field__item">
+                                                        <img loading="lazy"
+                                                            src="https://www.goodwillsa.org/sites/default/files/styles/homepage_hero_slide/public/2024-03/Corporate%20and%20Community%20Volunteer%20Program_color%20Image%20%282%29.jpg?h=e64638a8&itok=lbceYEe3"
+                                                            width="2000" height="780" alt="Goodwill Volunteers"
+                                                            class="image-style-homepage-hero-slide" />
+
+
+                                                    </div>
+
+                                                    <div class="home-hero-headings">
+
+                                                        <div class="home_hero_headings_inner‎">
+
+                                                            <div
+                                                                class="field field--name-field-hero-slide-title field--type-string field--label-hidden field__item">
+                                                                Corporate &amp; Community Volunteer Program</div>
+
+                                                            <div class="number-and-sub-head">
+
+                                                                <div
+                                                                    class="clearfix text-formatted field field--name-field-hero-slide-sub-title field--type-text-long field--label-hidden field__item">
+                                                                    <p class="featured-heading"><a class="button"
+                                                                            href="https://www.goodwillsa.org/corporate-community-partner-volunteer-program">Learn
+                                                                            More</a></p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slick__slide slide slide--6">
+                                                <div
+                                                    class="paragraph paragraph--type--homepage-hero-slide paragraph--id--124 paragraph--view-mode--default">
+
+                                                    <div
+                                                        class="field field--name-field-slide-background-image field--type-entity-reference field--label-hidden field__item">
+                                                        <img loading="lazy"
+                                                            src="https://www.goodwillsa.org/sites/default/files/styles/homepage_hero_slide/public/image/2019-05/gdwill-2-2019-4693.jpg?h=036a71b7&itok=37oqsRmP"
+                                                            width="2000" height="780"
+                                                            alt="Good Careers Specialist assists with writing a resume"
+                                                            class="image-style-homepage-hero-slide" />
+
+
+                                                    </div>
+
+                                                    <div class="home-hero-headings">
+
+                                                        <div class="home_hero_headings_inner‎">
+
+                                                            <div class="number-and-sub-head">
+
+                                                                <div
+                                                                    class="field field--name-field-hero-slide-number field--type-string field--label-hidden field__item">
+                                                                    1,100+</div>
+
+                                                                <div
+                                                                    class="clearfix text-formatted field field--name-field-hero-slide-sub-title field--type-text-long field--label-hidden field__item">
+                                                                    <p class="callout-orange">People Placed into
+                                                                        Employment</p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    );
-                                })}
+                                        <nav role="navigation" class="slick__arrow">
+                                            <button type="button" data-role="none" class="slick-prev"
+                                                aria-label="Previous" tabindex="0">Previous</button><button
+                                                type="button" data-role="none" class="slick-next" aria-label="Next"
+                                                tabindex="0">Next</button>
+                                        </nav>
+                                    </div>
+
+                                </div>
                             </div>
-                        ) : (
-                            <div className='no-fileshared-section'>
-                                No files shared yet. Share file 📂
+                        </div>
+
+                    </div>
+                    <nav role="navigation" aria-labelledby="block-global-menu" id="block-global"
+                        class="block block-menu navigation menu--global">
+
+                        <h2 class="visually-hidden" id="block-global-menu">Global</h2>
+
+
+
+                        <ul class="menu">
+                            <li class="menu-item menu-item--expanded">
+                                <a href="/donate" data-drupal-link-system-path="node/258">Donate</a>
+                                <ul class="menu">
+                                    <li class="menu-item">
+                                        <a href="/locations?location_type=donation"
+                                            title="Conveniently Located Throughout our Community"
+                                            data-drupal-link-query="{&quot;location_type&quot;:&quot;donation&quot;}"
+                                            data-drupal-link-system-path="locations">Drop-off Locations</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="https://www.goodwillsa.org/customer-ambassador-program">Customer
+                                            Ambassador Program</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="https://www.goodwillsa.org/partnersforgood"
+                                            title="Partners for Good">Partners for Good</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="/donate/home-pickup" title="Free, Easy, and Convenient"
+                                            data-drupal-link-system-path="node/28">Home Pickup</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="https://goodwillsa.careasy.org/home"
+                                            title="Fuel someone&#039;s career">Vehicle Donation</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="https://www.goodwillsa.org/maintaining-mission"
+                                            title="Monetary Donation">Monetary Donation</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="/about-us/faqs#138" title="Common Donation Questions Answered"
+                                            data-drupal-link-system-path="node/22">FAQs</a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            <li class="menu-item menu-item--expanded">
+                                <a href="/shop" data-drupal-link-system-path="node/259">Shop</a>
+                                <ul class="menu">
+                                    <li class="menu-item">
+                                        <a href="/locations?location_type=shop"
+                                            title="Conveniently Located Throughout our Community"
+                                            data-drupal-link-query="{&quot;location_type&quot;:&quot;shop&quot;}"
+                                            data-drupal-link-system-path="locations">Locations</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="/shop/online" title="Discover More Treasures"
+                                            data-drupal-link-system-path="node/31">Online</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="https://www.goodwillsa.org/customer-ambassador-program">Customer
+                                            Ambassador Program</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="/about-us/faqs#185" title="Common Shopping Questions Answered"
+                                            data-drupal-link-system-path="node/22">FAQs</a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a href="/shop/store-policies" data-drupal-link-system-path="node/32">Store
+                                            Policies</a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            <li class="menu-item menu-item--expanded">
+                                <a href="/work" data-drupal-link-system-path="node/260">Work</a>
+                                <ul class="menu">
+                                    <li class="menu-item">
+                                        <a href="/find-job/work-good-goodwill"
+                                            data-drupal-link-system-path="node/6">Jobs at Goodwill</a>
+                                    </li>
+                                </ul>
+
+                            </li>
+                        </ul>
+
+
+
+                    </nav>
+                    <div class="views-element-container block block-views block-views-blockceo-message-block-1"
+                        id="block-views-block-ceo-message-block-1">
+
+
+                        <div>
+                            <div
+                                class="view view-ceo-message view-id-ceo_message view-display-id-block_1 js-view-dom-id-ed9e0ba3bfe1437554e427f10f2d95a47670590d7a556e3c46744d3b2a9c487f">
+
+
+
+                                <div class="view-content">
+                                    <div class="views-row">
+                                        <article class="blue node node--type-ceo-message node--view-mode-teaser">
+
+
+                                            <h2>
+                                                <a href="/node/558" rel="bookmark"><span
+                                                        class="field field--name-title field--type-string field--label-hidden">Goodwill
+                                                        San Antonio 80th Anniversary Gala</span>
+                                                </a>
+                                            </h2>
+
+
+
+                                            <div class="node__content">
+
+                                                <div class="message-wrap">
+
+                                                    <div
+                                                        class="clearfix text-formatted field field--name-body field--type-text-with-summary field--label-hidden field__item">
+                                                        <p class="text-align-center"><strong>Join us in celebrating 80
+                                                                years of changing lives through the power of work in the
+                                                                community.&nbsp;</strong></p>
+                                                        <p class="text-align-center">Learn how you can be a part of this
+                                                            memorable event.&nbsp;</p>
+                                                    </div>
+
+                                                    <div
+                                                        class="field field--name-field-call-to-action field--type-link field--label-hidden field__item">
+                                                        <a
+                                                            href="https://www.goodwillsa.org/celebrating-80-years-changing-lives">Sponsorship
+                                                            Opportunities &amp; Event Details</a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </article>
+                                    </div>
+
+                                </div>
+
                             </div>
-                        )}
+                        </div>
+
                     </div>
-                ) : (
-                    <div className='discussion-no-comment-section' onClick={handleAppDropDown}>
-                        User doesn't belong to any group. No files available.
-                    </div>
-                )}
-            </section>
-        </main>
-    );
-}
+
+                </div> <!-- end .region-inner -->
+            </div> <!-- end #preface -->
+
+
+            <div id="main">
+                <div class="region-inner">
+                    <a id="main-content" tabindex="-1"></a>
+
+                    <div id="help">
+                        <div class="region-inner">
+                            <div data-drupal-messages-fallback class="hidden"></div>
+
+                        </div> <!-- end .region-inner -->
+                    </div> <!-- end #help -->
+                </div> <!-- end .region-inner -->
+            </div> <!-- end #page -->            
+        </div>
+    </div>
+    <script
+        src="https://goodwillsa.org/sites/default/files/assets/js/js_QbwtZi7ocLDOBO3sAIMaAkvGDN9mBLtxFi3SA7zOgMA.js?scope=footer&amp;delta=0&amp;language=en&amp;theme=txc_base&amp;include=eJxdkFGywyAIRTdkw5IcVOLwSsRR0yZd_TNp2kzzc4fDRQQwhKYehVLAAg4rGSf4WsGxDviHywc3PWIvWKtwbQeLYjjCrLKOLPLBohN_WxYcj-hJLhuvosXpAoFGnKV9E5aTcCK48OlvH8IPnV7lKQu9S3aHltZf3yGUOaMMB5qoGntdwwixy5Xfu_8kJ1OoZk2VH2QnSjNcePCaRo6m38bfYddhH6Et3m6nhSjqUG61rX2GaB4cSC1NjoIdmeRcqlv0rLDrPso_7WqlOw"></script>
+    <script src="//addtocalendar.com/atc/1.5/atc.min.js"></script>
+    <script>
+        jQuery(document).ready(function ($) {
+            // Initialize the hero slider
+            $('.slick__slider').slick({
+                autoplay: true,
+                autoplaySpeed: 3000, // Change slider every 3 seconds
+                arrows: true,
+                dots: true,
+                infinite: true,
+                speed: 500,
+                fade: false,
+                cssEase: 'linear',
+                lazyLoad: 'ondemand',
+            });
+        });
+    </script>
+    <script
+        src="https://goodwillsa.org/sites/default/files/assets/js/js_inDlBBuXN8Fp-863JaWjnFyZNOp4AD7p-YFS5JfDDBI.js?scope=footer&amp;delta=2&amp;language=en&amp;theme=txc_base&amp;include=eJxdkFGywyAIRTdkw5IcVOLwSsRR0yZd_TNp2kzzc4fDRQQwhKYehVLAAg4rGSf4WsGxDviHywc3PWIvWKtwbQeLYjjCrLKOLPLBohN_WxYcj-hJLhuvosXpAoFGnKV9E5aTcCK48OlvH8IPnV7lKQu9S3aHltZf3yGUOaMMB5qoGntdwwixy5Xfu_8kJ1OoZk2VH2QnSjNcePCaRo6m38bfYddhH6Et3m6nhSjqUG61rX2GaB4cSC1NjoIdmeRcqlv0rLDrPso_7WqlOw"></script>
+</body>
+</html>
